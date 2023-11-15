@@ -1,0 +1,142 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  font-family: "Poppins", Arial, sans-serif;
+}
+
+html {
+  overflow-x: hidden;
+  height: 100%;
+}
+
+:root {
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  text-size-adjust: none;
+  text-decoration-skip-ink: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+
+  --color-bg: #e975a8;
+  --color-text: #111;
+  --color-black: #222222;
+}
+
+body {
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  overflow: hidden auto;
+  font-family: "Poppins";
+}
+
+body::selection {
+  background-color: #026a52;
+}
+
+.wrapper {
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.wrapper :is(a, .icon, button) {
+  cursor: pointer;
+}
+
+.wrapper .icon {
+  display: grid;
+  place-items: center;
+  height: 6em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.wrapper .icon:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+
+.wrapper :where(a, span) {
+  color: inherit;
+  font-size: inherit;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.wrapper :where(img) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: inherit;
+}
+
+.wrapper :where(ul li) {
+  list-style-type: none;
+  display: list-item;
+}
+
+.wrapper :where(button) {
+  display: inline-block;
+  transition: border-color 0.25s;
+}
+
+.wrapper :where(input:hover, input:focus, textarea:hover, textarea:focus) {
+  outline: none;
+}
+
+.wrapper :where(button:focus, button:focus-visible) {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+.menu-primary-enter {
+  position: absolute;
+  transform: translateX(-110%);
+}
+.menu-primary-enter-active {
+  transform: translateX(0%);
+}
+.menu-primary-exit {
+  position: absolute;
+}
+.menu-primary-exit-active {
+  transform: translateX(-110%);
+  transition: all 500ms linear;
+}
+
+.menu-secondary-enter {
+  position: absolute;
+  transform: translateX(110%);
+}
+.menu-secondary-enter-active {
+  transform: translateX(0%);
+  transition: all 500ms linear;
+}
+.menu-secondary-exit {
+}
+.menu-secondary-exit-active {
+  transform: translateX(110%);
+}
+
+.wrapper ::-webkit-scrollbar {
+  width: 8px;
+  height: 100%;
+}
+
+/* Track */
+.wrapper ::-webkit-scrollbar-track {
+  background: red;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 999px;
+}

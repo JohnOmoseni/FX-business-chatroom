@@ -1,0 +1,100 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@font-face {
+  font-family: "Kinn";
+  src: url("/fonts/Kinn-Book.ttf");
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("/fonts/Poppins-Regular.ttf");
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  h1 {
+    @apply font-kinn text-primary font-bold;
+  }
+  h2 {
+    @apply font-kinn text-secondary font-semibold;
+  }
+  h3 {
+    @apply font-poppins text-subtitle font-semibold;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    color: transparent;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .text-gradient-100 {
+    @apply text-gradient;
+    background-image: linear-gradient(to bottom right, #06ff72, #000000 90%);
+  }
+  .text-gradient-200 {
+    @apply text-gradient;
+    background: linear-gradient(to bottom right, #ef2de2fd, #7f00ad 90%);
+  }
+  .text-shadow {
+    text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);
+  }
+
+  .flex-row {
+    @apply flex items-center align-middle justify-center flex-nowrap;
+  }
+  .flex-column {
+    @apply flex flex-col items-start justify-center;
+  }
+
+  .bg-gradient-100 {
+    background: linear-gradient(to top right, #01a137fd, rgb(135, 244, 195));
+  }
+  .bg-gradient-200 {
+    background: linear-gradient(to right, #e44685fd, #06456c 95%);
+  }
+  .mask-gradient {
+    background-image: linear-gradient(to top, #aef7c44c 0%, transparent 100%);
+  }
+
+  .p-section {
+    padding: max(5%, 3em) max(4%, 1em) max(5%, 2rem);
+  }
+
+  .i-reset {
+    @apply border-none outline-none text-regular focus:outline-none bg-transparent text-ellipsis whitespace-nowrap transition-all overflow-hidden;
+  }
+  .transition-sm {
+    transition: all 0.3s linear;
+  }
+  .center {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+@layer components {
+  .grid-cols-main {
+    grid-template-columns: minmax(25%, auto) 1fr minmax(25%, auto);
+  }
+  .grid-cols-row {
+    grid-template-columns: auto 1fr auto;
+  }
+  .grid-cols-200 {
+    grid-template-columns: 1fr minmax(300px, 1fr);
+  }
+  .grid-cols-300 {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+  .grid-rows-100 {
+    display: grid;
+    grid-template-rows: 200px auto auto;
+  }
+  .gain {
+    background: white;
+    padding: 0.8em;
+    border-radius: 8% 92% 36% 64% / 12% 39% 61% 88%;
+  }
+}
