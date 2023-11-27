@@ -1,41 +1,84 @@
 import { useState } from "react";
-import { BiSearchAlt } from "react-icons/bi";
-import { users } from "@constants/constants";
+import { useSelector } from "react-redux";
+import Tabs from "./Tabs";
+import TabsPanel from "./TabsPanel";
+import Conversations from "./Conversations";
+import Business from "./Business";
+import logo from "@assets/images/app-logo.png";
+
+import Search from "./Search";
+import ErrorTimeout from "./ErrorTimeout";
 import ChatRow from "./ChatRow";
 
 function LeftNav() {
-  const [search, setSearch] = useState("");
-
-  const handleSearch = (e) => {
-    if (e.key === "Enter") {
-      console.log("searching");
-    }
-  };
+  const { currentUser, isActive } = useSelector((state) => state.authUser);
+  const [activeTab, setActiveTab] = useState("chats-tab");
+  const [errorSearch, setErrorSearch] = useState(false);
+  const [searchUser, setSearchUser] = useState("");
+  const [user, setUser] = useState("");
 
   return (
     <>
-      <div className="px-3 py-3.5 mx-auto w-[95%] relative rounded-md shadow-sm border border-solid border-br-light ">
-        <span className="icon absolute center right-3 align-middle">
-          <BiSearchAlt size={16} fill="#888" />
-        </span>
+      <div className="w-full flex-row gap-3 !justify-between">
+        <div className="w-[100px]">
+          <img src={logo} alt="Osho Free" />
+        </div>
+        <div className="flex-row w-[45%] !justify-between gap-3">
+          <h4 className="w-[50%] text-shadow text-regular">
+            {currentUser?.displayName}
+            <span className="mt-[-1px] text-tiny truncate">
+              {currentUser?.uid}
+            </span>
+          </h4>
+          <div className="icon relative w-[30px] h-[30px] rounded-[50%] border border-solid border-neutral-200">
+            <img
+              src={currentUser?.avatar}
+              alt={currentUser?.displayName.split(" ")[0]}
+              className="group-hover:scale-105 transition"
+            />
+            <span
+              className={`${
+                isActive ? "bg-green-400" : "bg-[#888] "
+              } absolute z-[100] -bottom-[1px] right-0 w-[10px] h-[10px] rounded-[50%] shadow-sm border border-solid border-neutral-300`}
+            ></span>
+          </div>
+        </div>
+      </div>
 
-        <input
-          type="text"
-          name="search"
-          value={search}
-          placeholder="Search..."
-          onChange={(e) => setSearch(e.target.value)}
-          onKeyDown={handleSearch}
-          className="  w-full i-reset placeholder:text-base placeholder:text-neutral-500"
+      <Tabs
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        setUser={setUser}
+        setSearchUser={setSearchUser}
+      />
+
+      <Search
+        searchUser={searchUser}
+        setSearchUser={setSearchUser}
+        user={user}
+        setUser={setUser}
+        setErrorSearch={setErrorSearch}
+      />
+
+      {user ? (
+        user.length > 0 && user?.map((u) => <ChatRow user={u} />)
+      ) : errorSearch ? (
+        <ErrorTimeout
+          setSearchUser={setSearchUser}
+          setErrorSearch={setErrorSearch}
+          title="Error searching for users..."
         />
-      </div>
-      <div className="pb-6 overflow-y-auto relative">
-        <ul className="flex-column gap-6">
-          {users?.map((user) => {
-            return <ChatRow key={user?.uid} {...user} />;
-          })}
-        </ul>
-      </div>
+      ) : (
+        <>
+          <TabsPanel activeTab={activeTab} id="chats-tab">
+            <Conversations />
+          </TabsPanel>
+
+          <TabsPanel activeTab={activeTab} id="business-tab">
+            <Business />
+          </TabsPanel>
+        </>
+      )}
     </>
   );
 }

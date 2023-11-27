@@ -1,22 +1,48 @@
+import { useEffect, useState } from "react";
 import Chat from "./Chat";
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from "../../config/firebase-config";
 
-function Messages({ owner }) {
+function Messages({ chatId }) {
+  const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    if (chatId) {
+      const unsub = onSnapshot(doc(db, "chats", chatId), (doc) => {
+        doc.exists() && setMessages(doc.data().messages);
+      });
+
+      return () => {
+        unsub();
+      };
+    }
+  }, [chatId]);
+
+  const rows = [];
+  let startOfUserMsg = "";
+
+  messages.length > 0 &&
+    messages?.forEach((msg, idx) => {
+      if (startOfUserMsg !== messages[idx]?.senderID) {
+        rows.push(<Chat msg={msg} key={msg.id} messages={messages} startMsg />);
+      } else {
+        rows.push(<Chat msg={msg} key={msg.id} messages={messages} />);
+      }
+
+      startOfUserMsg = messages[idx]?.senderID;
+    });
+
   return (
     <div
-      className={`group relative w-full mt-[1px] pt-4 pb-6 px-[3%] flex-1 flex flex-col  gap-4 overflow-y-auto `}
+      className={`group relative w-full mt-[1px] py-6 px-[3%] flex-1 flex flex-col gap-4 overflow-y-auto `}
     >
-      <div className="flex-row gap-4">
+      <div className="flex-row gap-4 mb-1">
         <hr className="w-[40%] border border-solid border-br-light opacity-40" />
         <span className="text-tiny text-neutral-400">Today</span>
         <hr className="w-[40%] border border-solid border-br-light  opacity-50" />
       </div>
 
-      <Chat />
-      <Chat owner />
-      <Chat />
-      <Chat owner />
-      <Chat />
-      <Chat owner />
+      {rows.length > 0 && rows?.map((row) => row)}
       <Chat />
     </div>
   );

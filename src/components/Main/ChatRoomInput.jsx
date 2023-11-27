@@ -1,20 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  Timestamp,
-  arrayUnion,
-  doc,
-  serverTimestamp,
-  updateDoc,
-} from "firebase/firestore";
+import { Timestamp, arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { db, storage } from "../../config/firebase-config";
 import { useSelector } from "react-redux";
-import { v4 as uuid } from "uuid";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { validateMessage } from "@utils";
+import { roomID } from "@constants/constants";
+import { v4 as uuid } from "uuid";
 import { PiImage } from "react-icons/pi";
-import { BsFillSendXFill } from "react-icons/bs";
 
-function InputBar({ userChat, chatId }) {
+function ChatRoomInput({ userChat }) {
   const { currentUser } = useSelector((state) => state.authUser);
   const [newMessage, setNewMessage] = useState("");
   const [img, setImg] = useState(null);
@@ -30,6 +24,7 @@ function InputBar({ userChat, chatId }) {
 
     if (img) {
       const uploadTask = uploadBytesResumable(storageRef, img);
+      console.log("running img");
 
       uploadTask.on(
         "state_changed",
@@ -44,13 +39,14 @@ function InputBar({ userChat, chatId }) {
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
             console.log(`File available at ${downloadURL}`);
-            await updateDoc(doc(db, "chats", chatId), {
+            await updateDoc(doc(db, "chatroom", roomID), {
               messages: arrayUnion({
                 id: uuid(),
                 text: newMessage,
                 img: downloadURL,
                 senderID: currentUser?.uid,
                 date: Timestamp.now(),
+                roomID,
               }),
             });
           });
@@ -62,28 +58,14 @@ function InputBar({ userChat, chatId }) {
       if (!isValid) {
         return;
       }
-
-      try {
-        await updateDoc(doc(db, "chats", chatId), {
-          messages: arrayUnion({
-            id: uuid(),
-            text: newMessage,
-            senderID: currentUser?.uid,
-            date: Timestamp.now(),
-          }),
-        });
-
-        await updateDoc(doc(db, "userChats", currentUser?.uid), {
-          [chatId + ".lastMessage"]: newMessage,
-          [chatId + ".date"]: serverTimestamp(),
-        });
-        await updateDoc(doc(db, "userChats", userChat?.uid), {
-          [chatId + ".lastMessage"]: newMessage,
-          [chatId + ".date"]: serverTimestamp(),
-        });
-      } catch (err) {
-        console.log(err);
-      }
+      await updateDoc(doc(db, "chatroom", roomID), {
+        messages: arrayUnion({
+          id: uuid(),
+          text: newMessage,
+          senderID: currentUser?.uid,
+          date: Timestamp.now(),
+        }),
+      });
     }
 
     setNewMessage("");
@@ -102,15 +84,14 @@ function InputBar({ userChat, chatId }) {
             placeholder="Type something..."
             className="i-reset w-full pr-1 placeholder:text-neutral-400"
           />
-
-          <div title="Send image">
+          <div className="flex-row gap-3">
             <input
               type="file"
               id="file"
               className="hidden"
               onChange={(e) => setImg(e.target.files[0])}
             />
-            <label htmlFor="file" className="icon grid place-items-center">
+            <label htmlFor="file">
               <span>
                 <PiImage size={26} color="#aaa" />
               </span>
@@ -119,15 +100,12 @@ function InputBar({ userChat, chatId }) {
         </div>
         <button
           type="submit"
-          className={`flex-row gap-2 px-3 py-2 bg-green-500 text-white rounded-md`}
+          className={`flex-row px-3 py-2 bg-green-500 bg-opacity-80 text-white rounded-md`}
         >
-          <span className="icon">
-            <BsFillSendXFill size={16} color="white" className="opacity-70" />
-          </span>
           Send
         </button>
       </form>
     </div>
   );
 }
-export default InputBar;
+export default ChatRoomInput;

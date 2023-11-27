@@ -27,6 +27,7 @@
 @layer utilities {
   .text-gradient {
     color: transparent;
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
@@ -53,7 +54,11 @@
     background: linear-gradient(to top right, #01a137fd, rgb(135, 244, 195));
   }
   .bg-gradient-200 {
-    background: linear-gradient(to right, #e44685fd, #06456c 95%);
+    background-image: linear-gradient(
+      to top,
+      #00fe94b7 0%,
+      rgb(231, 255, 221) 100%
+    );
   }
   .mask-gradient {
     background-image: linear-gradient(to top, #aef7c44c 0%, transparent 100%);
@@ -63,6 +68,9 @@
     padding: max(5%, 3em) max(4%, 1em) max(5%, 2rem);
   }
 
+  .truncate {
+    @apply w-full text-ellipsis whitespace-nowrap overflow-hidden;
+  }
   .i-reset {
     @apply border-none outline-none text-regular focus:outline-none bg-transparent text-ellipsis whitespace-nowrap transition-all overflow-hidden;
   }
@@ -77,20 +85,19 @@
 
 @layer components {
   .grid-cols-main {
-    grid-template-columns: minmax(25%, auto) 1fr minmax(25%, auto);
+    grid-template-columns: 25% 1fr 25%;
+  }
+  .grid-cols-sm {
+    grid-template-columns: minmax(25%, auto) 1fr;
   }
   .grid-cols-row {
     grid-template-columns: auto 1fr auto;
   }
-  .grid-cols-200 {
-    grid-template-columns: 1fr minmax(300px, 1fr);
+  .grid-cols-auth {
+    grid-template-columns: 40% 1fr;
   }
-  .grid-cols-300 {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  }
-  .grid-rows-100 {
-    display: grid;
-    grid-template-rows: 200px auto auto;
+  .grid-cols-list {
+    grid-template-columns: auto 50% max-content;
   }
   .gain {
     background: white;

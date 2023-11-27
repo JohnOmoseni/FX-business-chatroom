@@ -73,7 +73,7 @@ function DropdownMenu({ setOpenMenu }) {
       variants={menuVariant}
       initial="hidden"
       animate="animate"
-      className="block bg-[#222222] w-[50%] text-white flex-column absolute top-[100%] right-[-2px] border border-solid border-br-light rounded-b-md"
+      className="block dropdown-menu bg-[#222222] w-[50%] text-white flex-column absolute top-[99%] right-[-2px] rounded-b-md"
     >
       <div className="w-full my-2">
         {isDropdown ? (

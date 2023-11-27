@@ -1,15 +1,18 @@
 import { useRef, useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import gallery from "@icons/gallery.svg";
 
 export const FormGroup = ({
   type = "text",
   label,
   name,
   value,
+  fileRef,
   placeholder = "",
   Icon,
   errors,
   touched,
+  onBlur,
   onChange,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -26,23 +29,37 @@ export const FormGroup = ({
         errors[name] && touched[name] ? "is-error" : ""
       }`}
     >
-      <label
-        htmlFor={name}
-        className="text-sm mb-1 inline-block tracking-wider text-shadow"
-      >
-        {label}
-        {name === "file" && <img src="" alt="" />}
-      </label>
       {name === "file" ? (
-        <input id={name} type={type} name={name} className="hidden" />
+        <label
+          htmlFor={name}
+          className="flex-row gap-2 px-1 py-3 !justify-start cursor-pointer select-none "
+        >
+          <div className="w-[26px]">
+            <img src={gallery} alt="" />
+          </div>
+          <input
+            ref={fileRef}
+            id={name}
+            type={type}
+            name={name}
+            placeholder="Add business logo"
+            className="text-tiny i-reset tracking-wide file:rounded-md file:border-none file:px-3 file:py-1 file:font-semibold file:bg-green-200 hover:file:bg-green-300 file:transition-colors file:placeholder: text-neutral-600 cursor-pointer"
+          />
+        </label>
       ) : (
         <>
+          <label
+            htmlFor={name}
+            className="text-sm mb-1 inline-block tracking-wider text-shadow"
+          >
+            {label}
+          </label>
           <div
             className={`${
               errors[name] && touched[name]
                 ? "border-pink-400 bg-pink-100"
                 : "border-grey-400 bg-green-100"
-            } px-3 relative rounded-md shadow-sm border border-solid  form-group w-full flex-row gap-2 !justify-start`}
+            } px-3 relative rounded-md shadow-sm border border-solid  form-group w-full flex-row gap-2 !justify-start align-middle`}
           >
             {type === "password" ? (
               <>
@@ -53,6 +70,7 @@ export const FormGroup = ({
                   name={name}
                   value={value}
                   placeholder={placeholder}
+                  onBlur={onBlur}
                   onChange={onChange}
                   className="peer w-full py-2.5 i-reset placeholder:text-base"
                 />
@@ -71,7 +89,7 @@ export const FormGroup = ({
             ) : (
               Icon && (
                 <>
-                  <span className="items-start leading-none align-middle icon">
+                  <span className="items-start leading-none icon pt-[1px]">
                     <Icon size={16} fill="#888" />
                   </span>
 
@@ -82,7 +100,7 @@ export const FormGroup = ({
                     value={value}
                     placeholder={placeholder}
                     onChange={onChange}
-                    className="w-full py-2.5 i-reset placeholder:text-base"
+                    className="w-full py-2.5 i-reset leading-none laceholder:text-base"
                   />
                 </>
               )

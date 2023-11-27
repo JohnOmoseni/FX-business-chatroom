@@ -18,7 +18,7 @@ export default {
         tiny: ["0.7rem", { lineHeight: "0.9rem" }],
         base: ["0.8rem", { lineHeight: "1.3rem" }],
         regular: ["clamp(0.9rem, 1vw, 1rem)", { lineHeight: "1.4rem" }],
-        subtitle: ["clamp(1.1rem, 1vw, 20px)", { lineHeight: "1.2rem" }],
+        subtitle: ["clamp(1.2rem, 2vw, 20px)", { lineHeight: "1.2rem" }],
         secondary: ["clamp(1.4rem, 3vw, 30px) ", { lineHeight: "1.2" }],
         primary: ["clamp(1.6rem, 4vw, 35px)", { lineHeight: "1.2" }],
       },

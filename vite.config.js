@@ -8,11 +8,13 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      "@assets": path.resolve(__dirname, "./src/assets"),
+      "@icons": path.resolve(__dirname, "./src/icons"),
+      "@assets": path.resolve(__dirname, "./"),
       "@components": path.resolve(__dirname, "./src/components"),
       "@constants": path.resolve(__dirname, "./constants"),
       "@utils": path.resolve(__dirname, "./utils"),
       "@schema": path.resolve(__dirname, "./schema"),
+      "@redux": path.resolve(__dirname, "./redux"),
     },
   },
 });
