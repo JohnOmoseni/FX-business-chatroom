@@ -94,7 +94,7 @@
     grid-template-columns: auto 1fr auto;
   }
   .grid-cols-auth {
-    grid-template-columns: 40% 1fr;
+    grid-template-columns: 45% 1fr;
   }
   .grid-cols-list {
     grid-template-columns: auto 50% max-content;

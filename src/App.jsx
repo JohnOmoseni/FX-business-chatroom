@@ -15,7 +15,7 @@ function App() {
 
   const ProtectedRoute = ({ children }) => {
     if (!isAuth) {
-      return <Navigate to="/auth/sign-up" />;
+      // return <Navigate to="/auth/sign-up" />;
     } else {
       // return <Outlet />;
     }

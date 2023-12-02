@@ -1,7 +1,18 @@
+import { setActivePane } from "@redux/features/appStateSlice";
+import { useDispatch, useSelector } from "react-redux";
+
 const currentUser = {};
 const isActive = {};
 
 function RightNav() {
+  const { visiblePane, screenSize } = useSelector((state) => state.appState);
+  const dispatch = useDispatch();
+
+  const handleCloseRightPane = () => {
+    if (visiblePane?.showRightPane && screenSize <= 760) {
+      dispatch(setActivePane({ id: showRightPane, val: false }));
+    }
+  };
   return (
     <div className="w-full flex-column !items-center pt-8 md:pt-[12%]">
       <div className="relative w-[80px] h-[80px] rounded-[50%] border border-solid border-neutral-200 shadow-sm">

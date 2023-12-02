@@ -5,32 +5,19 @@ import InputBar from "./InputBar";
 import Messages from "./Messages";
 import BusinessChatRoom from "./BusinessChatRoom";
 import ChatRoomInput from "./ChatRoomInput";
+import { motion } from "framer-motion";
+import { paneAnimate } from "@utils";
 
 function Main() {
   const { user, chatId, isPrivateChat } = useSelector(
     (state) => state.userChat
   );
-  const [openDropdown, setOpenDropdown] = useState(false);
+    const { visiblePane, screenSize } = useSelector((state) => state.appState);
 
-  const handleCloseDropdown = (e) => {
-    const elem = e.target;
-
-    if (!elem.closest(".dropdown-btn")) {
-      setOpenDropdown(false);
-      return;
-    }
-  };
 
   return (
-    <div
-      className="flex-column h-screen !justify-start"
-      onClick={handleCloseDropdown}
-    >
-      <Heading
-        openDropdown={openDropdown}
-        setOpenDropdown={setOpenDropdown}
-        userChat={user}
-      />
+    <motion.div variants={screenSize <= 760 && paneAnimate} initial="hidden" animate="animate" className="hidden sm:flex-column h-screen !justify-start">
+      <Heading userChat={user} />
       {isPrivateChat ? (
         <>
           <Messages userChat={user} chatId={chatId} />
@@ -42,7 +29,7 @@ function Main() {
           <ChatRoomInput userChat={user} />
         </>
       )}
-    </div>
+    </motion.div>
   );
 }
 export default Main;

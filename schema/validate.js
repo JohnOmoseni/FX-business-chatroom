@@ -19,9 +19,9 @@ export const registerSchema = yup.object().shape({
     .string()
     .oneOf([yup.ref("password"), null], "Passwords must match")
     .required("Field is required"),
-  name: yup.string().required("Field is required"),
+  firstName: yup.string().required("Field is required"),
   businessName: yup.string().required("Field is required"),
-  address: yup.string(),
+  phoneNo: yup.number("Must be of number type").required("Field is required"),
 });
 
 export const signInSchema = yup.object().shape({

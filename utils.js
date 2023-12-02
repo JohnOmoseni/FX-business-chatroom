@@ -89,6 +89,15 @@ export const container = {
   },
 };
 
+export const paneAnimate = {
+  hidden: {opacity: 0, x: window.innerWidth},
+  animate: {opacity: 1, x: 0,  transition: {
+      duration: 1,
+            type: "spring",
+      staggerChildren: 0.6,
+    },},
+}
+
 export const innerAnimate = {
   hidden: { opacity: 0, y: 100 },
   animate: {

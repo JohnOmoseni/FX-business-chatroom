@@ -1,6 +1,5 @@
 import { MdOutlineArrowBack } from "react-icons/md";
-import { BsThreeDotsVertical } from "react-icons/bs";
-import DropdownMenu from "./Dropdown";
+import Dropdown from "@components/Dropdown";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsPrivateChat } from "@redux/features/chatSlice";
@@ -9,14 +8,14 @@ const IconBg = ({ children, onClick, className }) => {
   return (
     <div
       onClick={onClick}
-      className={`${className} icon w-[25px] h-[25px] rounded-sm bg-green-100 opacity-90  grid place-items-center`}
+      className={`${className} icon inline-flex w-full rounded-md bg-white p-2 text-sm opacity-80 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50`}
     >
       {children}
     </div>
   );
 };
 
-function Heading({ userChat, openDropdown, setOpenDropdown }) {
+function Heading({ userChat }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const avatar = userChat?.avatar;
@@ -47,19 +46,9 @@ function Heading({ userChat, openDropdown, setOpenDropdown }) {
           ? userChat?.displayName
           : "FX Chat Room"}
       </h3>
-      <div className="flex-row justify-between gap-3 self-start mt-[4px]">
-        <IconBg
-          className="dropdown-btn"
-          onClick={() => setOpenDropdown(!openDropdown)}
-        >
-          <BsThreeDotsVertical
-            size={18}
-            className="cursor-pointer"
-            color="black"
-          />
-        </IconBg>
+      <div className="flex-row justify-between gap-3">
+        <Dropdown />
       </div>
-      {openDropdown && <DropdownMenu />}
     </div>
   );
 }

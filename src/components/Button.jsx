@@ -24,7 +24,7 @@ const Button = ({
       disabled={disabled}
       className={`${
         isIcon ? "flex-row gap-2.5" : ""
-      } ${className} px-5 py-2 rounded-sm shadow-sm disabled:opacity-70`}
+      } ${className} px-5 py-2 rounded-sm shadow-md disabled:opacity-70`}
       variants={animate ? buttonAnimate : null}
       initial="hidden"
       whileInView="animate"

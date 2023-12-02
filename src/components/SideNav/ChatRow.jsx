@@ -8,7 +8,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { db } from "../../config/firebase-config";
 import { setChangeUser, setIsPrivateChat } from "@redux/features/chatSlice";
-import { BiTime } from "react-icons/bi";
+import { setActivePane } from "@redux/features/appStateSlice";
 
 function ChatRow({ user, lastMessage }) {
   const { currentUser } = useSelector((state) => state.authUser);
@@ -51,6 +51,7 @@ function ChatRow({ user, lastMessage }) {
     } else if (res.exists()) {
       console.log(res);
     }
+    dispatch(setActivePane({ id: "showChat", val: true }));
     dispatch(setChangeUser({ currentUser, user }));
     dispatch(setIsPrivateChat(true));
   };

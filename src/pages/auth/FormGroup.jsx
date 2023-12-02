@@ -4,6 +4,7 @@ import gallery from "@icons/gallery.svg";
 
 export const FormGroup = ({
   type = "text",
+  required,
   label,
   name,
   value,
@@ -50,7 +51,9 @@ export const FormGroup = ({
         <>
           <label
             htmlFor={name}
-            className="text-sm mb-1 inline-block tracking-wider text-shadow"
+            className={`text-sm relative mb-1 inline-block tracking-wider text-shadow after:absolute ${
+              required && "after:content-['*']"
+            } after:-top-[2px] after:-right-2 after:text-red-800 after:text-sm`}
           >
             {label}
           </label>
@@ -72,7 +75,7 @@ export const FormGroup = ({
                   placeholder={placeholder}
                   onBlur={onBlur}
                   onChange={onChange}
-                  className="peer w-full py-2.5 i-reset placeholder:text-base"
+                  className="peer w-full py-2.5 i-reset placeholder:text-sm md:placeholder:text-regular"
                 />
 
                 <span
@@ -100,7 +103,7 @@ export const FormGroup = ({
                     value={value}
                     placeholder={placeholder}
                     onChange={onChange}
-                    className="w-full py-2.5 i-reset leading-none laceholder:text-base"
+                    className="w-full py-2.5 i-reset leading-none placeholder:text-sm md:placeholder:text-regular"
                   />
                 </>
               )
