@@ -6,5 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { setIsLoggedIn } from "@redux/features/authUserSlice";
 
 export const ProtectedRoute = ({ children, isLoggedIn }) => {
-  return isLoggedIn ? <Outlet /> : <Navigate to="/auth/sign-up" />;
+  return <Outlet />;
+  // return isLoggedIn ? <Outlet /> : <Navigate to="/auth/sign-up" />;
 };
