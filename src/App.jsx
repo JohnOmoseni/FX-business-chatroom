@@ -14,12 +14,32 @@ import { useDispatch, useSelector } from "react-redux";
 import { setIsLoggedIn } from "../redux/features/authUserSlice";
 
 function App() {
+  const { isLoggedIn } = useSelector((state) => state.authUser);
+  const dispatch = useDispatch();
+  console.log(isLoggedIn, auth?.currentUser);
+
+  useEffect(() => {
+    const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // user is signed in
+        console.log("User is logged in", user);
+        dispatch(setIsLoggedIn(true));
+      } else {
+        // user is signed out
+        console.log("User is logged out");
+        dispatch(setIsLoggedIn(false));
+      }
+    });
+    return () => {
+      unsubscribeAuth();
+    };
+  }, []);
   return (
     <>
       <div className="wrapper relative">
         <Suspense fallback="Loading...">
           <Routes>
-            <Route element={<ProtectedRoute />}>
+            <Route element={<ProtectedRoute isLoggedIn={isLoggedIn} />}>
               <Route path="/" element={<Navigate to="/home" />} />
               <Route path="/home" element={<Home />} />
               <Route path="users" element="Users" />

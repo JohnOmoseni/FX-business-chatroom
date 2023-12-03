@@ -105,7 +105,7 @@ function RegisterForm() {
               })
             );
             cookies.set("auth-token", res.user.refreshToken);
-            navigate("/");
+            // navigate("/");
           });
         }
       );
@@ -121,6 +121,8 @@ function RegisterForm() {
         });
       }
     } finally {
+      navigate("/home");
+
       // actions.resetForm();
     }
   };
