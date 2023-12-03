@@ -4,7 +4,7 @@ import Tabs from "./Tabs";
 import TabsPanel from "./TabsPanel";
 import Conversations from "./Conversations";
 import Business from "./Business";
-import logo from "@assets/images/app-logo.png";
+import logo from "@assets/images/logo.png";
 
 import Search from "./Search";
 import ErrorTimeout from "./ErrorTimeout";

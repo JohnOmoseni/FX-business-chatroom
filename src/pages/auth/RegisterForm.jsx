@@ -14,7 +14,7 @@ import { setDoc, doc } from "firebase/firestore";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { cookies } from "@constants/constants";
-import logo from "@assets/images/app-logo.png";
+import logo from "@assets/images/logo.png";
 import sectionbg from "@assets/images/section-bg (4).png";
 import { toast } from "react-toastify";
 

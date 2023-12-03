@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineMail } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import { toast } from "react-toastify";
-import logo from "@assets/images/app-logo.png";
+import logo from "@assets/images/logo.png";
 import { signInSchema } from "@schema/validate";
 import { useFormik } from "formik";
 import { FormGroup } from "./FormGroup";
