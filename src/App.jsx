@@ -1,4 +1,4 @@
-import React, { useState, Suspense } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { Routes, Route, Navigate, Outlet } from "react-router-dom";
 import RegisterForm from "./pages/auth/RegisterForm";
 import SignIn from "./pages/auth/SignIn";
@@ -7,41 +7,27 @@ const Home = React.lazy(() => import("./pages/Home"));
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { cookies } from "@constants/constants";
+import { auth } from "./config/firebase-config";
+import { ProtectedRoute } from "./ProtectedRoute";
+import { onAuthStateChanged } from "firebase/auth";
+import { useDispatch, useSelector } from "react-redux";
+import { setIsLoggedIn } from "../redux/features/authUserSlice";
 
 function App() {
-  const isAuth = cookies.get("auth-token");
-  console.log(isAuth);
-
-  const ProtectedRoute = ({ children }) => {
-    if (!isAuth) {
-      return <Navigate to="/auth/sign-up" />;
-    } else {
-      // return <Outlet />;
-    }
-    return children;
-  };
-
   return (
     <>
       <div className="wrapper relative">
         <Suspense fallback="Loading...">
           <Routes>
-            <Route path="/auth/sign-up" element={<RegisterForm />} />
-            <Route path="/auth/sign-in" element={<SignIn />} />
-            <Route path="/">
-              <Route index element={<Navigate to="/home" />} />
-              <Route
-                path="/home"
-                element={
-                  <ProtectedRoute>
-                    <Home />
-                  </ProtectedRoute>
-                }
-              />
+            <Route element={<ProtectedRoute />}>
+              <Route path="/" element={<Navigate to="/home" />} />
+              <Route path="/home" element={<Home />} />
               <Route path="users" element="Users" />
               <Route path="users/:id" element="UsersDetails" />
             </Route>
+
+            <Route path="/auth/sign-up" element={<RegisterForm />} />
+            <Route path="/auth/sign-in" element={<SignIn />} />
           </Routes>
         </Suspense>
       </div>

@@ -58,7 +58,7 @@ function ChatRow({ user, lastMessage }) {
 
   return (
     <li
-      className="group w-full py-2 px-2 rounded-md grid grid-cols-list gap-2 items-center bg-white hover:bg-lime-100 transition-colors shadow-sm border border-solif border-br-light cursor-pointer"
+      className="group w-full py-2 px-2 rounded-md grid grid-cols-list gap-4 items-center bg-white hover:bg-lime-100 transition-colors shadow-sm border border-solif border-br-light cursor-pointer"
       onClick={handleSelect}
     >
       <div className="relative w-[45px] h-[45px] rounded-[50%] border border-solid border-neutral-200 ">

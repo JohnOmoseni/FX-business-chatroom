@@ -36,8 +36,8 @@ function Heading({ userChat }) {
           <MdOutlineArrowBack className="icon" color="black" size={18} />
         </IconBg>
 
-        <div className="w-[30px] h-[30px] rounded-[50%]  border border-solid border-br-light self-start">
-          <img src={avatar ?? ""} alt="" />
+        <div className="w-full border border-solid border-br-light  overflow-hidden rounded-[50%]">
+          <img src={avatar ?? ""} alt="" className="w-[30px] h-[30px]" />
         </div>
       </div>
 

@@ -23,7 +23,7 @@ function LeftNav() {
         <div className="w-[100px]">
           <img src={logo} alt="Osho Free" />
         </div>
-        <div className="flex-row w-[45%] !justify-between gap-3">
+        <div className="flex-row w-[45%] justify-end gap-4 max-sm:pr-2">
           <h4 className="w-[50%] text-shadow text-regular">
             {currentUser?.displayName}
             <span className="mt-[-1px] text-tiny truncate">
@@ -33,7 +33,7 @@ function LeftNav() {
           <div className="icon relative w-[30px] h-[30px] rounded-[50%] border border-solid border-neutral-200">
             <img
               src={currentUser?.avatar}
-              alt={currentUser?.displayName.split(" ")[0]}
+              alt=""
               className="group-hover:scale-105 transition"
             />
             <span

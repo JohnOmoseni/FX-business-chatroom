@@ -34,12 +34,21 @@ const Top = () => (
 );
 
 function RegisterForm() {
+  const [preview, setPreview] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const fileRef = useRef(null);
 
   const onSubmit = async (values, actions) => {
     const file = fileRef.current.files[0];
+
+    const fileReader = new FileReader();
+    fileReader.onload = () => {
+      setPreview(fileReader?.result);
+    };
+
+    file && fileReader?.readAsDataURL(file);
+    console.log(file);
 
     try {
       const res = await createUserWithEmailAndPassword(
@@ -75,7 +84,7 @@ function RegisterForm() {
               displayName: values.firstName,
               email: values.email,
               avatar: downloadURL,
-              fullName: `${values?.firstName + values?.lastName}`,
+              fullName: `${values?.firstName} ${values?.lastName}}`,
               businessName: values?.businessName,
               phoneNo: values?.phoneNo,
               country: values?.country,
@@ -89,7 +98,7 @@ function RegisterForm() {
                 displayName: values.firstName,
                 email: values.email,
                 avatar: downloadURL,
-                fullName: `${values?.firstName + values?.lastName}`,
+                fullName: `${values?.firstName} ${values?.lastName}}`,
                 businessName: values?.businessName,
                 phoneNo: values?.phoneNo,
                 country: values?.country,
@@ -101,10 +110,16 @@ function RegisterForm() {
         }
       );
     } catch (err) {
-      console.log(err, "Something went wrong");
-      toast.error("Something went wrong", {
-        className: "font-poppins tracking-wide",
-      });
+      console.log(err.message, "Something went wrong");
+      if (err.message.includes("(auth/email-already-in-use)")) {
+        toast.error("Email already in use", {
+          className: "font-poppins tracking-wide",
+        });
+      } else {
+        toast.error("Something went wrong", {
+          className: "font-poppins tracking-wide",
+        });
+      }
     } finally {
       // actions.resetForm();
     }
@@ -258,12 +273,18 @@ function RegisterForm() {
             touched={touched}
           />
 
+          {preview && (
+            <div className="rounded-md w-[90%] mx-auto h-[140px] -mt-2">
+              <img src={preview} alt="" />
+            </div>
+          )}
+
           <Button
             type="submit"
             title="Submit"
             textGradient
             disabled={isSubmitting}
-            className="bg-green-400 font-kinn w-[80%] mx-auto mt-10 transition-all  hover:bg-grad-100 hover:opacity-80 hover:scale-[1.02] translate-y-0 active:translate-y-1 active:origin-bottom active:scale-y-90"
+            className="bg-green-400 font-kinn w-[80%] mx-auto mt-6 md:mt-8 transition-all  hover:bg-grad-100 hover:opacity-80 hover:scale-[1.02] translate-y-0 active:translate-y-1 active:origin-bottom active:scale-y-90"
           />
         </form>
         <p className="px-4 mx-auto max-w-[60ch] text-[0.8rem] text-neutral- text-center">

@@ -85,7 +85,7 @@
 
 @layer components {
   .grid-cols-main {
-    grid-template-columns: 25% 1fr 25%;
+    grid-template-columns: minmax(min-content, 25%) minmax(min-content, 1fr) 25%;
   }
   .grid-cols-sm {
     grid-template-columns: minmax(25%, auto) 1fr;
@@ -97,7 +97,7 @@
     grid-template-columns: 45% 1fr;
   }
   .grid-cols-list {
-    grid-template-columns: auto 50% max-content;
+    grid-template-columns: max-content 1fr max-content;
   }
   .gain {
     background: white;

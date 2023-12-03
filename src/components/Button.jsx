@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { SpiralSpinner } from "react-spinners-kit";
 
 const buttonAnimate = {
   hidden: { opacity: 0, x: -100 },
@@ -23,16 +24,16 @@ const Button = ({
       type={type ?? "text"}
       disabled={disabled}
       className={`${
-        isIcon ? "flex-row gap-2.5" : ""
-      } ${className} px-5 py-2 rounded-sm shadow-md disabled:opacity-70`}
+        disabled ? "flex-row gap-2.5" : ""
+      } ${className} px-5 py-2 rounded-sm shadow-md disabled:opacity-60`}
       variants={animate ? buttonAnimate : null}
       initial="hidden"
       whileInView="animate"
       viewport={{ once: true }}
     >
-      {isIcon && (
+      {disabled && (
         <span className="">
-          <Icon size="20" />
+          <SpiralSpinner size={30} />
         </span>
       )}
       <span

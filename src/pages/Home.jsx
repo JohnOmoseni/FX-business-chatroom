@@ -19,15 +19,12 @@ function Home() {
 
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
-      console.log(`User Cred: ${user}`);
       if (user && isAuth) {
         // user is signed in
-        console.log("User is logged in", user);
         const docSnap = await getDoc(doc(db, "users", user?.uid));
         dispatch(setCurrentuser(docSnap.data()));
         console.log(docSnap.data());
       } else {
-        // user is signed out
         console.log("User is logged out");
       }
     });
@@ -57,7 +54,11 @@ function Home() {
         <LeftNav />
       </SideLayout>
 
-      {screenSize < 768 && visiblePane?.showChat ? <Main /> : screenSize > 768 && <Main />   }
+      {screenSize < 768 && visiblePane?.showChat ? (
+        <Main />
+      ) : (
+        screenSize > 630 && <Main />
+      )}
 
       {/* <Main /> */}
 
