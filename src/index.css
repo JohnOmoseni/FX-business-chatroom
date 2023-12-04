@@ -91,13 +91,13 @@
     grid-template-columns: minmax(25%, auto) 1fr;
   }
   .grid-cols-row {
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: max-content 1fr auto;
   }
   .grid-cols-auth {
     grid-template-columns: 45% 1fr;
   }
   .grid-cols-list {
-    grid-template-columns: max-content 1fr max-content;
+    grid-template-columns: max-content minmax(55%, 1fr) max-content;
   }
   .gain {
     background: white;

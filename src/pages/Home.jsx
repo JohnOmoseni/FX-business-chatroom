@@ -1,35 +1,57 @@
 import { useEffect } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import LeftNav from "@components/SideNav/LeftNav";
 import SideLayout from "@components/SideNav/SideLayout";
 import Main from "@components/Main/Main";
 import RightNav from "@components/SideNav/RightNav/RightNav";
+import { paneAnimate } from "@utils";
 import { auth, db } from "../config/firebase-config";
-import { onAuthStateChanged } from "firebase/auth";
-import { cookies } from "@constants/constants";
 import { doc, getDoc } from "firebase/firestore";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentuser } from "@redux/features/authUserSlice";
 import { setScreenSize } from "@redux/features/appStateSlice";
+import { onAuthStateChanged } from "firebase/auth";
+
+const VisiblePaneLayout = ({ children, screenSize, className }) => {
+  return (
+    <AnimatePresence>
+      <motion.div
+        variants={screenSize < 640 && paneAnimate}
+        initial="hidden"
+        animate="animate"
+        exit="exit"
+        className={className}
+        style={{ zIndex: "1000" }}
+      >
+        {children}
+      </motion.div>
+    </AnimatePresence>
+  );
+};
 
 function Home() {
-  const { visiblePane, screenSize } = useSelector((state) => state.appState);
-  const showRight = visiblePane?.showRightPane;
+  const { isLoggedIn } = useSelector((state) => {
+    console.log(state);
+    return state.authUser;
+  });
+  const { showPane, showRightPane, screenSize } = useSelector(
+    (state) => state.appState
+  );
   const dispatch = useDispatch();
-  const isAuth = cookies.get("auth-token");
 
   useEffect(() => {
-    const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
-      if (user && isAuth) {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
         // user is signed in
         const docSnap = await getDoc(doc(db, "users", user?.uid));
         dispatch(setCurrentuser(docSnap.data()));
-        console.log(docSnap.data());
+        console.log(docSnap.data(), user?.uid);
       } else {
         console.log("User is logged out");
       }
     });
     return () => {
-      unsubscribeAuth();
+      unsubscribe();
     };
   }, []);
 
@@ -48,25 +70,30 @@ function Home() {
 
   return (
     <div
-      className={`h-screen w-full sm:grid sm:grid-cols-sm md:grid-cols-main overflow-hidden`}
+      className={`relative h-screen w-full sm:grid sm:grid-cols-sm md:grid-cols-main overflow-hidden`}
     >
       <SideLayout>
         <LeftNav />
       </SideLayout>
 
-      {screenSize < 768 && visiblePane?.showChat ? (
-        <Main />
+      {screenSize < 640 ? (
+        <VisiblePaneLayout
+          screenSize={screenSize}
+          className={`${
+            showPane
+              ? "w-full bg-[#fff] h-screen overflow-hidden fixed top-0 right-0"
+              : "w-0 overflow-hidden hidden"
+          }`}
+        >
+          <Main />
+        </VisiblePaneLayout>
       ) : (
-        screenSize > 630 && <Main />
+        screenSize > 640 && <Main />
       )}
 
-      {/* <Main /> */}
-
-      {showRight && (
-        <SideLayout right>
-          <RightNav />
-        </SideLayout>
-      )}
+      <SideLayout right>
+        <RightNav />
+      </SideLayout>
     </div>
   );
 }

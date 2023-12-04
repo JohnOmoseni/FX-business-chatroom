@@ -81,8 +81,6 @@ export const container = {
   animate: {
     opacity: 1,
     transition: {
-      ease: "easeIn",
-      delayChildren: 0.3,
       staggerChildren: 0.6,
       when: "beforeChildren",
     },
@@ -90,13 +88,25 @@ export const container = {
 };
 
 export const paneAnimate = {
-  hidden: {opacity: 0, x: window.innerWidth},
-  animate: {opacity: 1, x: 0,  transition: {
+  hidden: { opacity: 0, x: window.innerWidth },
+  animate: {
+    opacity: 1,
+    x: 0,
+    transition: {
       duration: 1,
-            type: "spring",
+      ease: "easeIn",
       staggerChildren: 0.6,
-    },},
-}
+    },
+    exit: {
+      opacity: 0,
+      x: window.innerWidth,
+      transition: {
+        duration: 3,
+        ease: "easeOut",
+      },
+    },
+  },
+};
 
 export const innerAnimate = {
   hidden: { opacity: 0, y: 100 },

@@ -6,11 +6,9 @@ import Swal from "sweetalert2";
 export function Chat({ msg, startMsg, messages }) {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.authUser);
-  const { user, isPrivateChat } = useSelector((state) => state.userChat);
+  const { user, isPrivateChat } = useSelector((state) => state.usersState);
   const owner = msg?.senderID === currentUser?.uid;
   const newMsgRef = useRef();
-
-  console.log(msg, msg?.date?.seconds);
 
   useEffect(() => {
     newMsgRef?.current &&

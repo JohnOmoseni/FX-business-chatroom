@@ -1,14 +1,20 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ChatRow from "./ChatRow";
-import { setUsers } from "@redux/features/usersSlice";
+import { setUsers } from "@redux/features/chatSlice";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../config/firebase-config";
 
 function Business() {
   const { currentUser } = useSelector((state) => state.authUser);
-  const { users } = useSelector((state) => state.users);
+  const { users } = useSelector((state) => state.usersState);
   const dispatch = useDispatch();
+
+  const sortFunction = (a, b) => {
+    const objA = a.displayName;
+    const objB = b.displayName;
+    return objA.localeCompare(objB);
+  };
 
   useEffect(() => {
     const getUsers = async () => {
@@ -19,9 +25,9 @@ function Business() {
         querySnapshot.forEach((doc) => {
           usersArray.push(doc.data());
         });
-        const otherUsers = usersArray.filter(
-          (user) => user?.uid !== currentUser?.uid
-        );
+        const otherUsers = usersArray
+          ?.filter((user) => user?.uid !== currentUser?.uid)
+          ?.sort(sortFunction);
         dispatch(setUsers(otherUsers));
       } catch (err) {
         console.log(err);

@@ -82,7 +82,7 @@ function ChatRoomInput({ userChat }) {
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             placeholder="Type something..."
-            className="i-reset w-full pr-1 placeholder:text-neutral-400"
+            className="i-reset w-full pr-1 placeholder:text-neutral-400 truncate"
           />
           <div className="flex-row gap-3">
             <input

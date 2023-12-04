@@ -3,8 +3,15 @@ import { query, where, getDocs, collection } from "firebase/firestore";
 import { db } from "../../config/firebase-config";
 import { useSelector } from "react-redux";
 
-function Search({ setUser, searchUser, setSearchUser, setErrorSearch }) {
-  const { users } = useSelector((state) => state.users);
+function Search({
+  activeTab,
+  setUser,
+  searchUser,
+  setSearchUser,
+  setErrorSearch,
+}) {
+  const { users, userChats } = useSelector((state) => state.usersState);
+
   const handleSearch = async () => {
     const q = query(
       collection(db, "users"),
@@ -24,22 +31,30 @@ function Search({ setUser, searchUser, setSearchUser, setErrorSearch }) {
       });
       array.length > 0 && setUser(array);
     } catch (err) {
-      console.log(err);
+      console.log(err.message);
+      setErrorSearch(true);
     }
   };
 
   const handleInputChange = (e) => {
     const val = e.target.value;
     setSearchUser(val);
+    let foundUsers = [];
 
-    const foundUsers = users?.filter((user) =>
-      user?.displayName.toLowerCase().includes(val.toLowerCase())
-    );
+    if (activeTab === "chats-tab") {
+      foundUsers = userChats?.filter((user) =>
+        user?.displayName.toLowerCase().includes(val.toLowerCase())
+      );
+    } else if (activeTab === "business-tab") {
+      foundUsers = users?.filter((user) =>
+        user?.displayName.toLowerCase().includes(val.toLowerCase())
+      );
+    }
     console.log(foundUsers);
     if (foundUsers?.length > 0) {
       setUser(foundUsers);
     } else {
-      setUser(users);
+      activeTab === "business-tab" ? setUser(users) : setUser(userChats);
     }
   };
 

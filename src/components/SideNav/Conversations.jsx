@@ -1,20 +1,32 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ChatRow from "./ChatRow";
 import { onSnapshot, doc } from "firebase/firestore";
 import { db } from "../../config/firebase-config";
+import { setUserChats } from "@redux/features/chatSlice";
 
 function Conversations() {
   const { currentUser } = useSelector((state) => state.authUser);
   const [usersChat, setUsersChat] = useState([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const getChats = () => {
       const unsubscribe = onSnapshot(
         doc(db, "userChats", currentUser.uid),
         (doc) => {
-          console.log(doc.data());
           setUsersChat(doc.data());
+          const entries = Object.entries(doc.data());
+          const array = entries?.map((arr) => {
+            return {
+              ...arr[1].userInfo,
+              chatId: arr[0],
+              date: Object.entries(arr[1]?.date),
+              lastMessage: arr[1].lastMessage,
+            };
+          });
+          dispatch(setUserChats(array));
+          console.log(array);
         },
         (err) => console.log(err)
       );
@@ -42,8 +54,8 @@ function Conversations() {
             })}
         </ul>
       ) : (
-        <div className="">
-          <p>No Conversations</p>
+        <div className="text-neutral-500">
+          <p className="text-shadow">No Conversations</p>
         </div>
       )}
     </div>

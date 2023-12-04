@@ -8,12 +8,21 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { db } from "../../config/firebase-config";
 import { setChangeUser, setIsPrivateChat } from "@redux/features/chatSlice";
-import { setActivePane } from "@redux/features/appStateSlice";
+import {
+  setActivePane,
+  setVisibleRightPane,
+} from "@redux/features/appStateSlice";
+import { setBusinessProfile } from "@redux/features/chatSlice";
 
-function ChatRow({ user, lastMessage }) {
+function ChatRow({ user, lastMessage, isBusinessRow }) {
   const { currentUser } = useSelector((state) => state.authUser);
   const dispatch = useDispatch();
   const isActive = user?.uid === currentUser?.uid;
+
+  const handleBusinessProfile = () => {
+    dispatch(setVisibleRightPane({ id: "userProfile", val: true }));
+    dispatch(setBusinessProfile(user));
+  };
 
   const handleSelect = async () => {
     const combinedId =
@@ -54,6 +63,7 @@ function ChatRow({ user, lastMessage }) {
     dispatch(setActivePane({ id: "showChat", val: true }));
     dispatch(setChangeUser({ currentUser, user }));
     dispatch(setIsPrivateChat(true));
+    handleClick();
   };
 
   return (
@@ -69,19 +79,19 @@ function ChatRow({ user, lastMessage }) {
         />
         <span
           className={`${
-            isActive ? "bg-green-400" : "bg-[#888] "
+            isActive ? "bg-green-400" : "bg-[#888]"
           } absolute z-[100] -bottom-[2px] right-0 w-[14px] h-[14px] rounded-[50%] shadow-sm border border-solid border-neutral-300`}
         ></span>
       </div>
 
-      <div className="flex-column gap-1">
+      <div className="flex-column gap-1 w-full">
         <h4 className="font-semibold tracking-tight leading-5 truncate">
           {user?.displayName}
         </h4>
         {lastMessage && <p className="text-tiny truncate">{lastMessage}</p>}
       </div>
 
-      <div className="flex-column gap-2 !items-center">
+      <div className="flex-column gap-2 pr-2 !items-center">
         <span className="text-neutral-500 text-tiny">12:30pm</span>
         <div className="relative text-[0.65em] w-[20px] h-[20px] grid place-items-center bg-[#222] rounded-[50%] text-white text-center">
           3

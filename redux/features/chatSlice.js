@@ -4,6 +4,9 @@ const initialChatState = {
   user: null,
   chatId: "",
   isPrivateChat: false,
+  businessProfile: null,
+  users: [],
+  userChats: [],
 };
 
 const chatSlice = createSlice({
@@ -19,11 +22,26 @@ const chatSlice = createSlice({
       state.user = user;
       state.chatId = combinedId;
     },
+    setBusinessProfile: (state, { payload }) => {
+      state.businessProfile = payload;
+    },
     setIsPrivateChat: (state, { payload }) => {
       state.isPrivateChat = payload;
+    },
+    setUsers: (state, { payload }) => {
+      state.users = payload;
+    },
+    setUserChats: (state, { payload }) => {
+      state.userChats = payload;
     },
   },
 });
 
 export default chatSlice.reducer;
-export const { setChangeUser, setIsPrivateChat } = chatSlice.actions;
+export const {
+  setChangeUser,
+  setBusinessProfile,
+  setIsPrivateChat,
+  setUsers,
+  setUserChats,
+} = chatSlice.actions;
