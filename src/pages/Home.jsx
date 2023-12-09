@@ -12,11 +12,17 @@ import { setCurrentuser } from "@redux/features/authUserSlice";
 import { setScreenSize } from "@redux/features/appStateSlice";
 import { onAuthStateChanged } from "firebase/auth";
 
-const VisiblePaneLayout = ({ children, screenSize, className }) => {
+const VisiblePaneLayout = ({
+  children,
+  screenSize,
+  className,
+  isRightLayout,
+}) => {
+  const val = isRightLayout ? 768 : 640;
   return (
     <AnimatePresence>
       <motion.div
-        variants={screenSize < 640 && paneAnimate}
+        variants={screenSize < val && paneAnimate}
         initial="hidden"
         animate="animate"
         exit="exit"
@@ -91,9 +97,31 @@ function Home() {
         screenSize > 640 && <Main />
       )}
 
-      <SideLayout right>
-        <RightNav />
-      </SideLayout>
+      {screenSize < 768 ? (
+        <VisiblePaneLayout
+          screenSize={screenSize}
+          isRightLayout
+          className={`${
+            showRightPane
+              ? "w-full h-screen overflow-hidden fixed top-0 right-0 flex-column gap-2 bg-white"
+              : "w-0 overflow-hidden hidden"
+          }`}
+        >
+          <SideLayout right>
+            <RightNav />
+          </SideLayout>
+        </VisiblePaneLayout>
+      ) : (
+        screenSize >= 768 && (
+          <div
+            className={`w-full h-full relative flex-column gap-2 overflow-hidden`}
+          >
+            <SideLayout right>
+              <RightNav />
+            </SideLayout>
+          </div>
+        )
+      )}
     </div>
   );
 }

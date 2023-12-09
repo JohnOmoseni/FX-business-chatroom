@@ -50,7 +50,6 @@ function Search({
         user?.displayName.toLowerCase().includes(val.toLowerCase())
       );
     }
-    console.log(foundUsers);
     if (foundUsers?.length > 0) {
       setUser(foundUsers);
     } else {
@@ -63,7 +62,7 @@ function Search({
   };
 
   return (
-    <div className="px-3 py-3.5 mx-auto w-[95%] relative rounded-md shadow-sm border border-solid border-br-light">
+    <div className="px-3 py-3.5 mb-3 mx-auto w-[95%] relative rounded-md shadow-sm border border-solid border-br-light">
       <span className="icon absolute center right-3 align-middle">
         <BiSearchAlt size={16} fill="#888" />
       </span>

@@ -34,12 +34,12 @@ function Messages({ chatId }) {
 
   return (
     <div
-      className={`group relative w-full mt-[1px] py-6 px-[4%] flex-1 flex flex-col gap-4 overflow-y-auto `}
+      className={`group relative w-full py-6 pb-4 px-[4%] flex-1 flex flex-col gap-4 overflow-y-auto `}
     >
       <div className="flex-row gap-4 mb-1">
-        <hr className="w-[40%] border border-solid border-br-light opacity-40" />
+        <hr className="w-[45%] border border-solid border-br-light opacity-40" />
         <span className="text-tiny text-neutral-400">Today</span>
-        <hr className="w-[40%] border border-solid border-br-light  opacity-50" />
+        <hr className="w-[45%] border border-solid border-br-light  opacity-50" />
       </div>
 
       {rows.length > 0 && rows?.map((row) => row)}

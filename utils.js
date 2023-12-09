@@ -97,14 +97,6 @@ export const paneAnimate = {
       ease: "easeIn",
       staggerChildren: 0.6,
     },
-    exit: {
-      opacity: 0,
-      x: window.innerWidth,
-      transition: {
-        duration: 3,
-        ease: "easeOut",
-      },
-    },
   },
 };
 

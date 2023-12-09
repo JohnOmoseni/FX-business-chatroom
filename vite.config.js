@@ -13,6 +13,7 @@ export default defineConfig({
       "@components": path.resolve(__dirname, "./src/components"),
       "@constants": path.resolve(__dirname, "./constants"),
       "@utils": path.resolve(__dirname, "./utils"),
+      "@pages": path.resolve(__dirname, "./src/pages"),
       "@schema": path.resolve(__dirname, "./schema"),
       "@redux": path.resolve(__dirname, "./redux"),
     },

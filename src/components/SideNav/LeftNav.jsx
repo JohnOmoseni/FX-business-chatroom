@@ -13,6 +13,8 @@ import {
   setActivePane,
   setVisibleRightPane,
 } from "@redux/features/appStateSlice";
+import { setBusinessProfile } from "@redux/features/chatSlice";
+import { Link } from "react-router-dom";
 
 function LeftNav() {
   const { currentUser, isActive } = useSelector((state) => state.authUser);
@@ -22,25 +24,30 @@ function LeftNav() {
   const [user, setUser] = useState("");
   const dispatch = useDispatch();
 
+  const handleUserProfileClick = () => {
+    dispatch(
+      setVisibleRightPane({ id: "userProfile", val: true, isCurrentUser: true })
+    );
+    dispatch(setBusinessProfile(currentUser));
+  };
+
   return (
     <>
       <div className="w-full flex-row gap-4 !justify-between">
-        <div className="w-[100px]">
+        <Link to="/" className="w-[100px]">
           <img src={logo} alt="Osho Free" />
-        </div>
+        </Link>
         <div
-          className="flex-row w-[50%] !justify-end gap-3 cursor-pointer"
-          onClick={() =>
-            dispatch(setVisibleRightPane({ id: "userProfile", val: true }))
-          }
+          className="flex-row max-w-[50%] !justify-end gap-3 cursor-pointer"
+          onClick={handleUserProfileClick}
         >
           <h4 className="!w-[50%] text-shadow text-regular text-end sm:text-center overflow-hidden truncate">
-            {currentUser?.displayName ?? "Johnny"}
-            <span className="mt-[-1px] text-tiny truncate">
+            {currentUser?.displayName}
+            <span className="mt-[-1px] !block text-tiny truncate">
               {currentUser?.uid}
             </span>
           </h4>
-          <div className="icon relative w-[30px] h-[30px] rounded-[50%] border border-solid border-neutral-200">
+          <div className="relative max-w-[30px] h-[30px] rounded-[50%] border border-solid border-neutral-200">
             <img
               src={currentUser?.avatar}
               alt=""

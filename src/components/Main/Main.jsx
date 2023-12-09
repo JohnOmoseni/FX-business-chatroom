@@ -5,6 +5,7 @@ import Messages from "./Messages";
 import BusinessChatRoom from "./BusinessChatRoom";
 import ChatRoomInput from "./ChatRoomInput";
 import { motion } from "framer-motion";
+import ChatRoomHeading from "./ChatRoomHeading";
 
 function Main() {
   const { user, chatId, isPrivateChat } = useSelector(
@@ -13,12 +14,12 @@ function Main() {
   const { visiblePane, screenSize } = useSelector((state) => state.appState);
 
   return (
-    <motion.div className="flex-column h-screen !justify-start">
-      <Heading userChat={user} />
+    <motion.div className="flex-column h-[100dvh] bg-red-400 !justify-start relative overflow-hidden">
       {screenSize < 640 ? (
         <>
           {visiblePane?.showChat && (
             <>
+              <Heading userChat={user} />
               <Messages userChat={user} chatId={chatId} />
               <InputBar userChat={user} chatId={chatId} />
             </>
@@ -26,6 +27,7 @@ function Main() {
           <>
             {visiblePane?.showChatRoom && (
               <>
+                <ChatRoomHeading userChat={user} />
                 <BusinessChatRoom />
                 <ChatRoomInput userChat={user} />
               </>
@@ -34,11 +36,13 @@ function Main() {
         </>
       ) : isPrivateChat ? (
         <>
+          <Heading userChat={user} />
           <Messages userChat={user} chatId={chatId} />
           <InputBar userChat={user} chatId={chatId} />
         </>
       ) : (
         <>
+          <ChatRoomHeading userChat={user} />
           <BusinessChatRoom />
           <ChatRoomInput userChat={user} />
         </>

@@ -37,7 +37,7 @@
   }
   .text-gradient-200 {
     @apply text-gradient;
-    background: linear-gradient(to bottom right, #ef2de2fd, #7f00ad 90%);
+    background-image: linear-gradient(to bottom right, #1e1a1efd, #053e3e 90%);
   }
   .text-shadow {
     text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);
@@ -81,11 +81,20 @@
     top: 50%;
     transform: translateY(-50%);
   }
+  .gap-clamp-sm {
+    gap: clamp(0.5rem, 1rem, 2rem);
+  }
+  .clip-circle {
+    clip-path: circle();
+  }
 }
 
 @layer components {
   .grid-cols-main {
-    grid-template-columns: minmax(min-content, 25%) minmax(min-content, 1fr) 25%;
+    grid-template-columns: minmax(min-content, 25%) minmax(min-content, 1fr) minmax(
+        min-content,
+        25%
+      );
   }
   .grid-cols-sm {
     grid-template-columns: minmax(25%, auto) 1fr;
@@ -97,7 +106,14 @@
     grid-template-columns: 45% 1fr;
   }
   .grid-cols-list {
-    grid-template-columns: max-content minmax(55%, 1fr) max-content;
+    grid-template-columns: max-content minmax(40%, 1fr) auto;
+  }
+  .grid-cols-balance {
+    grid-template-columns: 6% 1fr 6%;
+    grid-template-rows: minmax(80px, 115px);
+  }
+  .grid-rows-trade {
+    grid-template-rows: minmax(150px, 300px) max-content;
   }
   .gain {
     background: white;

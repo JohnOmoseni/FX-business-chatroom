@@ -21,6 +21,7 @@ export const registerSchema = yup.object().shape({
     .required("Field is required"),
   firstName: yup.string().required("Field is required"),
   businessName: yup.string().required("Field is required"),
+  lastName: yup.string(),
   phoneNo: yup.number("Must be of number type").required("Field is required"),
 });
 

@@ -16,22 +16,25 @@ const Button = ({
   className,
   animate,
   textGradient,
-  isIcon,
+  icon,
   disabled,
+  onClick,
 }) => {
   return (
     <motion.button
       type={type ?? "text"}
       disabled={disabled}
       className={`${
-        disabled ? "flex-row gap-2.5" : ""
+        disabled || icon ? "flex-row gap-2.5" : ""
       } ${className} px-5 py-2 rounded-sm shadow-md disabled:opacity-60`}
       variants={animate ? buttonAnimate : null}
       initial="hidden"
       whileInView="animate"
       viewport={{ once: true }}
+      onClick={onClick}
     >
-      {disabled && (
+      {icon && <span className="">{icon}</span>}
+      {disabled && !icon && (
         <span className="">
           <SpiralSpinner size={30} />
         </span>

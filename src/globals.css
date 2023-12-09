@@ -63,7 +63,7 @@ body::selection {
 
 .wrapper :where(a, span) {
   color: inherit;
-  display: block;
+  display: inline-block;
   text-decoration: none;
 }
 

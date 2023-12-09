@@ -19,11 +19,6 @@ function ChatRow({ user, lastMessage, isBusinessRow }) {
   const dispatch = useDispatch();
   const isActive = user?.uid === currentUser?.uid;
 
-  const handleBusinessProfile = () => {
-    dispatch(setVisibleRightPane({ id: "userProfile", val: true }));
-    dispatch(setBusinessProfile(user));
-  };
-
   const handleSelect = async () => {
     const combinedId =
       currentUser?.uid > user?.uid
@@ -32,7 +27,7 @@ function ChatRow({ user, lastMessage, isBusinessRow }) {
     // check whether the chat exists in chats
     const res = await getDoc(doc(db, "chats", combinedId));
 
-    console.log(res.data(), combinedId, user, currentUser);
+    console.log(combinedId, user, currentUser);
 
     if (!res.exists()) {
       console.log("running");
@@ -63,17 +58,16 @@ function ChatRow({ user, lastMessage, isBusinessRow }) {
     dispatch(setActivePane({ id: "showChat", val: true }));
     dispatch(setChangeUser({ currentUser, user }));
     dispatch(setIsPrivateChat(true));
-    handleClick();
   };
 
   return (
     <li
-      className="group w-full py-2 px-2 rounded-md grid grid-cols-list gap-4 items-center bg-white hover:bg-lime-100 transition-colors shadow-sm border border-solif border-br-light cursor-pointer"
+      className="group w-full py-2 px-2 rounded-md grid grid-cols-list gap-4 items-center bg-white hover:bg-lime-100 transition-colors shadow-sm border border-solid border-br-light cursor-pointer"
       onClick={handleSelect}
     >
       <div className="relative w-[45px] h-[45px] rounded-[50%] border border-solid border-neutral-200 ">
         <img
-          src={user?.avatar}
+          src={user?.avatar ?? ""}
           alt={user?.displayName}
           className="group-hover:scale-105 transition overflow-hidden"
         />
@@ -86,7 +80,7 @@ function ChatRow({ user, lastMessage, isBusinessRow }) {
 
       <div className="flex-column gap-1 w-full">
         <h4 className="font-semibold tracking-tight leading-5 truncate">
-          {user?.displayName}
+          {user?.businessName ?? user?.displayName}
         </h4>
         {lastMessage && <p className="text-tiny truncate">{lastMessage}</p>}
       </div>

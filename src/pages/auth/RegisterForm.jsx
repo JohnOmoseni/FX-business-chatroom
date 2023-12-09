@@ -48,7 +48,6 @@ function RegisterForm() {
     };
 
     file && fileReader?.readAsDataURL(file);
-    console.log(file);
 
     try {
       const res = await createUserWithEmailAndPassword(
@@ -82,6 +81,7 @@ function RegisterForm() {
             await setDoc(doc(db, "users", res.user.uid), {
               uid: res.user.uid,
               displayName: values.firstName,
+              lastName: values.lastName,
               email: values.email,
               avatar: downloadURL,
               fullName: `${values?.firstName} ${values?.lastName}}`,

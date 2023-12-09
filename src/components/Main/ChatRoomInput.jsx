@@ -73,7 +73,7 @@ function ChatRoomInput({ userChat }) {
   };
 
   return (
-    <div className="w-full min-h-[60px] bg-slate-100 flex items-center gap-3  px-4 pr-2">
+    <div className="w-full min-h-[4rem] bg-slate-100 flex items-center gap-3 px-4 pr-2">
       <form onSubmit={handleSend} className="w-full flex-1 flex py-2 gap-4">
         <div className="flex-1 flex-row">
           <input

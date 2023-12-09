@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   showPane: false,
   showRightPane: false,
+  isCurrentUser: false,
   visiblePane: {
     theme: "dark",
     showChat: false,
@@ -11,7 +12,8 @@ const initialState = {
     privateChat: false,
   },
   rightPane: {
-    userProfile: false,
+    userProfile: true,
+    businessProfile: false,
     tradeWallet: false,
     userWallet: false,
     currencyList: false,
@@ -29,15 +31,27 @@ const appStateSlice = createSlice({
       state.visiblePane = { ...state.visiblePane, [id]: val };
     },
     setVisibleRightPane: (state, { payload }) => {
-      const { id, val } = payload;
+      const { id, val, isCurrentUser } = payload;
       state.showPane = true;
       state.showRightPane = true;
+      state.isCurrentUser = isCurrentUser;
+
+      for (let key in state.rightPane) {
+        state.rightPane[key] = false;
+      }
       state.rightPane = { ...state.rightPane, [id]: val };
     },
     setClosePane: (state, { payload }) => {
       const { id, val } = payload;
       state.showPane = false;
       state.visiblePane = { ...state.visiblePane, [id]: val };
+    },
+    setCloseRightPane: (state, { payload }) => {
+      state.showPane = false;
+      state.showRightPane = false;
+      for (let key in state.rightPane) {
+        state.rightPane[key] = false;
+      }
     },
     setScreenSize: (state, { payload }) => {
       state.screenSize = payload;
@@ -47,9 +61,9 @@ const appStateSlice = createSlice({
 
 export default appStateSlice.reducer;
 export const {
-  setActiveMenu,
   setActivePane,
   setClosePane,
   setScreenSize,
   setVisibleRightPane,
+  setCloseRightPane,
 } = appStateSlice.actions;
