@@ -9,7 +9,7 @@ function PaneHeading({ title, onClick, isVisible }) {
       {(screenSize < 768 || (screenSize >= 768 && isVisible)) && (
         <div
           onClick={onClick}
-          className="icon p-2 text-sm rounded-sm transition hover:ring-1 ring-inset ring-gray-200 hover:scale-95"
+          className="icon absolute p-2 text-sm rounded-sm transition hover:ring-1 ring-inset ring-gray-200 hover:scale-95"
         >
           <MdOutlineArrowBack color="black" size={18} />
         </div>
