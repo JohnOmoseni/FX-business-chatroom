@@ -14,7 +14,7 @@ function Main() {
   const { visiblePane, screenSize } = useSelector((state) => state.appState);
 
   return (
-    <motion.div className="flex-column h-[100dvh] bg-red-400 !justify-start relative overflow-hidden">
+    <motion.div className="flex-column full-height !justify-start relative overflow-hidden">
       {screenSize < 640 ? (
         <>
           {visiblePane?.showChat && (

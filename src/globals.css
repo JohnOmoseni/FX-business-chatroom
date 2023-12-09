@@ -103,6 +103,10 @@ body::selection {
   outline: none;
 }
 
+.full-height {
+  height: 100vh;
+  height: 100dvh;
+}
 .wrapper ::-webkit-scrollbar {
   width: 3px;
   height: 100%;

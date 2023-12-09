@@ -60,9 +60,7 @@ function Heading({ userChat }) {
       </div>
 
       <h3 className="font-kinn mt-1 text-center text-[#444] text-shadow">
-        {isPrivateChat && userChat?.displayName
-          ? userChat?.businessName
-          : userChat?.displayName}
+        {user?.businessName ?? user?.displayName}
       </h3>
       <div className="flex-row justify-between gap-3">
         <ChatDropdown />
