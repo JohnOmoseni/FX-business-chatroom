@@ -32,7 +32,7 @@ function BusinessProfile() {
         onClick={() => dispatch(setCloseRightPane())}
       />
       <div className="w-full pt-10 pb-4 px-4 overflow-auto">
-        <div className="flex-column gap-4 !items-start md:flex-row md:!justify-start px-4 md:gap-clamp-sm">
+        <div className="flex-column gap-4 !items-center md:!items-start md:flex-row md:!justify-start px-4 md:gap-clamp-sm">
           <div className="relative min-w-[140px] h-[140px] md:min-w-[80px] md:h-[80px] rounded-[50%] border border-solid border-neutral-200 shadow-md">
             <img
               src={businessProfile?.avatar ?? ""}

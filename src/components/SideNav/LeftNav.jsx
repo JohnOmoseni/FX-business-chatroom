@@ -15,6 +15,7 @@ import {
 } from "@redux/features/appStateSlice";
 import { setBusinessProfile } from "@redux/features/chatSlice";
 import { Link } from "react-router-dom";
+import { setIsPrivateChat } from "../../../redux/features/chatSlice";
 
 function LeftNav() {
   const { currentUser, isActive } = useSelector((state) => state.authUser);
@@ -29,6 +30,11 @@ function LeftNav() {
       setVisibleRightPane({ id: "userProfile", val: true, isCurrentUser: true })
     );
     dispatch(setBusinessProfile(currentUser));
+  };
+
+  const handleShowChatRoom = () => {
+    dispatch(setActivePane({ id: "showChatRoom", val: true }));
+    dispatch(setIsPrivateChat(false));
   };
 
   return (
@@ -99,10 +105,8 @@ function LeftNav() {
       )}
       <button
         type="button"
-        className="absolute z-40 icon sm:!hidden right-4 bottom-2 text-3xl p-4 rounded-[50%] hover:drop-shadow-lg border-2 border-solid border-br-light active:scale-90 transition hover:bg-green-100"
-        onClick={() =>
-          dispatch(setActivePane({ id: "showChatRoom", val: true }))
-        }
+        className="absolute bg-green-200 bg-opacity-70 z-40 icon sm:!hidden right-4 bottom-2 text-3xl p-4 rounded-[50%] hover:drop-shadow-lg border-2 border-solid border-br-light active:scale-90 transition hover:bg-green-100"
+        onClick={handleShowChatRoom}
       >
         <BsFillChatDotsFill color="#01a137fd" />
       </button>

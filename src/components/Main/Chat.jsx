@@ -67,7 +67,7 @@ export function Chat({ msg, startMsg, messages }) {
         {!isPrivateChat && (
           <p className="w-full text-base text-left text-shadow flex-row gap-3 !justify-between mb-[2px]">
             <span className="tracking-tight">
-              {owner ? currentUser?.displayName : user?.displayName}
+              {owner ? currentUser?.businessName : user?.displayName}
             </span>
             <span className="text-tiny tracking-normal !w-[50px] truncate">
               {owner ? currentUser?.uid : user?.uid}

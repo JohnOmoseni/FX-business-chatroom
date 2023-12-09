@@ -12,10 +12,6 @@ import gallery from "@icons/gallery.svg";
 import { toast } from "react-toastify";
 import { FormGroup } from "../../../pages/auth/FormGroup";
 import { db, storage } from "../../../config/firebase-config";
-import {
-  setCloseRightPane,
-  setVisibleRightPane,
-} from "@redux/features/appStateSlice";
 import placeholderImg from "@assets/images/logo.png";
 
 const currentUser = {

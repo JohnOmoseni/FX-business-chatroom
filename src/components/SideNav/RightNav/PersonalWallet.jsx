@@ -20,7 +20,7 @@ const WalletHeader = ({ userProfile, onClick }) => (
       >
         <MdOutlineArrowBack color="black" size={18} />
       </span>
-      <div className="relative min-w-[40px] h-[40px] rounded-[50%] border border-solid border-neutral-200 shadow-md">
+      <div className="relative w-[40px] max-w-[40px] h-[40px] rounded-[50%] border border-solid border-neutral-200 shadow-md">
         <img
           src={userProfile?.avatar ?? ""}
           alt=""
