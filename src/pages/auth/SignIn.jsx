@@ -9,8 +9,11 @@ import { useFormik } from "formik";
 import { FormGroup } from "./FormGroup";
 import Button from "@components/Button";
 import { motion } from "framer-motion";
+import useAuthContext from "@context/AuthContext";
+import { cookies } from "@constants/constants";
 
 import sectionbg from "@assets/images/section-bg (5).jpg";
+import { useDispatch } from "react-redux";
 
 const Top = () => (
   <div className="w-full self-center">
@@ -22,12 +25,33 @@ const Top = () => (
   </div>
 );
 
-function SignIn({ setIsAuth }) {
+function SignIn() {
   const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false);
-  const onSubmit = (values, actions) => {
-    console.log("Submitted", values, actions);
+  const { handleSignIn, setIsAuthenticated } = useAuthContext();
+
+  const onSubmit = async (values, actions) => {
+    console.log("Submitted", values);
+    try {
+      const res = await handleSignIn(values?.email, values?.password);
+      if (res?.user) {
+        setIsAuthenticated(true);
+        cookies.set("auth-token", res.user.refreshToken);
+        navigate("/home");
+      }
+    } catch (err) {
+      console.error(err.message, "Something went wrong");
+      if (err.message.includes("(auth/email-already-in-use)")) {
+        toast.error("Email already in use", {
+          className: "font-poppins tracking-wide",
+        });
+      } else {
+        toast.error("Something went wrong", {
+          className: "font-poppins tracking-wide",
+        });
+      }
+    }
   };
+
   const { values, errors, touched, isSubmitting, handleChange, handleSubmit } =
     useFormik({
       initialValues: {

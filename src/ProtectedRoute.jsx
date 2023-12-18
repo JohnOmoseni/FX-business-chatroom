@@ -1,14 +1,15 @@
-import { onAuthStateChanged } from "firebase/auth";
-import { Navigate, Outlet } from "react-router-dom";
-import { auth } from "./config/firebase-config";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setIsLoggedIn } from "@redux/features/authUserSlice";
+import { Navigate } from "react-router-dom";
 import { cookies } from "@constants/constants";
+import useAuthContext from "@context/AuthContext";
 
-export const ProtectedRoute = ({ children, isLoggedIn }) => {
-  const isAuth = cookies.get("auth-token");
+export const ProtectedRoute = ({ children }) => {
+  const isCookie = cookies.get("auth-token");
+  const { isAuthenticated } = useAuthContext();
 
-  return <Outlet />;
-  // return isLoggedIn ? <Outlet /> : <Navigate to="/auth/sign-up" />;
+  console.log(isAuthenticated);
+  if (!isAuthenticated) {
+    return <Navigate to="/auth/sign-in" />;
+  }
+
+  return children;
 };

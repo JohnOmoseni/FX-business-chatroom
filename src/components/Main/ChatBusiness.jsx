@@ -131,7 +131,9 @@ export function ChatBusiness({ msg, startMsg }) {
       >
         <p className="w-full text-base text-left text-shadow flex-row gap-3 !justify-between mb-[2px]">
           <span className="tracking-tight">
-            {userObj?.businessName ?? "Unknown"}
+            {owner
+              ? currentUser?.businessName
+              : userObj?.businessName ?? "Unknown"}
           </span>
           <span className="text-tiny tracking-normal !w-[50px] truncate">
             {msg?.senderID}

@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setClosePane } from "@redux/features/appStateSlice";
 import { signOut } from "firebase/auth";
-import { useSignOut } from "react-auth-kit";
 import { auth } from "../../config/firebase-config";
 import Dropdown from "@components/Dropdown";
+import useAuthContext from "@context/AuthContext";
 
 const IconBg = ({ children, onClick, className }) => {
   return (
@@ -22,9 +22,7 @@ const IconBg = ({ children, onClick, className }) => {
 function ChatRoomHeading({ userChat }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const avatar = userChat?.avatar;
-  // const signout = useSignOut();
-  const { isPrivateChat } = useSelector((state) => state.usersState);
+  const { logOut } = useAuthContext();
 
   const handleBack = () => {
     dispatch(setClosePane({ id: "showChatRoom", val: false }));
@@ -32,19 +30,8 @@ function ChatRoomHeading({ userChat }) {
   };
 
   const handleLogOut = async () => {
-    const res = window.confirm("Do you wanna sign out?");
-    try {
-      if (res) {
-        // user clicked OK
-        signOut(auth);
-        // signout();
-        navigate("/auth/sign-in");
-      } else {
-        return;
-      }
-    } catch (err) {
-      console.log(err.message, "Error logging out");
-    }
+    await logOut();
+    navigate("/auth/sign-in");
   };
 
   return (

@@ -12,11 +12,9 @@ import {
   setCloseRightPane,
 } from "@redux/features/appStateSlice";
 import EditProfile from "./EditProfile";
-import { auth } from "../../../config/firebase-config";
-import { signOut } from "firebase/auth";
-import { useSignOut } from "react-auth-kit";
 import placeholderImg from "@assets/images/logo.png";
 import { useNavigate } from "react-router-dom";
+import useAuthContext from "@context/AuthContext";
 import Swal from "sweetalert2";
 
 const tabClassName =
@@ -42,25 +40,13 @@ function UserProfile() {
   const [isEditProfile, setEditProfile] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // const signout = useSignOut();
+  const { logOut } = useAuthContext();
 
   console.log(userProfile);
 
   const handleLogOut = async () => {
-    const res = window.confirm("Do you wanna sign out?");
-    console.log(res);
-    try {
-      if (res) {
-        // user clicked OK
-        signOut(auth);
-        // signout();
-        navigate("/auth/sign-in");
-      } else {
-        return;
-      }
-    } catch (err) {
-      console.log(err.message, "Error logging out");
-    }
+    await logOut();
+    navigate("/auth/sign-in");
   };
 
   const handleNavigate = (id) => {

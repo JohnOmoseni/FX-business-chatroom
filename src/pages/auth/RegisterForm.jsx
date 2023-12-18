@@ -11,13 +11,13 @@ import { setCurrentuser } from "@redux/features/authUserSlice";
 import { registerSchema } from "@schema/validate";
 import { auth, db, storage } from "../../config/firebase-config";
 import { setDoc, doc } from "firebase/firestore";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { updateProfile } from "firebase/auth";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { cookies } from "@constants/constants";
 import logo from "@assets/images/logo.png";
 import sectionbg from "@assets/images/section-bg (4).png";
 import { toast } from "react-toastify";
-import { useSignIn } from "react-auth-kit";
+import useAuthContext from "@context/AuthContext";
 
 const Top = () => (
   <div>
@@ -38,8 +38,8 @@ function RegisterForm() {
   const [preview, setPreview] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const signIn = useSignIn();
   const fileRef = useRef(null);
+  const { createUser, setIsAuthenticated } = useAuthContext();
 
   const onSubmit = async (values, actions) => {
     const file = fileRef.current.files[0];
@@ -52,11 +52,7 @@ function RegisterForm() {
     file && fileReader?.readAsDataURL(file);
 
     try {
-      const res = await createUserWithEmailAndPassword(
-        auth,
-        values.email,
-        values.password
-      );
+      const res = await createUser(values.email, values.password);
 
       console.log(res);
       // upload an image
@@ -107,11 +103,7 @@ function RegisterForm() {
               })
             );
             cookies.set("auth-token", res.user.refreshToken);
-            // signIn({
-            //   token: res.user.refreshToken,
-            //   expiresIn: 3600,
-            //   tokenType: "Bearer",
-            // });
+            setIsAuthenticated(true)
             navigate("/home");
           });
         }
