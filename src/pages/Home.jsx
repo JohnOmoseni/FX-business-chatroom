@@ -107,7 +107,7 @@ function Home() {
           isRightLayout
           className={`${
             showRightPane
-              ? "w-full h-screen overflow-hidden fixed top-0 right-0 flex-column gap-2 bg-white"
+              ? "w-full h-100dvh overflow-hidden fixed top-0 right-0 flex-column gap-2 bg-white"
               : "w-0 overflow-hidden hidden"
           }`}
         >
@@ -118,7 +118,7 @@ function Home() {
       ) : (
         screenSize >= 768 && (
           <div
-            className={`w-full h-full relative flex-column gap-2 overflow-hidden`}
+            className={`w-full h-100dvh relative flex-column gap-2 overflow-hidden`}
           >
             <SideLayout right>
               <RightNav />

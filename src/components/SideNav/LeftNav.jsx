@@ -106,7 +106,7 @@ function LeftNav() {
       )}
       <button
         type="button"
-        className="absolute bg-green-200 bg-opacity-70 z-40 icon sm:!hidden right-4 bottom-2 text-3xl p-4 rounded-[50%] hover:drop-shadow-lg border-2 border-solid border-br-light active:scale-90 transition hover:bg-green-100"
+        className="fixed bg-green-200 bg-opacity-70 z-40 icon sm:!hidden right-4 bottom-2 text-3xl p-4 rounded-[50%] hover:drop-shadow-lg border-2 border-solid border-br-light active:scale-90 transition hover:bg-green-100"
         onClick={handleShowChatRoom}
       >
         <BsFillChatDotsFill color="#01a137fd" />
