@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BiSearchAlt } from "react-icons/bi";
 import { CiLocationOn } from "react-icons/ci";
@@ -9,10 +9,12 @@ import {
   setCloseRightPane,
   setVisibleRightPane,
 } from "@redux/features/appStateSlice";
+import { faker } from "@faker-js/faker";
+
 import Deposit from "@pages/payment/Deposit";
 
-const WalletHeader = ({ userProfile, onClick }) => (
-  <div className="w-full py-[3%] pl-1 pr-3 flex-row gap-6 !justify-between">
+const WalletHeader = ({ userProfile, onClick, currency }) => (
+  <div className="w-full py-3 md:py-[4%] pl-1 pr-3 flex-row gap-6 !justify-between border-b border-solid border-br-light shadow-md">
     <div className="flex-row gap-1">
       <span
         onClick={onClick}
@@ -22,7 +24,7 @@ const WalletHeader = ({ userProfile, onClick }) => (
       </span>
       <div className="relative w-[40px] max-w-[40px] h-[40px] rounded-[50%] border border-solid border-neutral-200 shadow-md">
         <img
-          src={userProfile?.avatar ?? ""}
+          src={userProfile?.avatar ?? faker.image.avatar()}
           alt=""
           className="group-hover:scale-105 transition"
         />
@@ -32,7 +34,7 @@ const WalletHeader = ({ userProfile, onClick }) => (
           Hello,
         </span>
         <p className="text-xl font-semibold text-shadow tracking-tight font-kinn">
-          Jenkins
+          {userProfile?.businessName ?? "Unknown"}
         </p>
       </div>
     </div>
@@ -40,7 +42,7 @@ const WalletHeader = ({ userProfile, onClick }) => (
     <Dropdown
       menuBtn={() => (
         <>
-          Currency
+          {currency}
           <MdKeyboardArrowDown
             size={18}
             className="cursor-pointer icon ml-2"
@@ -96,19 +98,41 @@ const SearchBar = ({ setSearchBar, input, setInput, setSearchResult, txs }) => {
 };
 
 function PersonalWallet() {
-  const { currentUser: userProfile, isActive } = useSelector(
-    (state) => state.authUser
-  );
+  const { currentUser: userProfile } = useSelector((state) => state.authUser);
+  const { users } = useSelector((state) => state.usersState);
+  const { selectedCurrency, userAccount, transactions, lastTransaction } =
+    useSelector((state) => state.fxState);
   const { screenSize } = useSelector((state) => state.appState);
   const dispatch = useDispatch();
   const [searchBar, setSearchBar] = useState(false);
   const [input, setInput] = useState("");
   const [searchResult, setSearchResult] = useState([]);
 
+  const balance = useMemo(() => {
+    const amount = userAccount?.balance.split(".");
+    const sigNo = parseInt(amount?.[0]);
+    const decimal = amount?.[1];
+
+    return [sigNo, decimal];
+  }, [userAccount?.balance]);
+
+  console.log(balance, userAccount?.balance.split("."));
+
+  const txs = useCallback(() => {
+    transactions?.map((tx, idx) => {
+      return {
+        ...tx,
+        receiverID: () => {
+          return users?.find((user) => user?.uid === tx?.receiverID);
+        },
+      };
+    });
+  }, [transactions]);
+
   const handleDeposit = () => {};
   const handleWithdraw = () => {};
 
-  const handleArrowClick = () => {
+  const handleBackArrowClick = () => {
     if (screenSize >= 768) {
       dispatch(setVisibleRightPane({ id: "userProfile", val: true }));
     } else {
@@ -118,7 +142,11 @@ function PersonalWallet() {
 
   return (
     <>
-      <WalletHeader userProfile={userProfile} onClick={handleArrowClick} />
+      <WalletHeader
+        userProfile={userProfile}
+        currency={userAccount?.currency}
+        onClick={handleBackArrowClick}
+      />
       <div className="w-full pt-3 h-full overflow-y-auto">
         <div className="grid grid-cols-balance gap-4 overflow-hidden">
           <div className="bg-gradient-200 rounded-md"></div>
@@ -127,8 +155,9 @@ function PersonalWallet() {
               Account Balance
             </span>
             <h2 className="whitespace-nowrap  text-4xl text-shadow text-gradient-100">
-              <span>$</span>36,410
-              <span className="text-xl !text-red-400">.00</span>
+              <span className="text-3xl">{userAccount?.currency}</span>
+              {balance?.[0]}
+              <span className="text-xl !text-neutral-400">.{balance?.[1]}</span>
             </h2>
           </div>
           <div className="bg-gradient-100 rounded-md"></div>
@@ -137,9 +166,11 @@ function PersonalWallet() {
 
         <div className="flex-row gap-4 my-14 px-4 mx-auto">
           <Button icon={<CiLocationOn />}>
-            <Deposit title="Load" amount currency customer />
+            {/* <Deposit title="Load" amount currency customer /> */}
           </Button>
-          <Button icon={<CiLocationOn />}></Button>
+          <Button icon={<CiLocationOn />}>
+            {/* <Deposit title="Withdraw" amount currency customer /> */}
+          </Button>
         </div>
         <div className="h-full rounded-ss-2xl rounded-se-lg shadow-md py-4 px-[4%] border-t-2 border-solid border-br-light">
           <div className="flex-row gap-3 !justify-between">
@@ -166,8 +197,20 @@ function PersonalWallet() {
           </div>
           <ul className="mt-4">
             <span className="text-xs ml-1 mb-2">Today</span>
+            {txs?.length > 0 &&
+              txs.map((tx, idx) => {
+                return (
+                  <ListRow
+                    key={idx}
+                    obj={tx}
+                    renderLastCol={() => (
+                      <div className="text-center leading-5">Some text</div>
+                    )}
+                  />
+                );
+              })}
             <ListRow
-              renderColumn={() => (
+              renderLastCol={() => (
                 <div className="text-center leading-5">Some text</div>
               )}
             />

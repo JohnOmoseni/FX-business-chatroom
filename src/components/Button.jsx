@@ -26,7 +26,7 @@ const Button = ({
       disabled={disabled}
       className={`${
         disabled || icon ? "flex-row gap-2.5" : ""
-      } ${className} px-5 py-2 rounded-sm shadow-md disabled:opacity-60`}
+      } ${className} px-5 py-2 rounded-sm shadow-md transition-sm active:scale-95 disabled:opacity-60`}
       variants={animate ? buttonAnimate : null}
       initial="hidden"
       whileInView="animate"
@@ -42,7 +42,7 @@ const Button = ({
       <span
         className={`${
           textGradient && "text-gradient-100"
-        } font-semibold tracking-tight`}
+        } font-semibold tracking-wide`}
       >
         {title}
       </span>

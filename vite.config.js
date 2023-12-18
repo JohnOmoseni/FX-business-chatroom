@@ -16,6 +16,8 @@ export default defineConfig({
       "@pages": path.resolve(__dirname, "./src/pages"),
       "@schema": path.resolve(__dirname, "./schema"),
       "@redux": path.resolve(__dirname, "./redux"),
+      "@redux": path.resolve(__dirname, "./redux"),
+      "@hooks": path.resolve(__dirname, "./src/hooks"),
     },
   },
 });

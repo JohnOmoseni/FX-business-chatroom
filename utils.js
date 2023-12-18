@@ -76,6 +76,8 @@ const currDate = new Date();
 currDate.setHours(0, 0, 0, 0);
 const yesterday = currDate.getTime() - 1 * 24 * 60 * 60 * 1000;
 
+export const calculatePercentage = (amount) => {};
+
 export const container = {
   hidden: { opacity: 0 },
   animate: {

@@ -17,7 +17,6 @@ export default function ChatDropdown() {
   const handleClick = (id) => {
     const isPane = [
       "userProfile",
-      "tradeWallet",
       "userWallet",
       "currencyList",
       "businessProfile",
@@ -64,19 +63,6 @@ export default function ChatDropdown() {
                   onClick={() => handleClick("userWallet")}
                 >
                   Personal Wallet
-                </div>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <div
-                  className={classNames(
-                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                    "block px-4 py-2 text-sm"
-                  )}
-                  onClick={() => handleClick("tradeWallet")}
-                >
-                  Trade Account
                 </div>
               )}
             </Menu.Item>

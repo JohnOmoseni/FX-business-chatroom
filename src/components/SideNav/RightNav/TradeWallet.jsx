@@ -27,24 +27,27 @@ const transaction = {
   fx: "USD/NGN",
 };
 
-const WalletHeader = ({ onClick }) => (
-  <div className="w-full py-[4%] pr-3 flex-row gap-4 !justify-between border-b border-solid border-br-light shadow-md">
+const WalletHeader = ({ onClick, currrencyPair }) => (
+  <div className="w-full py-4 md:py-[4%] pr-3 flex-row gap-4 !justify-between border-b border-solid border-br-light shadow-md">
     <div className="flex-row gap-3 !justify-start pl-3">
       <span
         onClick={onClick}
-        className="icon p-2 text-sm rounded-sm transition hover:ring-1 ring-inset ring-gray-200 hover:scale-95"
+        className="icon p-1 text-sm rounded-sm transition hover:ring-1 ring-inset ring-gray-200 hover:scale-95"
       >
         <MdOutlineArrowBack color="black" size={18} />
       </span>
 
-      <h3 className="text-xl flex-1 w-full text-shadow font-semibold text-[#444]">
+      <h3 className="text-xl flex-1 w-full text-shadow font-semibold text-[#444] leading-4">
         Transfer
       </h3>
     </div>
     <Dropdown
+      menuClass="!p-1"
       menuBtn={() => (
         <>
-          <span className="mr-2 leading-4">Currency pair</span>
+          <span className="mr-2 leading-4 text-gradient-100">
+            {currrencyPair}
+          </span>
           <CiAirportSign1
             size={20}
             className="cursor-pointer mt-[2px]"
@@ -91,17 +94,23 @@ const TransferReceipt = () => {
 };
 
 function TradeWallet() {
-  const { currentUser: userProfile, isActive } = useSelector(
-    (state) => state.authUser
-  );
+  const { currentUser } = useSelector((state) => state.authUser);
+  const { user } = useSelector((state) => state.usersState);
+  const {
+    baseCurrency,
+    selectedCurrency,
+    agreedExchangedRate,
+    amountToSend,
+    userAccount,
+  } = useSelector((state) => state.fxState);
   const { screenSize } = useSelector((state) => state.appState);
   const dispatch = useDispatch();
 
   const handleSendMoney = () => {};
 
-  const handleArrowClick = () => {
+  const handleBackArrowClick = () => {
     if (screenSize >= 768) {
-      dispatch(setVisibleRightPane({ id: "userProfile", val: true }));
+      dispatch(setVisibleRightPane({ id: "currencyList", val: true }));
     } else {
       dispatch(setCloseRightPane());
     }
@@ -109,9 +118,12 @@ function TradeWallet() {
 
   return (
     <>
-      <WalletHeader onClick={handleArrowClick} />
+      <WalletHeader
+        onClick={handleBackArrowClick}
+        currrencyPair={selectedCurrency?.pair}
+      />
       <div className="w-full h-full overflow-y-auto">
-        <div className="flex-column gap-4 w-[90%] py-6 px-[4%] mx-auto rounded-md shadow-sm">
+        <div className="flex-column gap-4 w-[94%] py-6 px-4 md:px-[4%] mx-auto rounded-md border border-solid border-br-light shadow-md">
           <ListRow
             renderColumn={() => (
               <div className="text-center leading-5">Some text</div>
@@ -124,18 +136,25 @@ function TradeWallet() {
           />
         </div>
         <div className="grid grid-rows-trade place-items-center min-h-[60%]">
-          <p className="flex-column !items-center text-center gap-1 whitespace-nowrap md:text-4xl text-shadow text-gradient-100">
-            $40.00
+          <p className="flex-column !items-center text-center gap-1 whitespace-nowrap text-5xl md:text-4xl text-shadow text-gradient-100">
+            ${amountToSend}
             <span className="text-sm text-neutral-300 text-opacity-60 tracking-wide text-gradient-200">
               Amount to transfer
             </span>
-            <span className="text-sm text-neutral-300 text-opacity-60 tracking-wide text-gradient-200">
-              Your balance $8,320.50(available)
+            <span className="text-sm px-3 text-neutral-300 text-opacity-60 tracking-wide text-gradient-200">
+              Your balance {userAccount?.balance} $8,320.50(available)
             </span>
           </p>
           <p className="text-center px-4">
-            <span>$0.30 TransferWise fee already included</span>
-            <span>Exchange rate: 1 EUR - 1,165 USD</span>
+            <span>
+              $0.30{" "}
+              <span className="text-shadow font-semibold">Oshofree fee</span>{" "}
+              already included
+            </span>
+            <span>
+              Exchange rate: 1 {baseCurrency} - {agreedExchangedRate}{" "}
+              {selectedCurrency?.symbol}
+            </span>
           </p>
         </div>
 

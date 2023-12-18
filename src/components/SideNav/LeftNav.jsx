@@ -6,6 +6,7 @@ import Conversations from "./Conversations";
 import Business from "./Business";
 import logo from "@assets/images/logo.png";
 import { BsFillChatDotsFill } from "react-icons/bs";
+import { faker } from "@faker-js/faker";
 import Search from "./Search";
 import ErrorTimeout from "./ErrorTimeout";
 import ChatRow from "./ChatRow";
@@ -19,7 +20,7 @@ import { setIsPrivateChat } from "../../../redux/features/chatSlice";
 
 function LeftNav() {
   const { currentUser, isActive } = useSelector((state) => state.authUser);
-  const [activeTab, setActiveTab] = useState("chats-tab");
+  const [activeTab, setActiveTab] = useState("business-tab");
   const [errorSearch, setErrorSearch] = useState(false);
   const [searchUser, setSearchUser] = useState("");
   const [user, setUser] = useState("");
@@ -47,15 +48,15 @@ function LeftNav() {
           className="flex-row max-w-[50%] !justify-end gap-3 cursor-pointer"
           onClick={handleUserProfileClick}
         >
-          <h4 className="!w-[50%] text-shadow text-regular text-end sm:text-center overflow-hidden truncate">
-            {currentUser?.displayName}
+          <h4 className="!w-[50%] text-base text-shadow text-end sm:text-center overflow-hidden truncate">
+            {currentUser?.displayName ?? "Unknown"}
             <span className="mt-[-1px] !block text-tiny truncate">
               {currentUser?.uid}
             </span>
           </h4>
-          <div className="relative max-w-[30px] h-[30px] rounded-[50%] border border-solid border-neutral-200">
+          <div className="group relative min-w-[30px] max-w-[30px] h-[30px] rounded-[50%] border border-solid border-neutral-200">
             <img
-              src={currentUser?.avatar}
+              src={currentUser?.avatar ?? faker.image.avatar()}
               alt=""
               className="group-hover:scale-105 transition"
             />

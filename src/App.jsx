@@ -1,17 +1,19 @@
 import React, { useState, useEffect, Suspense } from "react";
-import { Routes, Route, Navigate, Outlet } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import RegisterForm from "./pages/auth/RegisterForm";
 import SignIn from "./pages/auth/SignIn";
+import LoaderBody from "./components/Loaders/LoaderBody";
 
 const Home = React.lazy(() => import("./pages/Home"));
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { auth } from "./config/firebase-config";
-import { ProtectedRoute } from "./ProtectedRoute";
 import { onAuthStateChanged } from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsLoggedIn } from "../redux/features/authUserSlice";
+import { ProtectedRoute } from "./ProtectedRoute";
+import { RequireAuth } from "react-auth-kit";
 
 function App() {
   const { isLoggedIn } = useSelector((state) => state.authUser);
@@ -37,14 +39,17 @@ function App() {
   return (
     <>
       <div className="wrapper relative">
-        <Suspense fallback="Loading...">
+        <Suspense fallback={<LoaderBody />}>
           <Routes>
-            <Route element={<ProtectedRoute isLoggedIn={isLoggedIn} />}>
-              <Route path="/" element={<Navigate to="/home" />} />
-              <Route path="/home" element={<Home />} />
-              <Route path="users" element="Users" />
-              <Route path="users/:id" element="UsersDetails" />
-            </Route>
+            <Route path="/" element={<Navigate to="/home" />} />
+            <Route
+              path="/home"
+              element={
+                // <RequireAuth loginPath="/auth/sign-up">
+                <Home />
+                // </RequireAuth>
+              }
+            />
 
             <Route path="/auth/sign-up" element={<RegisterForm />} />
             <Route path="/auth/sign-in" element={<SignIn />} />

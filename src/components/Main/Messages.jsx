@@ -9,6 +9,7 @@ function Messages({ chatId }) {
   useEffect(() => {
     if (chatId) {
       const unsub = onSnapshot(doc(db, "chats", chatId), (doc) => {
+        console.log(doc.data());
         doc.exists() && setMessages(doc.data().messages);
       });
 
@@ -34,7 +35,7 @@ function Messages({ chatId }) {
 
   return (
     <div
-      className={`group relative w-full py-6 pb-4 px-[4%] flex-1 flex flex-col gap-4 overflow-y-auto max-sm:mb-[2rem]`}
+      className={`group relative w-full pt-5 pb-4 px-[4%] flex-1 flex flex-col gap-4 overflow-y-auto max-sm:mb-[1rem]`}
     >
       <div className="flex-row gap-4 mb-1">
         <hr className="w-[45%] border border-solid border-br-light opacity-40" />

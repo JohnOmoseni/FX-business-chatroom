@@ -54,9 +54,9 @@ function Conversations() {
             })}
         </ul>
       ) : (
-        <div className="text-neutral-500">
-          <p className="text-shadow">No Conversations</p>
-        </div>
+        <p className="text-shadow text-center text-neutral-500">
+          No Conversations
+        </p>
       )}
     </div>
   );

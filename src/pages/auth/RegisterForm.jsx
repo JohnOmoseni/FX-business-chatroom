@@ -17,6 +17,7 @@ import { cookies } from "@constants/constants";
 import logo from "@assets/images/logo.png";
 import sectionbg from "@assets/images/section-bg (4).png";
 import { toast } from "react-toastify";
+import { useSignIn } from "react-auth-kit";
 
 const Top = () => (
   <div>
@@ -37,6 +38,7 @@ function RegisterForm() {
   const [preview, setPreview] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  // const signIn = useSignIn();
   const fileRef = useRef(null);
 
   const onSubmit = async (values, actions) => {
@@ -105,7 +107,12 @@ function RegisterForm() {
               })
             );
             cookies.set("auth-token", res.user.refreshToken);
-            // navigate("/");
+            // signIn({
+            //   token: res.user.refreshToken,
+            //   expiresIn: 3600,
+            //   tokenType: "Bearer",
+            // });
+            navigate("/home");
           });
         }
       );
@@ -121,8 +128,6 @@ function RegisterForm() {
         });
       }
     } finally {
-      navigate("/home");
-
       // actions.resetForm();
     }
   };

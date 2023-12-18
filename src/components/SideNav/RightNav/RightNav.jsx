@@ -1,17 +1,24 @@
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setVisibleRightPane,
-  setActivePane,
-} from "@redux/features/appStateSlice";
-
+import { useEffect } from "react";
 import UserProfile from "./UserProfile";
 import TradeWallet from "./TradeWallet";
 import PersonalWallet from "./PersonalWallet";
 import Currencies from "./Currencies";
 import BusinessProfile from "./BusinessProfile";
+import { setVisibleRightPane } from "@redux/features/appStateSlice";
 
 function RightNav() {
-  const { rightPane } = useSelector((state) => state.appState);
+  const { rightPane, screenSize } = useSelector((state) => state.appState);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const showUserProfileOnly = Object.values(rightPane)?.every(
+      (val) => val === false
+    );
+    if (showUserProfileOnly && screenSize >= 768) {
+      dispatch(setVisibleRightPane({ id: "userProfile", val: true }));
+    }
+  }, [screenSize]);
 
   return (
     <>

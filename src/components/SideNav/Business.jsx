@@ -50,9 +50,9 @@ function Business() {
           })}
         </ul>
       ) : (
-        <div className="text-neutral-500">
-          <p className="text-shadow">No registered users</p>
-        </div>
+        <p className="text-neutral-500 text-shadow text-center">
+          No registered users
+        </p>
       )}
     </div>
   );

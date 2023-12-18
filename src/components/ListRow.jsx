@@ -1,11 +1,11 @@
-const ListRow = ({ handleRowClick, renderColumn, containerClass }) => (
+const ListRow = ({ handleRowClick, renderLastCol, containerClass, obj }) => (
   <li
-    className={`${containerClass} w-full group py-2.5 px-3 rounded-md grid grid-cols-list gap-4 items-center bg-white hover:bg-lime-100 transition-colors shadow-sm border border-solid border-br-light cursor-pointer`}
+    className={`${containerClass} w-full group py-4 px-3 md:py-2 rounded-md grid grid-cols-list gap-3 items-center bg-white hover:bg-lime-100 transition-colors shadow-sm border border-solid border-br-light cursor-pointer`}
     onClick={handleRowClick}
   >
-    <div className="relative w-[45px] h-[45px] rounded-[50%] border border-solid border-neutral-200 ">
+    <div className="relative w-[30px] h-[30px] rounded-[50%] border border-solid border-neutral-200 ">
       <img
-        src=""
+        src={obj?.avatar}
         alt=""
         className="group-hover:scale-105 transition overflow-hidden"
       />
@@ -18,7 +18,7 @@ const ListRow = ({ handleRowClick, renderColumn, containerClass }) => (
       <p className="text-sm truncate">some text</p>
     </div>
 
-    {renderColumn()}
+    {renderLastCol()}
   </li>
 );
 

@@ -103,6 +103,30 @@ body::selection {
   outline: none;
 }
 
+.css-wmy1p7-ReactDropdownSelect {
+  border-radius: 4px !important;
+}
+.css-1c8t16q-InputComponent::placeholder {
+  font-size: 0.75rem;
+}
+.css-jznujr-ContentComponent span,
+.currency-header .css-nf4xsl-InputComponent::placeholder {
+  color: #222;
+  font-family: "Kinn", "Arial";
+  font-size: 0.8rem;
+  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3);
+}
+.css-1c8t16q-InputComponent {
+  width: calc(5ch + 5px) !important;
+}
+
+.wrapper .currencies .css-z532jj-InputComponent {
+  display: none;
+}
+.wrapper .currencies .css-1c8t16q-InputComponent {
+  width: 100% !important;
+}
+
 .full-height {
   height: 100vh;
   height: 100dvh;

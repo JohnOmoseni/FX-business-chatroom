@@ -12,8 +12,10 @@ const List = ({ icon, label, value }) => (
   <div className={`${tabClassName} !py-2 !bg-neutral-100`}>
     <span>{icon}</span>
     <p className="flex-1 w-full pr-3">
-      <span className="text-sm text-neutral-500 tracking-wide">{label}</span>
-      <span className="font-semibold break-words truncate">{value}</span>
+      <span className="text-sm text-neutral-500 tracking-wide">
+        {label ?? "-"}
+      </span>
+      <span className="font-semibold break-words truncate">{value ?? "-"}</span>
     </p>
   </div>
 );
@@ -46,13 +48,13 @@ function BusinessProfile() {
             ></span>
           </div>
           <div className="pr-3 text-center md:text-left">
-            <h3 className="font-kinn mt-6 text-shadow text-gradient-100">
-              {businessProfile?.businessName}
+            <h3 className="font-kinn mt-6 text-shadow text-gradient-100 capitalize">
+              {businessProfile?.businessName ?? "Unknown"}
             </h3>
             <span className="!text-[#555555]">
               {businessProfile?.displayName
                 ? `@${businessProfile?.displayName}`
-                : ""}
+                : "unknown"}
             </span>
 
             {businessProfile?.country && (

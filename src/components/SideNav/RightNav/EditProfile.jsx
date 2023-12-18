@@ -26,8 +26,14 @@ const currentUser = {
 
 function EditProfile({ setEditProfile }) {
   const { currentUser, isActive } = useSelector((state) => state.authUser);
-  const { businessName, displayName, lastName, avatar, phoneNo, country } =
-    currentUser;
+  const {
+    businessName = "",
+    displayName = "",
+    lastName = "",
+    avatar = "",
+    phoneNo = "",
+    country = "",
+  } = currentUser;
   const [preview, setPreview] = useState(avatar);
   const [fileInput, setFileInput] = useState("");
   const dispatch = useDispatch();

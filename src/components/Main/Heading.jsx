@@ -29,7 +29,6 @@ function Heading({ userChat }) {
       dispatch(setIsPrivateChat(false));
       dispatch(setClosePane({ id: "showChat", val: false }));
     } else {
-      dispatch(setClosePane({ id: "showChatRoom", val: false }));
       navigate(-1);
     }
   };

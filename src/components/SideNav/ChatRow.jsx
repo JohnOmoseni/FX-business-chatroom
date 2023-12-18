@@ -5,16 +5,13 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
+import { faker } from "@faker-js/faker";
 import { useDispatch, useSelector } from "react-redux";
 import { db } from "../../config/firebase-config";
 import { setChangeUser, setIsPrivateChat } from "@redux/features/chatSlice";
-import {
-  setActivePane,
-  setVisibleRightPane,
-} from "@redux/features/appStateSlice";
-import { setBusinessProfile } from "@redux/features/chatSlice";
+import { setActivePane } from "@redux/features/appStateSlice";
 
-function ChatRow({ user, lastMessage, isBusinessRow }) {
+function ChatRow({ user, lastMessage }) {
   const { currentUser } = useSelector((state) => state.authUser);
   const dispatch = useDispatch();
   const isActive = user?.uid === currentUser?.uid;
@@ -67,8 +64,8 @@ function ChatRow({ user, lastMessage, isBusinessRow }) {
     >
       <div className="relative w-[45px] h-[45px] rounded-[50%] border border-solid border-neutral-200 ">
         <img
-          src={user?.avatar ?? ""}
-          alt={user?.displayName}
+          src={user?.avatar ?? faker.image.avatar()}
+          alt=""
           className="group-hover:scale-105 transition overflow-hidden"
         />
         <span

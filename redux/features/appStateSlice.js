@@ -12,10 +12,10 @@ const initialState = {
     privateChat: false,
   },
   rightPane: {
-    userProfile: true,
+    userProfile: false,
     businessProfile: false,
     tradeWallet: false,
-    userWallet: false,
+    userWallet: true,
     currencyList: false,
   },
   screenSize: undefined,
