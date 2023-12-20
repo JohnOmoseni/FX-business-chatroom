@@ -116,8 +116,6 @@ function PersonalWallet() {
     return [sigNo, decimal];
   }, [userAccount?.balance]);
 
-  console.log(balance, userAccount?.balance.split("."));
-
   const txs = useCallback(() => {
     transactions?.map((tx, idx) => {
       return {

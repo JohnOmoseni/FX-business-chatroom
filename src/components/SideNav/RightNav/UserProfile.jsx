@@ -5,6 +5,7 @@ import { PiPhoneLight } from "react-icons/pi";
 import { AiOutlineMail } from "react-icons/ai";
 import { MdKeyboardArrowRight, MdLogout } from "react-icons/md";
 import Button from "@components/Button";
+import { faker } from "@faker-js/faker";
 import { useDispatch, useSelector } from "react-redux";
 import PaneHeading from "./PaneHeading";
 import {
@@ -12,7 +13,6 @@ import {
   setCloseRightPane,
 } from "@redux/features/appStateSlice";
 import EditProfile from "./EditProfile";
-import placeholderImg from "@assets/images/logo.png";
 import { useNavigate } from "react-router-dom";
 import useAuthContext from "@context/AuthContext";
 import Swal from "sweetalert2";
@@ -78,9 +78,9 @@ function UserProfile() {
       <PaneHeading title="Profile" onClick={handleBackArrowClick} />
       <div className="w-full py-4 px-4 overflow-auto">
         <div className="flex-column mx-auto md:w-[95%] gap-4 !items-center md:flex-row md:gap-clamp-sm">
-          <div className="relative w-[140px] h-[140px] md:w-[100px] md:h-[100px] clip-circle rounded-[50%] border border-solid border-neutral-200 shadow-md">
+          <div className="relative w-[120px] h-[120px] md:w-[100px] md:h-[100px] clip-circle rounded-[50%] border border-solid border-neutral-200 shadow-md">
             <img
-              src={userProfile?.avatar ?? placeholderImg}
+              src={userProfile?.avatar ?? faker.image.avatar()}
               alt=""
               className="group-hover:scale-105 transition"
             />

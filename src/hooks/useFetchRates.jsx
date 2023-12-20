@@ -32,10 +32,11 @@ function useFetchRates() {
           throw new Error("Error fetching data");
         }
 
-        const data = await res.text();
+        const data = await res.json();
+        console.log(data);
         if (mounted) {
           setRates(data?.rates);
-          dispatch(setBaseCurrency(data?.source));
+          dispatch(setBaseCurrency(data?.base));
         }
         setIsLoading(false);
       } catch (error) {

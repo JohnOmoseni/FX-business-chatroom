@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 function FxItem({ fxSymbol, fxRate, onClick }) {
   const { baseCurrency } = useSelector((state) => state.fxState);
   const rate = parseInt(fxRate).toFixed(2);
-  const symbol = fxSymbol.substr(3);
+  const symbol = fxSymbol;
 
   return (
     <li

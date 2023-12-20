@@ -29,11 +29,9 @@ function useFetchCurrencies() {
           throw new Error("Error fetching data");
         }
 
-        const data = await res.text();
+        const data = await res.json();
         console.log(data);
-        if (mounted) {
-          setCurrencies(data?.currencies);
-        }
+        setCurrencies(data?.symbols);
         setIsLoading(false);
       } catch (error) {
         setIsLoading(false);
