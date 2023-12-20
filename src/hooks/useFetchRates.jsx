@@ -24,7 +24,10 @@ function useFetchRates() {
     const getRates = async () => {
       setIsLoading(true);
       try {
-        const res = await fetch(`${apiURL}/latest?base=USD`, options);
+        const res = await fetch(
+          `${apiURL}/latest?base=${baseCurrency}`,
+          options
+        );
 
         if (!res.ok) {
           console.log(res.text());
