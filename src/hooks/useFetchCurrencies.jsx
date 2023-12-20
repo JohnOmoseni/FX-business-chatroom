@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
-const apiURL = "https://api.apilayer.com/currency_data/list";
-const testURL = "/src/hooks/currencies.json";
+const apiURL = import.meta.env.VITE_API_URL;
 
 const myHeaders = new Headers();
 myHeaders.append("apikey", import.meta.env.VITE_API_KEY);
@@ -22,7 +21,7 @@ function useFetchCurrencies() {
     const getCurrencies = async () => {
       setIsLoading(true);
       try {
-        const res = await fetch(testURL);
+        const res = await fetch(`${apiURL}/symbols`, options);
 
         if (!res.ok) {
           console.log(res.text());
@@ -30,7 +29,8 @@ function useFetchCurrencies() {
           throw new Error("Error fetching data");
         }
 
-        const data = await res.json();
+        const data = await res.text();
+        console.log(data);
         if (mounted) {
           setCurrencies(data?.currencies);
         }

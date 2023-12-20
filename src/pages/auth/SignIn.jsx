@@ -30,7 +30,6 @@ function SignIn() {
   const { handleSignIn, setIsAuthenticated } = useAuthContext();
 
   const onSubmit = async (values, actions) => {
-    console.log("Submitted", values);
     try {
       const res = await handleSignIn(values?.email, values?.password);
       if (res?.user) {

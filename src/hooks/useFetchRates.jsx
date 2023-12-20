@@ -2,16 +2,13 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setBaseCurrency } from "@redux/features/fxSlice";
 
-const testUrl = "https://api.exchangerate.host/latest?base=USD";
-const apiURL =
-  "https://api.apilayer.com/currency_data/live?source=source&currencies=currencies";
+const apiURL = "https://api.apilayer.com/exchangerates_data";
 
 const myHeaders = new Headers();
 myHeaders.append("apikey", import.meta.env.VITE_API_KEY);
 
 const options = {
   method: "GET",
-  redirect: "follow",
   headers: myHeaders,
 };
 
@@ -24,21 +21,20 @@ function useFetchRates() {
 
   useEffect(() => {
     let mounted = true;
-    console.log("fetching rates");
     const getRates = async () => {
       setIsLoading(true);
       try {
-        const res = await fetch("/src/hooks/rates.json");
+        const res = await fetch(`${apiURL}/latest?base=USD`, options);
 
         if (!res.ok) {
-          console.log(res.json());
+          console.log(res.text());
           setError(true);
           throw new Error("Error fetching data");
         }
 
-        const data = await res.json();
+        const data = await res.text();
         if (mounted) {
-          setRates(data?.quotes);
+          setRates(data?.rates);
           dispatch(setBaseCurrency(data?.source));
         }
         setIsLoading(false);

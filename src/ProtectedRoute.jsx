@@ -7,9 +7,9 @@ export const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAuthContext();
 
   console.log(isAuthenticated);
-  if (!isAuthenticated) {
-    return <Navigate to="/auth/sign-in" />;
-  }
+  // if (!isAuthenticathed) {
+  //   return <Navigate to="/auth/sign-in" />;
+  // }
 
   return children;
 };

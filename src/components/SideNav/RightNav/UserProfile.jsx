@@ -42,8 +42,6 @@ function UserProfile() {
   const dispatch = useDispatch();
   const { logOut } = useAuthContext();
 
-  console.log(userProfile);
-
   const handleLogOut = async () => {
     await logOut();
     navigate("/auth/sign-in");
