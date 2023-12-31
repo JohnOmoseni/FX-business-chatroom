@@ -5,7 +5,7 @@ import PaneHeading from "./PaneHeading";
 import { FaUser } from "react-icons/fa";
 import { AiFillLock } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
-import { registerSchema } from "@schema/validate";
+import { editProfileSchema } from "@schema/validate";
 import { doc, updateDoc } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import gallery from "@icons/gallery.svg";
@@ -36,11 +36,9 @@ function EditProfile({ setEditProfile }) {
   } = currentUser;
   const [preview, setPreview] = useState(avatar);
   const [fileInput, setFileInput] = useState("");
-  const dispatch = useDispatch();
   const fileRef = useRef(null);
 
   const onSubmit = async (values, actions) => {
-    e.preventDefault();
     console.log(values, "Running", fileInput);
 
     if (fileInput) {
@@ -71,8 +69,14 @@ function EditProfile({ setEditProfile }) {
         ...values,
       });
     }
+    toast.success("Saved", {
+      autoClose: 1000,
+      className: "font-kinn tracking-wide",
+    });
 
-    setEditProfile(false);
+    setTimeout(() => {
+      setEditProfile(false);
+    }, 3000);
   };
 
   const {
@@ -91,7 +95,7 @@ function EditProfile({ setEditProfile }) {
       phoneNo: phoneNo ?? "",
       country: country ?? "",
     },
-    validationSchema: registerSchema,
+    validationSchema: editProfileSchema,
     onSubmit,
   });
 

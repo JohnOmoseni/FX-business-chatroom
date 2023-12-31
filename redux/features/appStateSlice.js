@@ -46,7 +46,7 @@ const appStateSlice = createSlice({
       state.showPane = false;
       state.visiblePane = { ...state.visiblePane, [id]: val };
     },
-    setCloseRightPane: (state, { payload }) => {
+    setCloseRightPane: (state, actions) => {
       state.showPane = false;
       state.showRightPane = false;
       for (let key in state.rightPane) {

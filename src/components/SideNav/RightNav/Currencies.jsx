@@ -100,7 +100,7 @@ function Currencies() {
           {isLoading ? (
             <Loader isLoading={isLoading} />
           ) : ratesArray ? (
-            <ul className="flex-column gap-3 px-3 my-4">
+            <ul className="flex-column gap-3 px-3 my-5">
               {ratesArray?.map(({ rate, symbol }, idx) => {
                 return (
                   <FxItem
