@@ -44,7 +44,6 @@ function Messages({ chatId }) {
       </div>
 
       {rows.length > 0 && rows?.map((row) => row)}
-      <Chat />
     </div>
   );
 }

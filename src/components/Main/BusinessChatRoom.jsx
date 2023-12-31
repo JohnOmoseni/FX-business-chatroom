@@ -60,7 +60,6 @@ function BusinessChatRoom() {
       </div>
 
       {rows.length > 0 && rows?.map((row) => row)}
-      <ChatBusiness />
     </div>
   );
 }

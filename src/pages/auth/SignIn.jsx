@@ -29,12 +29,13 @@ function SignIn() {
   const navigate = useNavigate();
   const { handleSignIn, setIsAuthenticated } = useAuthContext();
 
-  const onSubmit = async (values, actions) => {
+  const onSubmit = async (values) => {
     try {
       const res = await handleSignIn(values?.email, values?.password);
       if (res?.user) {
         setIsAuthenticated(true);
         cookies.set("auth-token", res.user.refreshToken);
+        localStorage.setItem("auth-token", res.user.refreshToken);
         navigate("/home");
       }
     } catch (err) {
@@ -78,7 +79,7 @@ function SignIn() {
         <div className="w-full">
           <form
             onSubmit={handleSubmit}
-            className="mt-10 mb-4 mx-auto w-[95%]  flex-column gap-6"
+            className="mt-10 mb-4 mx-auto w-[95%] flex-column gap-6"
           >
             <FormGroup
               name="email"

@@ -7,12 +7,13 @@ const amount = "500";
 
 export default function Deposit({
   currency = "NGN",
+  amount,
   customer,
   desc = "Make a deposit",
 }) {
   // const { name, phoneNo: phone_number, email } = customer;
   const config = {
-    public_key: "FLWPUBK_TEST-a6157e327949bccb95ad0e4f97279130-X",
+    public_key: import.meta.env.VITE_FLUTTERWAVE_API_KEY,
     tx_ref: Date.now(),
     amount: 200,
     currency: "NGN",
@@ -31,7 +32,7 @@ export default function Deposit({
 
   const fwConfig = {
     ...config,
-    text: "Pay with Flutterwave!",
+    text: "Deposit",
     callback: (response) => {
       console.log(response);
       if (response.status !== "completed") {

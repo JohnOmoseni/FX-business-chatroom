@@ -10,11 +10,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { db } from "../../config/firebase-config";
 import { setChangeUser, setIsPrivateChat } from "@redux/features/chatSlice";
 import { setActivePane } from "@redux/features/appStateSlice";
+import { convertToTime } from "@utils";
 
-function ChatRow({ user, lastMessage }) {
+function ChatRow({ user, lastMessage, date, isConversation }) {
   const { currentUser } = useSelector((state) => state.authUser);
   const dispatch = useDispatch();
   const isActive = user?.uid === currentUser?.uid;
+  const dtObj = convertToTime(date?.seconds, date?.nanoseconds);
 
   const handleSelect = async () => {
     const combinedId =
@@ -82,12 +84,16 @@ function ChatRow({ user, lastMessage }) {
         {lastMessage && <p className="text-tiny truncate">{lastMessage}</p>}
       </div>
 
-      <div className="flex-column gap-2 pr-2 !items-center">
-        <span className="text-neutral-500 text-tiny">12:30pm</span>
-        <div className="relative text-[0.65em] w-[20px] h-[20px] grid place-items-center bg-[#222] rounded-[50%] text-white text-center">
-          3
+      {isConversation && (
+        <div className="flex-column mt-1 gap-1 pr-2 !items-center">
+          <span className="text-neutral-500 text-tiny font-semibold">
+            {dtObj.date}
+          </span>
+          <span className="text-neutral-500 text-[0.6rem] text-center">
+            {dtObj?.time}
+          </span>
         </div>
-      </div>
+      )}
     </li>
   );
 }

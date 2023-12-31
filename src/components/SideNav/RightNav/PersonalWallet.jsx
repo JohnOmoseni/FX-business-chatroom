@@ -12,9 +12,10 @@ import {
 import { faker } from "@faker-js/faker";
 
 import Deposit from "@pages/payment/Deposit";
+import Withdraw from "@pages/payment/Withdraw";
 
 const WalletHeader = ({ userProfile, onClick, currency }) => (
-  <div className="w-full py-3 md:py-[4%] pl-1 pr-3 flex-row gap-6 !justify-between border-b border-solid border-br-light shadow-md">
+  <div className="w-full py-4 md:py-[4%] pl-1 pr-3 flex-row gap-6 !justify-between border-b border-solid border-br-light shadow-md">
     <div className="flex-row gap-1">
       <span
         onClick={onClick}
@@ -145,7 +146,7 @@ function PersonalWallet() {
         currency={userAccount?.currency}
         onClick={handleBackArrowClick}
       />
-      <div className="w-full pt-3 h-full overflow-y-auto">
+      <div className="w-full h-full pt-3">
         <div className="grid grid-cols-balance gap-4 overflow-hidden">
           <div className="bg-gradient-200 rounded-md"></div>
           <div className="rounded-md shadow-100 bg-neutral-100 px-3 pt-5 pb-6 mx-auto w-[100%]">
@@ -164,13 +165,13 @@ function PersonalWallet() {
 
         <div className="flex-row gap-4 my-14 px-4 mx-auto">
           <Button icon={<CiLocationOn />}>
-            {/* <Deposit title="Load" amount currency customer /> */}
+            <Deposit amount currency customer />
           </Button>
           <Button icon={<CiLocationOn />}>
-            {/* <Deposit title="Withdraw" amount currency customer /> */}
+            <Withdraw title="Withdraw" amount currency customer />
           </Button>
         </div>
-        <div className="h-full rounded-ss-2xl rounded-se-lg shadow-md py-4 px-[4%] border-t-2 border-solid border-br-light">
+        <div className="h-full relative rounded-ss-2xl rounded-se-lg shadow-md py-4 px-[4%] border-t-2 border-solid border-br-light overflow-y-auto">
           <div className="flex-row gap-3 !justify-between">
             {searchBar ? (
               <SearchBar
@@ -193,10 +194,9 @@ function PersonalWallet() {
               </>
             )}
           </div>
-          <ul className="mt-4">
-            <span className="text-xs ml-1 mb-2">Today</span>
-            {txs?.length > 0 &&
-              txs.map((tx, idx) => {
+          {txs?.length > 0 ? (
+            <ul className="mt-4">
+              {txs.map((tx, idx) => {
                 return (
                   <ListRow
                     key={idx}
@@ -207,12 +207,12 @@ function PersonalWallet() {
                   />
                 );
               })}
-            <ListRow
-              renderLastCol={() => (
-                <div className="text-center leading-5">Some text</div>
-              )}
-            />
-          </ul>
+            </ul>
+          ) : (
+            <p className="absolute top-[40%] left-[50%] translate-x-[-50%] translate-y-[-100%] grid place-items-center text-neutral-500 text-shadow text-center">
+              No transactions
+            </p>
+          )}
         </div>
       </div>
     </>

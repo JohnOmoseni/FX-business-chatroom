@@ -25,7 +25,7 @@ const currentUser = {
 };
 
 function EditProfile({ setEditProfile }) {
-  const { currentUser, isActive } = useSelector((state) => state.authUser);
+  const { currentUser } = useSelector((state) => state.authUser);
   const {
     businessName = "",
     displayName = "",
@@ -38,11 +38,6 @@ function EditProfile({ setEditProfile }) {
   const [fileInput, setFileInput] = useState("");
   const dispatch = useDispatch();
   const fileRef = useRef(null);
-
-  const testSubmit = (e) => {
-    e.preventDefault();
-    console.log("Running", fileInput);
-  };
 
   const onSubmit = async (values, actions) => {
     e.preventDefault();

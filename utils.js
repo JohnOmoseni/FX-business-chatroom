@@ -69,14 +69,36 @@ export const formatDate = (dateInMs) => {
       const weeks = Math.floor(daysDiff / 7);
       return `${weeks} ${weeks === 1 ? "week" : "weeks"} ago`;
     }
-    return `${daysDiff} ${daysDiff === 1 ? "day" : "days"} ago`;
+    // return `${daysDiff} ${daysDiff === 1 ? "day" : "days"} ago`;
+    return "WTF!!!";
   }
 };
 const currDate = new Date();
 currDate.setHours(0, 0, 0, 0);
 const yesterday = currDate.getTime() - 1 * 24 * 60 * 60 * 1000;
 
-export const calculatePercentage = (amount) => {};
+const testDt = new Date(1702931243354).getTime();
+
+console.log(testDt, yesterday, formatDate(testDt));
+
+export const convertToTime = (seconds, nanoseconds) => {
+  const timestamp = seconds * 1000 + Math.round(nanoseconds / 1e6);
+  const formattedTime = new Date(timestamp).toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  const formattedDate = new Date(timestamp).toLocaleDateString("en-US", {
+    year: "2-digit",
+    month: "2-digit",
+    day: "2-digit",
+  });
+
+  const test = formatDate(timestamp);
+  // console.log(test);
+
+  return { time: formattedTime, date: formattedDate, timestamp };
+};
 
 export const container = {
   hidden: { opacity: 0 },

@@ -26,7 +26,7 @@ const Button = ({
       disabled={disabled}
       className={`${
         disabled || icon ? "flex-row gap-2.5" : ""
-      } ${className} px-5 py-2 rounded-sm shadow-md transition-sm active:scale-95 disabled:opacity-60`}
+      } ${className} px-5 py-2 rounded-sm shadow-md transition-sm cursor-pointer active:scale-95 disabled:opacity-60`}
       variants={animate ? buttonAnimate : null}
       initial="hidden"
       whileInView="animate"

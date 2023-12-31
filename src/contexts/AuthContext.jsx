@@ -18,6 +18,7 @@ export const AuthContextProvider = ({ children }) => {
       if (user) {
         // user is signed in
         setIsAuthenticated(true);
+        cookies.set("auth-token", user.refreshToken);
       } else {
         console.log("User is logged out");
         cookies.remove("auth-token");
@@ -42,6 +43,8 @@ export const AuthContextProvider = ({ children }) => {
     if (res) {
       try {
         // user clicked OK
+        cookies.remove("auth-token");
+        localStorage.removeItem("auth-token");
         return signOut(auth);
       } catch (err) {
         console.log(err.message, "Error logging out");

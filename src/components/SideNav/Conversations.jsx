@@ -26,7 +26,6 @@ function Conversations() {
             };
           });
           dispatch(setUserChats(array));
-          console.log(array);
         },
         (err) => console.log(err)
       );
@@ -49,7 +48,13 @@ function Conversations() {
             ?.sort((a, b) => b[1].date - a[1].date)
             ?.map((user) => {
               return (
-                <ChatRow key={user[0]} user={user[1].userInfo} {...user[1]} />
+                <ChatRow
+                  key={user[0]}
+                  user={user[1].userInfo}
+                  date={user[1]?.date}
+                  isConversation
+                  {...user[1]}
+                />
               );
             })}
         </ul>

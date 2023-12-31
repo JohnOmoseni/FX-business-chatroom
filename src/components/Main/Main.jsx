@@ -24,15 +24,13 @@ function Main() {
               <InputBar userChat={user} chatId={chatId} />
             </>
           )}
-          <>
-            {visiblePane?.showChatRoom && (
-              <>
-                <ChatRoomHeading userChat={user} />
-                <BusinessChatRoom />
-                <ChatRoomInput userChat={user} />
-              </>
-            )}
-          </>
+          {visiblePane?.showChatRoom && (
+            <>
+              <ChatRoomHeading userChat={user} />
+              <BusinessChatRoom />
+              <ChatRoomInput userChat={user} />
+            </>
+          )}
         </>
       ) : isPrivateChat ? (
         <>

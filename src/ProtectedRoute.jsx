@@ -4,10 +4,11 @@ import useAuthContext from "@context/AuthContext";
 
 export const ProtectedRoute = ({ children }) => {
   const isCookie = cookies.get("auth-token");
+  const authToken = localStorage.getItem("auth-token");
   const { isAuthenticated } = useAuthContext();
 
-  console.log(isAuthenticated);
-  if (!isAuthenticated) {
+  console.log(isAuthenticated, authToken);
+  if (!isAuthenticated && !authToken) {
     return <Navigate to="/auth/sign-in" />;
   }
 

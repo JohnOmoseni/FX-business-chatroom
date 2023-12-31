@@ -47,8 +47,6 @@ export function ChatBusiness({ msg, startMsg }) {
       confirmButtonText: "Reply privately",
     }).then((result) => {
       if (result.isConfirmed) {
-        //   dispatch(setChangeUser({ currentUser, user: clickedUser }));
-        //   dispatch(setIsPrivateChat(true));
         openPrivateChat(clickedUser);
       } else if (result.isDenied) {
         console.log("Reply in chatroom");
@@ -60,6 +58,7 @@ export function ChatBusiness({ msg, startMsg }) {
     dispatch(setChangeUser({ currentUser, user }));
     dispatch(setIsPrivateChat(true));
     dispatch(setActivePane({ id: "showChat", val: true }));
+    dispatch(setActivePane({ id: "showChatRoom", val: false }));
 
     const combinedId =
       currentUser?.uid > user?.uid
