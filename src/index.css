@@ -97,7 +97,7 @@
       );
   }
   .grid-cols-two {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr max-content;
   }
   .grid-cols-sm {
     grid-template-columns: minmax(25%, auto) 1fr;

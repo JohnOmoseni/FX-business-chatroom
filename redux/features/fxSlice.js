@@ -71,7 +71,7 @@ export const {
   setBaseCurrency,
   setSelectedCurrency,
   setAgreedExchangeRate,
-  setAmontToSend,
+  setAmountToSend,
   setCurrencies,
   setTransactions,
   setAccountBalance,

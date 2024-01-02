@@ -31,13 +31,14 @@ export function ChatBusiness({ msg, startMsg }) {
   }, [msg]);
 
   const handleChatRoomClick = (id) => {
+    if (owner) return;
     const clickedUser =
       users?.length > 0 &&
       users?.find((user) => {
         return user?.uid === id;
       });
 
-    console.log("Clicked on chat " + id, clickedUser);
+    console.log("Clicked on chat " + typeof id, clickedUser);
 
     Swal.fire({
       icon: "question",

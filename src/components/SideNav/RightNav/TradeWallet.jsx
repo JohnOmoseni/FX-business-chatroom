@@ -16,17 +16,6 @@ const from = {
   currency: "USD",
 };
 
-const transaction = {
-  currencySent: "",
-  currencyReceived: "",
-  amountSent: "USD 50",
-  amountReceived: "USD 50",
-  exchangeRate: "",
-  timestamp: "",
-  receiver: "",
-  fx: "USD/NGN",
-};
-
 const WalletHeader = ({ onClick, currrencyPair }) => (
   <div className="w-full py-4 md:py-[4%] pr-3 flex-row gap-4 !justify-between border-b border-solid border-br-light shadow-md">
     <div className="flex-row gap-3 !justify-start pl-3">
@@ -101,14 +90,20 @@ function TradeWallet() {
     currencies,
     agreedExchangedRate,
     amountToSend,
-    userAccount,
+    currentAccount,
   } = useSelector((state) => state.fxState);
   const { screenSize } = useSelector((state) => state.appState);
   const dispatch = useDispatch();
 
-  const test = currencies?.find((curr) =>
-    curr.symbol.includes(selectedCurrency?.symbol)
-  );
+  const test = currencies?.reduce((arr, curr) => {
+    if (
+      curr.symbol.includes(selectedCurrency?.symbol) ||
+      curr.symbol.includes(baseCurrency)
+    ) {
+      return [...arr, curr];
+    }
+    return arr;
+  }, []);
 
   console.log(test);
 
@@ -129,24 +124,25 @@ function TradeWallet() {
         currrencyPair={selectedCurrency?.pair}
       />
       <div className="w-full h-full overflow-y-auto">
-        <div className="flex-column gap-4 w-[94%] py-6 px-4 md:px-[4%] mx-auto rounded-md border border-solid border-br-light shadow-md">
-          <ListRow
-            obj={test}
-            renderLastCol={() => (
-              <div className="text-center leading-5">
-                {selectedCurrency?.symbol}
-              </div>
-            )}
-          />
-          <ListRow
-            obj={test}
-            renderLastCol={() => (
-              <div className="text-center leading-5">
-                {selectedCurrency?.baseCurrency}
-              </div>
-            )}
-          />
-        </div>
+        <ul className="w-full flex-column gap-4  py-6 px-4 md:px-[4%] mx-auto rounded-md border border-solid border-br-light shadow-md">
+          {test.map((item, idx) => {
+            const obj = {
+              name: item.name,
+              subtitle: item.symbol,
+            };
+            return (
+              <ListRow
+                obj={obj}
+                key={idx}
+                renderLastCol={() => (
+                  <div className="text-center leading-5 justify-self-end">
+                    {/* {selectedCurrency?.symbol} */}
+                  </div>
+                )}
+              />
+            );
+          })}
+        </ul>
         <div className="grid grid-rows-trade place-items-center min-h-[60%]">
           <p className="flex-column !items-center text-center gap-1 whitespace-nowrap text-5xl md:text-4xl text-shadow text-gradient-100">
             ${amountToSend}
@@ -156,13 +152,13 @@ function TradeWallet() {
             <span className="text-sm px-3 text-neutral-300 text-opacity-60 tracking-wide text-gradient-200">
               Your balance{" "}
               <span className="text-tiny font-semibold">{baseCurrency}</span>
-              {userAccount?.balance}(available)
+              {currentAccount?.balance}(available)
             </span>
           </p>
           <p className="text-center px-4">
             <span>
-              $0.30
-              <span className="text-shadow font-semibold"> Oshofree fee </span>
+              $0.30{" "}
+              <span className="text-shadow font-semibold"> Oshofree fee </span>{" "}
               already included
             </span>
             <span>

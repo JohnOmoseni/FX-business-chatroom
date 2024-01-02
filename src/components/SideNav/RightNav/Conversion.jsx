@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { MdOutlineCompareArrows } from "react-icons/md";
 import { setAgreedExchangeRate } from "@redux/features/fxSlice";
 import { setVisibleRightPane } from "@redux/features/appStateSlice";
-import { setAmontToSend } from "@redux/features/fxSlice";
+import { setAmountToSend } from "@redux/features/fxSlice";
 import { toast } from "react-toastify";
 
 const Header = ({ onClick }) => (
@@ -96,7 +96,7 @@ function Conversion({ setShowConversionPane }) {
   };
 
   const handleSetExchangeRate = () => {
-    if (exchangeRate) {
+    if (exchangeRate && !isNaN(exchangeRate)) {
       setIsSetExchangeRate(true);
       dispatch(setAgreedExchangeRate(exchangeRate));
     } else {
@@ -111,9 +111,9 @@ function Conversion({ setShowConversionPane }) {
   };
 
   const handleExchangeRate = () => {
-    if (amount) {
+    if (amount && !isNaN(amount)) {
       setShowConversionPane(false);
-      dispatch(setAmontToSend(amount));
+      dispatch(setAmountToSend(amount));
       dispatch(setVisibleRightPane({ id: "tradeWallet", val: true }));
     }
   };
