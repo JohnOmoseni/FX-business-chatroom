@@ -41,13 +41,9 @@ function SignIn() {
     } catch (err) {
       console.error(err.message, "Something went wrong");
       if (err.message.includes("(auth/email-already-in-use)")) {
-        toast.error("Email already in use", {
-          className: "font-poppins tracking-wide",
-        });
+        toast.error("Email already in use");
       } else {
-        toast.error("Something went wrong", {
-          className: "font-poppins tracking-wide",
-        });
+        toast.error("Something went wrong");
       }
     }
   };

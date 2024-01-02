@@ -17,12 +17,9 @@ export const AuthContextProvider = ({ children }) => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         // user is signed in
-        setIsAuthenticated(true);
-        cookies.set("auth-token", user.refreshToken);
+        console.log("user is logged in");
       } else {
         console.log("User is logged out");
-        cookies.remove("auth-token");
-        setIsAuthenticated(false);
       }
     });
     return () => {
@@ -44,6 +41,7 @@ export const AuthContextProvider = ({ children }) => {
       try {
         // user clicked OK
         cookies.remove("auth-token");
+        setIsAuthenticated(false);
         localStorage.removeItem("auth-token");
         return signOut(auth);
       } catch (err) {

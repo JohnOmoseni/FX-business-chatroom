@@ -42,8 +42,10 @@ function useFetchRates() {
           dispatch(setBaseCurrency(data?.base));
         }
         setIsLoading(false);
+        setError(false);
       } catch (error) {
         setIsLoading(false);
+        setError(true);
         console.error(error.message);
       }
     };

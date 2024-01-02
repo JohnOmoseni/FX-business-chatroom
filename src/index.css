@@ -96,6 +96,9 @@
         25%
       );
   }
+  .grid-cols-two {
+    grid-template-columns: 1fr auto;
+  }
   .grid-cols-sm {
     grid-template-columns: minmax(25%, auto) 1fr;
   }

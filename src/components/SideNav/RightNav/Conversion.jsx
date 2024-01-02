@@ -1,13 +1,13 @@
 import { MdOutlineArrowBack } from "react-icons/md";
+import Button from "../../Button";
+import InputField from "./InputField";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import InputField from "./InputField";
 import { MdOutlineCompareArrows } from "react-icons/md";
-import Button from "../../Button";
 import { setAgreedExchangeRate } from "@redux/features/fxSlice";
 import { setVisibleRightPane } from "@redux/features/appStateSlice";
+import { setAmontToSend } from "@redux/features/fxSlice";
 import { toast } from "react-toastify";
-import { setAmontToSend } from "../../../../redux/features/fxSlice";
 
 const Header = ({ onClick }) => (
   <div className="w-full pt-6 pb-4 px-[2%] flex-row gap-4 !justify-start opacity-80 shadow-md">

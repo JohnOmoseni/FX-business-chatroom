@@ -9,7 +9,7 @@ import { AiFillLock, AiOutlineMail } from "react-icons/ai";
 import { useDispatch } from "react-redux";
 import { setCurrentuser } from "@redux/features/authUserSlice";
 import { registerSchema } from "@schema/validate";
-import { auth, db, storage } from "../../config/firebase-config";
+import { db, storage } from "../../config/firebase-config";
 import { setDoc, doc } from "firebase/firestore";
 import { updateProfile } from "firebase/auth";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
@@ -35,11 +35,11 @@ const Top = () => (
 );
 
 function RegisterForm() {
-  const [preview, setPreview] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const fileRef = useRef(null);
   const { createUser, setIsAuthenticated } = useAuthContext();
+  const [preview, setPreview] = useState("");
 
   const onSubmit = async (values, actions) => {
     const file = fileRef.current.files[0];
@@ -103,7 +103,9 @@ function RegisterForm() {
               })
             );
             cookies.set("auth-token", res.user.refreshToken);
-            setIsAuthenticated(true)
+            localStorage.setItem("auth-token", res.user.refreshToken);
+            setIsAuthenticated(true);
+            toast.success("Registration successful");
             navigate("/home");
           });
         }
@@ -111,13 +113,9 @@ function RegisterForm() {
     } catch (err) {
       console.log(err.message, "Something went wrong");
       if (err.message.includes("(auth/email-already-in-use)")) {
-        toast.error("Email already in use", {
-          className: "font-poppins tracking-wide",
-        });
+        toast.error("Email already in use");
       } else {
-        toast.error("Something went wrong", {
-          className: "font-poppins tracking-wide",
-        });
+        toast.error("Something went wrong");
       }
     } finally {
       // actions.resetForm();

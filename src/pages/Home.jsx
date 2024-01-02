@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCurrentuser } from "@redux/features/authUserSlice";
 import { setScreenSize } from "@redux/features/appStateSlice";
 import { onAuthStateChanged } from "firebase/auth";
-import { setIsLoggedIn } from "@redux/features/authUserSlice";
 
 const VisiblePaneLayout = ({
   children,
@@ -37,7 +36,7 @@ const VisiblePaneLayout = ({
 };
 
 function Home() {
-  const { isLoggedIn } = useSelector((state) => {
+  const { currentUser } = useSelector((state) => {
     console.log(state);
     return state.authUser;
   });
@@ -52,12 +51,10 @@ function Home() {
         // user is signed in
         const docSnap = await getDoc(doc(db, "users", user?.uid));
         dispatch(setCurrentuser(docSnap.data()));
-        dispatch(setIsLoggedIn(true));
 
         console.log(docSnap.data(), user?.uid);
       } else {
         console.log("User is logged out");
-        dispatch(setIsLoggedIn(false));
       }
     });
     return () => {

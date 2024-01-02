@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialChatState = {
   isPrivateChat: false,
-  user: null,
+  user: {},
   chatId: "",
   users: [],
   userChats: [],

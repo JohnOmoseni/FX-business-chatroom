@@ -8,25 +8,26 @@ const initialState = {
   amountToSend: "",
   transactions: [],
   lastTransaction: {
+    transactionId: "",
     currencySent: "",
     currencyReceived: "",
-    amountSent: "",
-    amountReceived: "",
+    chargedAmount: "",
+    amount: "",
     exchangeRate: "",
-    timestamp: "",
-    receiverID: "",
+    txType: "",
     fx: "USD/NGN",
+    status: "",
+    recipient: null,
+    timestamp: "",
   },
-  userAccount: { balance: "0.00", currency: "NGN" },
+  userAccounts: [{ balance: "0.00", currency: "NGN" }],
+  currentAccount: { balance: "0.00", currency: "NGN" },
 };
 
 const fxSlice = createSlice({
   name: "fxState",
   initialState: initialState,
   reducers: {
-    setBalance: (state, { payload }) => {
-      state.users = payload;
-    },
     setBaseCurrency: (state, { payload }) => {
       state.baseCurrency = payload;
     },
@@ -36,21 +37,44 @@ const fxSlice = createSlice({
     setAgreedExchangeRate: (state, { payload }) => {
       state.agreedExchangedRate = parseInt(payload).toFixed(2);
     },
-    setAmontToSend: (state, { payload }) => {
+    setAmountToSend: (state, { payload }) => {
       state.amountToSend = parseInt(payload).toFixed(2);
     },
     setCurrencies: (state, { payload }) => {
       state.currencies = payload;
+    },
+    setTransactions: (state, { payload }) => {
+      state.transactions = [...state.transactions, payload];
+      state.lastTransaction = payload;
+    },
+    setAccounts: (state, { payload }) => {
+      state.userAccounts = [...state.userAccounts, payload];
+      state.currentAccount = payload;
+    },
+    setAccountCurrency: (state, { payload }) => {
+      state.currentAccount.currency = payload;
+    },
+    setAccountBalance: (state, { payload }) => {
+      state.currentAccount.balance = payload;
+      state.userAccounts = state.userAccounts.map((account) => {
+        if (account.currency === state.currentAccount.currency) {
+          account.balance = payload;
+        }
+        return account;
+      });
     },
   },
 });
 
 export default fxSlice.reducer;
 export const {
-  setBalance,
   setBaseCurrency,
   setSelectedCurrency,
   setAgreedExchangeRate,
   setAmontToSend,
   setCurrencies,
+  setTransactions,
+  setAccountBalance,
+  setAccountCurrency,
+  setAccounts,
 } = fxSlice.actions;

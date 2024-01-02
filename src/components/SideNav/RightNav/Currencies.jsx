@@ -30,7 +30,7 @@ function Currencies() {
   const { baseCurrency } = useSelector((state) => state.fxState);
   const dispatch = useDispatch();
   const [showConversionPane, setShowConversionPane] = useState(false);
-  const [rates, isLoading] = useFetchRates();
+  const [rates, isLoading, error] = useFetchRates();
   const [ratesArray, setRatesArray] = useState([]);
   const [search, setSearch] = useState("");
 
@@ -99,24 +99,26 @@ function Currencies() {
         <div>
           {isLoading ? (
             <Loader isLoading={isLoading} />
-          ) : ratesArray ? (
-            <ul className="flex-column gap-3 px-3 my-5">
-              {ratesArray?.map(({ rate, symbol }, idx) => {
-                return (
-                  <FxItem
-                    key={idx}
-                    fxRate={rate}
-                    fxSymbol={symbol}
-                    rates={rates}
-                    onClick={handleCurrencyRow}
-                  />
-                );
-              })}
-            </ul>
-          ) : (
-            <div className="px-2 text-base text-shadow w-full min-h-[50vh] leading-5 grid place-items-center bg-inherit text-neutral-500 text-center">
+          ) : error ? (
+            <div className="px-2 text-shadow w-full min-h-[60vh] leading-5 grid place-items-center bg-inherit text-neutral-600 text-center">
               There is no currency pair <br /> to show
             </div>
+          ) : (
+            ratesArray && (
+              <ul className="flex-column gap-3 px-3 my-5">
+                {ratesArray?.map(({ rate, symbol }, idx) => {
+                  return (
+                    <FxItem
+                      key={idx}
+                      fxRate={rate}
+                      fxSymbol={symbol}
+                      rates={rates}
+                      onClick={handleCurrencyRow}
+                    />
+                  );
+                })}
+              </ul>
+            )
           )}
         </div>
       </div>

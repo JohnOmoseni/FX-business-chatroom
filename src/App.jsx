@@ -3,11 +3,9 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import RegisterForm from "./pages/auth/RegisterForm";
 import SignIn from "./pages/auth/SignIn";
 import LoaderBody from "./components/Loaders/LoaderBody";
+import ReactModal from "react-modal";
 
 const Home = React.lazy(() => import("./pages/Home"));
-
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { ProtectedRoute } from "./ProtectedRoute";
 
 function App() {
@@ -31,7 +29,6 @@ function App() {
           </Routes>
         </Suspense>
       </div>
-      <ToastContainer position="top-center" autoClose={3000} />
     </>
   );
 }

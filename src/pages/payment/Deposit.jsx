@@ -1,27 +1,42 @@
-import { FlutterWaveButton, closePaymentModal } from "flutterwave-react-v3";
+import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setTransactions, setAccountBalance } from "@redux/features/fxSlice";
+import { toast } from "react-toastify";
+import { CiLocationOn } from "react-icons/ci";
+import InputField from "../../components/SideNav/RightNav/InputField";
+import { ButtonVariant } from "../../components/Button";
 
 const email = "johnny@gmail.com";
 const phone_number = "09012603169";
 const name = "johnny";
 const amount = "500";
 
-export default function Deposit({
-  currency = "NGN",
-  amount,
-  customer,
-  desc = "Make a deposit",
-}) {
-  // const { name, phoneNo: phone_number, email } = customer;
+export default function Deposit({ onCloseModal }) {
+  const { user } = useSelector((state) => state.usersState);
+  const { currentAccount } = useSelector((state) => state.fxState);
+  const { currentUser } = useSelector((state) => state.authUser);
+
+  const [amount, setAmount] = useState("");
+  const {
+    businessName = "",
+    displayName = "",
+    email = "",
+    phoneNo = "",
+    avatar = "",
+  } = user;
+  const dispatch = useDispatch();
+
   const config = {
     public_key: import.meta.env.VITE_FLUTTERWAVE_API_KEY,
     tx_ref: Date.now(),
-    amount: 200,
-    currency: "NGN",
+    amount: amount,
+    currency: currentAccount?.currency,
     payment_options: "card,mobilemoney,ussd",
     customer: {
       email,
-      phone_number,
-      name,
+      phone_number: phoneNo,
+      name: businessName ?? displayName,
     },
     customizations: {
       title: "Osho free",
@@ -30,24 +45,85 @@ export default function Deposit({
     },
   };
 
-  const fwConfig = {
-    ...config,
-    text: "Deposit",
-    callback: (response) => {
-      console.log(response);
-      if (response.status !== "completed") {
-        console.log("Failed transaction");
-      }
-      closePaymentModal(); // this will close the modal programmatically
-    },
-    onClose: () => {
-      console.log("User ended transaction");
-    },
+  const handleFlutterPayment = useFlutterwave(config);
+
+  const handleDeposit = () => {
+    console.log(amount);
+    if (amount && !isNaN(amount)) {
+      handleFlutterPayment({
+        callback: (response) => {
+          console.log(response);
+          if (response.status !== "completed") {
+            console.log("Failed transaction");
+            toast.error("Transaction failed", {
+              hideProgressBar: true,
+            });
+          } else {
+            console.log("Transaction successful");
+            toast.success("Transaction successful", {
+              hideProgressBar: true,
+            });
+            const tx = {
+              transactionId: response.transaction_id,
+              currencySent: "",
+              currencyReceived: response?.currency,
+              chargedAmount: "",
+              amount: response.amount,
+              exchangeRate: "",
+              txType: "Deposit",
+              fx: "",
+              status: response.status,
+              recipient: currentUser?.uid,
+              timestamp: response.created_at,
+            };
+            const updatedBalance =
+              parseInt(currentAccount.balance) + response?.amount;
+
+            dispatch(setTransactions(tx));
+            dispatch(setAccountBalance(updatedBalance));
+          }
+          closePaymentModal(); // this will close the modal programmatically
+          onCloseModal();
+        },
+        onClose: () => {
+          console.log("Transaction cancelled");
+          onCloseModal();
+          setAmount("");
+          toast.info("Transaction cancelled", {
+            hideProgressBar: true,
+          });
+        },
+      });
+    } else {
+      toast.info("Please enter a valid amount", {
+        hideProgressBar: true,
+      });
+      setAmount("");
+    }
   };
 
   return (
     <>
-      <FlutterWaveButton {...fwConfig} />
+      <div>
+        <span className="text-sm mb-1 font-semibold tracking-wide capitalize">
+          {currentAccount?.currency}
+        </span>
+        <div className="">
+          <InputField
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            className="!text-neutral-400"
+          />
+        </div>
+      </div>
+
+      <div>
+        <ButtonVariant
+          title="Deposit Money"
+          icon={<CiLocationOn />}
+          onClick={handleDeposit}
+        />
+      </div>
     </>
   );
 }

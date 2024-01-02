@@ -94,17 +94,23 @@ const TransferReceipt = () => {
 };
 
 function TradeWallet() {
-  const { currentUser } = useSelector((state) => state.authUser);
   const { user } = useSelector((state) => state.usersState);
   const {
     baseCurrency,
     selectedCurrency,
+    currencies,
     agreedExchangedRate,
     amountToSend,
     userAccount,
   } = useSelector((state) => state.fxState);
   const { screenSize } = useSelector((state) => state.appState);
   const dispatch = useDispatch();
+
+  const test = currencies?.find((curr) =>
+    curr.symbol.includes(selectedCurrency?.symbol)
+  );
+
+  console.log(test);
 
   const handleSendMoney = () => {};
 
@@ -125,13 +131,19 @@ function TradeWallet() {
       <div className="w-full h-full overflow-y-auto">
         <div className="flex-column gap-4 w-[94%] py-6 px-4 md:px-[4%] mx-auto rounded-md border border-solid border-br-light shadow-md">
           <ListRow
-            renderColumn={() => (
-              <div className="text-center leading-5">Some text</div>
+            obj={test}
+            renderLastCol={() => (
+              <div className="text-center leading-5">
+                {selectedCurrency?.symbol}
+              </div>
             )}
           />
           <ListRow
-            renderColumn={() => (
-              <div className="text-center leading-5">Some text</div>
+            obj={test}
+            renderLastCol={() => (
+              <div className="text-center leading-5">
+                {selectedCurrency?.baseCurrency}
+              </div>
             )}
           />
         </div>
@@ -142,13 +154,15 @@ function TradeWallet() {
               Amount to transfer
             </span>
             <span className="text-sm px-3 text-neutral-300 text-opacity-60 tracking-wide text-gradient-200">
-              Your balance {userAccount?.balance} $8,320.50(available)
+              Your balance{" "}
+              <span className="text-tiny font-semibold">{baseCurrency}</span>
+              {userAccount?.balance}(available)
             </span>
           </p>
           <p className="text-center px-4">
             <span>
-              $0.30{" "}
-              <span className="text-shadow font-semibold">Oshofree fee</span>{" "}
+              $0.30
+              <span className="text-shadow font-semibold"> Oshofree fee </span>
               already included
             </span>
             <span>
@@ -159,6 +173,7 @@ function TradeWallet() {
         </div>
 
         <Button
+          textGradient
           title="Send Money"
           className="flex-row mt-12 mb-4 w-[90%] mx-auto shadow-100"
         />
