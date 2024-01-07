@@ -10,9 +10,9 @@ const buttonAnimate = {
   },
 };
 
-export const ButtonVariant = ({ icon, title, onClick }) => (
+export const ButtonVariant = ({ icon, title, onClick, className }) => (
   <button
-    className="py-2.5 px-6 rounded-full flex-row gap-2 shadow-md border border-solid border-br-light  hover:drop-shadow-sm hover:scale-x-105 active:scale-100 active:translate-y-1 bg-gradient-200 opacity-80 cursor-pointer"
+    className={`${className} py-2.5 px-6 rounded-full flex-row gap-2 shadow-md border border-solid border-br-light hover:drop-shadow-sm hover:scale-x-105 active:scale-100 active:translate-y-1 bg-gradient-200 opacity-80 cursor-pointer`}
     onClick={onClick}
   >
     {icon}

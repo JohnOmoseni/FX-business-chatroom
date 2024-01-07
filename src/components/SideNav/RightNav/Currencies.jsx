@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { BiSearchAlt } from "react-icons/bi";
 import useFetchRates from "@hooks/useFetchRates";
 import FxItem from "./FxItem";

@@ -22,7 +22,7 @@ const ListRow = ({
     )}
 
     <div className="flex-column gap-1 w-full">
-      <h4 className="font-semibold tracking-tight leading-5 truncate">
+      <h4 className="font-semibold tracking-tight leading-4 text-gradient-100 truncate">
         {obj?.name}
       </h4>
       <p className="text-sm truncate">{obj?.subtitle}</p>

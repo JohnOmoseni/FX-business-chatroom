@@ -4,9 +4,13 @@ import InputField from "./InputField";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MdOutlineCompareArrows } from "react-icons/md";
-import { setAgreedExchangeRate } from "@redux/features/fxSlice";
+import {
+  setAgreedExchangeRate,
+  setAmountToSend,
+  setSelectedCurrency,
+  setCurrentAccount,
+} from "@redux/features/fxSlice";
 import { setVisibleRightPane } from "@redux/features/appStateSlice";
-import { setAmountToSend } from "@redux/features/fxSlice";
 import { toast } from "react-toastify";
 
 const Header = ({ onClick }) => (
@@ -32,7 +36,7 @@ const CurrencyRow = ({
   readOnly,
 }) => {
   return (
-    <div>
+    <div className="w-full">
       <span className="text-sm mb-1 font-semibold tracking-wide capitalize">
         {label}
       </span>
@@ -56,7 +60,7 @@ const CurrencyRow = ({
 };
 
 function Conversion({ setShowConversionPane }) {
-  const { baseCurrency, selectedCurrency } = useSelector(
+  const { baseCurrency, currentAccount, selectedCurrency } = useSelector(
     (state) => state.fxState
   );
   const dispatch = useDispatch();
@@ -112,8 +116,14 @@ function Conversion({ setShowConversionPane }) {
 
   const handleExchangeRate = () => {
     if (amount && !isNaN(amount)) {
-      setShowConversionPane(false);
+      // setShowConversionPane(false);
       dispatch(setAmountToSend(amount));
+      dispatch(
+        setCurrentAccount({ ...currentAccount, currency: baseCurrency })
+      );
+      dispatch(
+        setSelectedCurrency({ ...selectedCurrency, fromAmount, toAmount })
+      );
       dispatch(setVisibleRightPane({ id: "tradeWallet", val: true }));
     }
   };
@@ -123,18 +133,16 @@ function Conversion({ setShowConversionPane }) {
   return (
     <>
       <Header onClick={() => setShowConversionPane(false)} />
-      <div className="my-3 overflow-y-auto">
+      <div className="my-3 px-3 overflow-y-auto">
         <h3 className="text-center text-lg text-shadow font-kinn tracking-widest">
           {selectedCurrency?.pair}
         </h3>
-        <div className="p-2 pr-3 m-3 flex-column gap-3 bg-slate-50 bg-opacity-40 rounded-md shadow-md border border-solid border-br-light opacity-80">
+        <div className="w-full my-4 py-2 px-3 flex-column gap-3 bg-slate-50 bg-opacity-40 rounded-md shadow-md border border-solid border-br-light opacity-80">
           <CurrencyRow
             label="Base currency"
             selectCurrency={fromCurrency}
             readOnly={true}
-            render={() => (
-              <InputField type="number" value={1} readOnly={true} />
-            )}
+            render={() => <InputField value={1} readOnly={true} />}
           />
 
           <span className="self-center">
@@ -147,25 +155,23 @@ function Conversion({ setShowConversionPane }) {
             readOnly={true}
             render={() => (
               <InputField
-                type="number"
                 value={selectedCurrency?.rate}
                 name="rate"
-                readOnly="true"
+                readOnly={true}
               />
             )}
           />
         </div>
 
-        <div className="flex-column gap-3 mx-4 my-6">
-          <div className="flex-row gap-3">
+        <div className="flex-column gap-3 mx-4 mt-8 mb-4">
+          <div className="w-full flex-row gap-3">
             <span className="text-base text-shadow font-kinn leading-4 tracking-wider">
               Set Exchange Rate
             </span>
             <InputField
               refName={inputRateRef}
-              type="number"
+              name="exchange rate"
               value={exchangeRate}
-              name="exchangeRate"
               onChange={(e) => setExchangeRate(e.target.value)}
               className="!px-1"
             />
@@ -174,7 +180,7 @@ function Conversion({ setShowConversionPane }) {
           <Button
             title="Set Rate"
             onClick={handleSetExchangeRate}
-            className={`self-center text-sm whitespace-nowrap px-6 bg-emerald-600 bg-opacity-90 text-white`}
+            className={`self-center my-4 text-sm whitespace-nowrap px-6 bg-emerald-600 bg-opacity-90 text-white`}
           />
         </div>
 
@@ -186,17 +192,20 @@ function Conversion({ setShowConversionPane }) {
                 selectCurrency={fromCurrency}
                 readOnly={true}
                 render={() => (
-                  <InputField
-                    refName={inputRef}
-                    type="number"
-                    name="rate"
-                    value={fromAmount}
-                    onChange={handleFromAmountChange}
-                    className="w-full"
-                  />
+                  <div className="relative">
+                    <InputField
+                      refName={inputRef}
+                      value={fromAmount}
+                      onChange={handleFromAmountChange}
+                      className="w-full"
+                    />
+                    <span className="absolute -bottom-8 right-1 text-right text-tiny text-shadow">
+                      Amount to send
+                    </span>
+                  </div>
                 )}
               />
-              <span className="self-center mt-1">
+              <span className="self-center mt-6">
                 <MdOutlineCompareArrows size={22} color="#333" />
               </span>
 
@@ -206,8 +215,6 @@ function Conversion({ setShowConversionPane }) {
                 readOnly={true}
                 render={() => (
                   <InputField
-                    type="number"
-                    name="rate"
                     value={toAmount}
                     onChange={handleToAmountChange}
                     className="w-full"
@@ -218,7 +225,7 @@ function Conversion({ setShowConversionPane }) {
             <Button
               title="Exchange"
               onClick={handleExchangeRate}
-              className={`flex mx-auto my-4 text-sm whitespace-nowrap px-6 bg-emerald-600 bg-opacity-90 text-white`}
+              className={`flex mx-auto my-6 text-sm whitespace-nowrap px-6 bg-emerald-600 bg-opacity-90 text-white`}
             />
           </>
         )}

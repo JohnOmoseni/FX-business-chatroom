@@ -40,7 +40,7 @@ function Heading({ userChat }) {
   };
 
   return (
-    <div className="w-full relative z-50 py-[3%] px-[2%] grid grid-cols-row items-center gap-4 bg-gradient-200 opacity-90 shadow-md min-h-[50px] max-h-[80px]">
+    <div className="w-full relative z-50 py-[3%] px-[2%] md:py-3.5 md:px-3 grid grid-cols-row items-center gap-4 bg-gradient-200 opacity-90 shadow-md min-h-[50px] max-h-[80px]">
       <div className="grid grid-cols-2 gap-3 relative">
         <IconBg onClick={handleBack}>
           <MdOutlineArrowBack color="black" size={18} />

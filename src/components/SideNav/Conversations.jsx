@@ -21,7 +21,9 @@ function Conversations() {
             return {
               ...arr[1].userInfo,
               chatId: arr[0],
-              date: Object.entries(arr[1]?.date),
+              date:
+                typeof arr[1]?.date === "object" &&
+                Object.entries(arr[1]?.date),
               lastMessage: arr[1].lastMessage,
             };
           });

@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCurrentuser } from "@redux/features/authUserSlice";
 import { setScreenSize } from "@redux/features/appStateSlice";
 import { onAuthStateChanged } from "firebase/auth";
+import { setCurrencies } from "@redux/features/fxSlice";
+import useFetchCurrencies from "@hooks/useFetchCurrencies";
 
 const VisiblePaneLayout = ({
   children,
@@ -36,14 +38,13 @@ const VisiblePaneLayout = ({
 };
 
 function Home() {
-  const { currentUser } = useSelector((state) => {
+  const { showPane, showRightPane, screenSize } = useSelector((state) => {
     console.log(state);
-    return state.authUser;
+    return state.appState;
   });
-  const { showPane, showRightPane, screenSize } = useSelector(
-    (state) => state.appState
-  );
   const dispatch = useDispatch();
+  const { currencies: currArray } = useSelector((state) => state.fxState);
+  const [currencies] = useFetchCurrencies();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -51,8 +52,6 @@ function Home() {
         // user is signed in
         const docSnap = await getDoc(doc(db, "users", user?.uid));
         dispatch(setCurrentuser(docSnap.data()));
-
-        console.log(docSnap.data(), user?.uid);
       } else {
         console.log("User is logged out");
       }
@@ -74,6 +73,17 @@ function Home() {
       window.removeEventListener("resize", getScreenSize);
     };
   }, []);
+
+  useEffect(() => {
+    if (currencies && currArray.length === 0) {
+      const currenciesObj = Object.entries(currencies)?.map((curr) => ({
+        name: curr[1],
+        symbol: curr[0],
+      }));
+
+      dispatch(setCurrencies(currenciesObj));
+    }
+  }, [currencies]);
 
   return (
     <div

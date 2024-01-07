@@ -13,7 +13,6 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { validateMessage } from "@utils";
 import { BsEmojiSmile } from "react-icons/bs";
 import { PiImage } from "react-icons/pi";
-import { BsFillSendXFill } from "react-icons/bs";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 

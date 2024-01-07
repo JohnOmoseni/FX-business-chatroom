@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 const apiURL = import.meta.env.VITE_API_URL;
 
@@ -12,6 +13,7 @@ const options = {
 };
 
 function useFetchCurrencies() {
+  const { currencies: currArray } = useSelector((state) => state.fxState);
   const [currencies, setCurrencies] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -39,7 +41,7 @@ function useFetchCurrencies() {
       }
     };
 
-    getCurrencies();
+    currArray.length === 0 && getCurrencies();
     return () => (mounted = false);
   }, []);
 

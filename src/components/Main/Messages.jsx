@@ -35,7 +35,7 @@ function Messages({ chatId }) {
 
   return (
     <div
-      className={`group relative w-full pt-5 pb-4 px-[4%] flex-1 flex flex-col gap-4 overflow-y-auto max-sm:mb-[1rem]`}
+      className={`group relative w-full pt-5 pb-4 px-[4%] flex-1 flex flex-col gap-4 overflow-hidden overflow-y-auto max-sm:mb-[1rem]`}
     >
       <div className="flex-row gap-4 mb-1">
         <hr className="w-[45%] border border-solid border-br-light opacity-40" />

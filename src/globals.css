@@ -131,6 +131,9 @@ body::selection {
 .wrapper .currencies .css-1c8t16q-InputComponent {
   width: 100% !important;
 }
+.wallet .css-z532jj-InputComponent {
+  display: none !important;
+}
 
 .full-height {
   height: 100vh;

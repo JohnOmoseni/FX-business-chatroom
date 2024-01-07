@@ -3,22 +3,39 @@ import { useDispatch, useSelector } from "react-redux";
 import { MdOutlineArrowBack, MdOutlineClose } from "react-icons/md";
 import { faker } from "@faker-js/faker";
 import Deposit from "@pages/payment/Deposit";
+import TestDeposit from "@pages/payment/TestDeposit";
 import Withdraw from "@pages/payment/Withdraw";
 import SelectField from "./SelectField";
 import Transactions from "./Transactions";
-import { setAccountCurrency } from "@redux/features/fxSlice";
+import ReactModal from "react-modal";
+import { ButtonVariant } from "../../Button";
+import {
+  arrayUnion,
+  doc,
+  getDoc,
+  onSnapshot,
+  updateDoc,
+} from "firebase/firestore";
+import { db } from "../../../config/firebase-config";
 import {
   setCloseRightPane,
   setVisibleRightPane,
 } from "@redux/features/appStateSlice";
-import ReactModal from "react-modal";
-import { ButtonVariant } from "../../Button";
+import {
+  setAccounts,
+  setCurrentAccount,
+  setAccountCurrency,
+} from "@redux/features/fxSlice";
+import { toast } from "react-toastify";
 
-ReactModal.setAppElement("#root");
+const test = [];
+test.fi;
 
 const WalletHeader = ({ onClick }) => {
   const { currentUser } = useSelector((state) => state.authUser);
-  const { currencies, currentAccount } = useSelector((state) => state.fxState);
+  const { currencies, baseCurrency, currentAccount } = useSelector(
+    (state) => state.fxState
+  );
   const dispatch = useDispatch();
 
   const listCurrencies = useMemo(() => {
@@ -28,11 +45,10 @@ const WalletHeader = ({ onClick }) => {
   const handleSelectChange = (value) => {
     const selectValue = value[0]?.value;
     dispatch(setAccountCurrency(selectValue));
-    console.log(value);
   };
 
   return (
-    <div className="w-full py-4 md:py-[4%] pl-1 pr-3 flex-row gap-6 !justify-between border-b border-solid border-br-light shadow-md">
+    <div className="wallet w-full py-4 md:py-[4%] pl-1 pr-3 flex-row gap-6 !justify-between border-b border-solid border-br-light shadow-md">
       <div className="flex-row gap-1">
         <span
           onClick={onClick}
@@ -67,23 +83,98 @@ const WalletHeader = ({ onClick }) => {
 };
 
 function PersonalWallet() {
-  const { currentAccount, userAccounts } = useSelector(
+  const { currentAccount, userAccounts, baseCurrency } = useSelector(
     (state) => state.fxState
   );
   const { screenSize } = useSelector((state) => state.appState);
-  const dispatch = useDispatch();
+  const { currentUser } = useSelector((state) => state.authUser);
   const [inputModal, setInputModal] = useState({ isModal: false, id: "" });
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (currentUser?.uid) {
+      const unsub = onSnapshot(
+        doc(db, "userAccounts", currentUser?.uid),
+        (doc) => {
+          if (doc.exists()) {
+            dispatch(setAccounts(doc.data()?.currentAccount));
+            if (baseCurrency !== doc.data()?.currentAccount?.currency) {
+              console.log("doesn't match");
+            }
+          }
+          console.log(doc.data());
+        }
+      );
+
+      return () => {
+        unsub();
+      };
+    }
+  }, []);
+
+  useEffect(() => {
+    const currency = currentAccount?.currency;
+
+    const updateAccount = async () => {
+      const account = userAccounts?.find(
+        (account) => account.currency === currency
+      );
+      if (!account) {
+        const newAccount = { balance: "0.00", currency: currency };
+        await updateDoc(doc(db, "userAccounts", currentUser?.uid), {
+          userAccounts: arrayUnion(newAccount),
+          currentAccount: newAccount,
+        });
+        dispatch(setAccounts(newAccount));
+      } else {
+        await updateDoc(doc(db, "userAccounts", currentUser?.uid), {
+          currentAccount: account,
+        });
+        dispatch(setCurrentAccount(account));
+      }
+    };
+    userAccounts.length > 0 && currentUser && updateAccount();
+  }, [currentAccount?.currency]);
+
+  useEffect(() => {
+    const getAccount = async () => {
+      let account;
+      const res = await getDoc(doc(db, "userAccounts", currentUser?.uid));
+      if (res.exists()) {
+        account = res.data();
+        // dispatch(setAccounts(account?.userAccounts));
+      }
+    };
+    currentUser && getAccount();
+  }, [currentAccount?.balance]);
+
+  useEffect(() => {
+    const handleOnlineStatus = () => setIsOnline(true);
+    const handleOfflineStatus = () => setIsOnline(false);
+
+    window.addEventListener("online", handleOnlineStatus);
+    window.addEventListener("offline", handleOfflineStatus);
+
+    return () => {
+      window.removeEventListener("online", handleOnlineStatus);
+      window.removeEventListener("offline", handleOfflineStatus);
+    };
+  }, []);
 
   const balance = useMemo(() => {
     const amount =
       typeof currentAccount?.balance === "string"
         ? currentAccount?.balance.split(".")
         : currentAccount?.balance;
-    const sigNo = parseInt(amount?.[0]);
-    const decimal = amount?.[1];
-
-    return [sigNo, decimal];
+    if (Array.isArray(amount)) {
+      const sigNo = parseInt(amount?.[0]);
+      const decimal = amount?.[1];
+      return [sigNo, decimal];
+    }
+    return amount;
   }, [currentAccount?.balance]);
+  console.log(balance, currentAccount.balance);
 
   const handleBackArrowClick = () => {
     if (screenSize >= 768) {
@@ -93,13 +184,21 @@ function PersonalWallet() {
     }
   };
 
+  const handleDeposit = () => {
+    if (!isOnline) {
+      toast.info("No internet connection");
+      return;
+    }
+    setInputModal({ id: "deposit", isModal: true });
+  };
+
   return (
     <>
       <WalletHeader
         currency={currentAccount?.currency}
         onClick={handleBackArrowClick}
       />
-      <div className="w-full h-full pt-3 overflow-y-auto">
+      <div className="w-full h-full pt-3 pb-4 overflow-y-auto">
         <div className="grid grid-cols-balance gap-4">
           <div className="bg-gradient-200 rounded-md"></div>
           <div className="rounded-md shadow-100 bg-neutral-100 px-3 pt-5 pb-6 mx-auto w-[100%]">
@@ -108,71 +207,71 @@ function PersonalWallet() {
             </span>
             <h2 className="whitespace-nowrap  text-4xl text-shadow text-gradient-100">
               <span className="text-3xl">{currentAccount?.currency}</span>
-              {balance?.[0]}
-              <span className="text-xl !text-neutral-400">.{balance?.[1]}</span>
+              {Array.isArray(balance) ? balance?.[0] : balance}
+              <span className="text-xl !text-neutral-400">
+                .{Array.isArray(balance) ? balance?.[1] : "00"}
+              </span>
             </h2>
           </div>
           <div className="bg-gradient-100 rounded-md"></div>
         </div>
 
         <div className="flex-row gap-4 my-14 px-4 mx-auto">
-          <ButtonVariant
-            title="Deposit"
-            onClick={() =>
-              setInputModal((prev) => ({ id: "deposit", isModal: true }))
-            }
-          />
+          <ButtonVariant title="Deposit" onClick={handleDeposit} />
           <ButtonVariant
             title="Withdraw"
-            onClick={() =>
-              setInputModal((prev) => ({ id: "withdraw", isModal: true }))
-            }
+            onClick={() => setInputModal({ id: "withdraw", isModal: true })}
           />
         </div>
 
         <Transactions />
       </div>
 
-      <ReactModal
-        isOpen={inputModal.isModal}
-        onRequestClose={() =>
-          setInputModal((prev) => ({ ...prev, isModal: false }))
-        }
-        style={{
-          overlay: {
-            backgroundColor: "rgba(0,0,0,0.4)",
-            zIndex: 999,
-            backdropFilter: "1em",
-          },
-          content: {
-            color: "black",
-          },
-        }}
-      >
-        {inputModal.id === "deposit" ? (
-          <Deposit
-            onCloseModal={() =>
-              setInputModal((prev) => ({ ...prev, isModal: false }))
-            }
-          />
-        ) : (
-          <Withdraw
-            onCloseModal={() =>
-              setInputModal((prev) => ({ ...prev, isModal: false }))
-            }
-          />
-        )}
-        <div
-          onClick={() => setInputModal((prev) => ({ ...prev, isModal: false }))}
-          className="group absolute icon right-1.5 top-1.5"
-          title="close-modal"
+      {isOnline && (
+        <ReactModal
+          isOpen={inputModal.isModal}
+          contentLabel="Input Modal"
+          onRequestClose={() =>
+            setInputModal((prev) => ({ ...prev, isModal: false }))
+          }
+          style={{
+            overlay: {
+              backgroundColor: "rgba(0,0,0,0.4)",
+              zIndex: 9999,
+              backdropFilter: "1em",
+            },
+            content: {
+              color: "black",
+            },
+          }}
         >
-          <MdOutlineClose
-            size={22}
-            className="text-gray-500 group-hover:text-black group-hover:scale-95 transition-colors"
-          />
-        </div>
-      </ReactModal>
+          {inputModal.id === "deposit" ? (
+            <TestDeposit
+              onCloseModal={() =>
+                setInputModal((prev) => ({ ...prev, isModal: false }))
+              }
+            />
+          ) : (
+            <Withdraw
+              onCloseModal={() =>
+                setInputModal((prev) => ({ ...prev, isModal: false }))
+              }
+            />
+          )}
+          <div
+            onClick={() =>
+              setInputModal((prev) => ({ ...prev, isModal: false }))
+            }
+            className="group absolute icon right-1.5 top-1.5"
+            title="close-modal"
+          >
+            <MdOutlineClose
+              size={22}
+              className="text-gray-500 group-hover:text-black group-hover:scale-95 transition-colors"
+            />
+          </div>
+        </ReactModal>
+      )}
     </>
   );
 }

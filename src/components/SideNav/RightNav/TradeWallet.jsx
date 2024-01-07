@@ -1,13 +1,16 @@
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CiAirportSign1 } from "react-icons/ci";
 import ListRow from "../../ListRow";
 import Dropdown from "../../Dropdown";
 import Button from "../../Button";
-import { MdOutlineArrowBack } from "react-icons/md";
+import { MdOutlineArrowBack, MdOutlineClose } from "react-icons/md";
 import {
   setCloseRightPane,
   setVisibleRightPane,
 } from "@redux/features/appStateSlice";
+import ReactModal from "react-modal";
+import TransferReceipt from "./TransferReceipt";
 
 const from = {
   avatar: "",
@@ -16,7 +19,7 @@ const from = {
   currency: "USD",
 };
 
-const WalletHeader = ({ onClick, currrencyPair }) => (
+const WalletHeader = ({ onClick, currency }) => (
   <div className="w-full py-4 md:py-[4%] pr-3 flex-row gap-4 !justify-between border-b border-solid border-br-light shadow-md">
     <div className="flex-row gap-3 !justify-start pl-3">
       <span
@@ -34,9 +37,7 @@ const WalletHeader = ({ onClick, currrencyPair }) => (
       menuClass="!p-1"
       menuBtn={() => (
         <>
-          <span className="mr-2 leading-4 text-gradient-100">
-            {currrencyPair}
-          </span>
+          <span className="mr-2 leading-4 text-gradient-100">{currency}</span>
           <CiAirportSign1
             size={20}
             className="cursor-pointer mt-[2px]"
@@ -48,42 +49,7 @@ const WalletHeader = ({ onClick, currrencyPair }) => (
   </div>
 );
 
-const TransferReceipt = () => {
-  return (
-    <div>
-      <div>
-        <div className="relative min-w-[140px] h-[140px] md:min-w-[80px] md:h-[80px] rounded-[50%] border border-solid border-neutral-200 shadow-md">
-          <img
-            src={userProfile?.avatar ?? ""}
-            alt=""
-            className="group-hover:scale-105 transition"
-          />
-          <span
-            className={`${
-              isActive ? "bg-green-400" : "bg-[#888] "
-            } absolute z-[100] bottom-[2px] right-[4px] w-[14px] h-[14px] rounded-[50%] shadow-sm border border-solid border-neutral-300`}
-          ></span>
-        </div>
-        <div className="pr-3 text-center md:text-left">
-          <h3 className="font-kinn mt-6 text-shadow text-gradient-100">
-            Jenkins Wallace
-          </h3>
-          <span className="!text-[#555555] ">@Johnny</span>
-        </div>
-
-        <ul>
-          <li>
-            <span>You Send</span>
-            <span> USD 50 </span>
-          </li>
-        </ul>
-      </div>
-    </div>
-  );
-};
-
 function TradeWallet() {
-  const { user } = useSelector((state) => state.usersState);
   const {
     baseCurrency,
     selectedCurrency,
@@ -94,24 +60,21 @@ function TradeWallet() {
   } = useSelector((state) => state.fxState);
   const { screenSize } = useSelector((state) => state.appState);
   const dispatch = useDispatch();
+  const [showTransferReceipt, setTransferReceipt] = useState(false);
 
   const test = currencies?.reduce((arr, curr) => {
-    if (
-      curr.symbol.includes(selectedCurrency?.symbol) ||
-      curr.symbol.includes(baseCurrency)
-    ) {
+    if (curr.symbol.includes(selectedCurrency?.symbol)) {
+      return [curr, ...arr];
+      return arr.unshift(curr);
+    } else if (curr.symbol.includes(baseCurrency)) {
       return [...arr, curr];
     }
     return arr;
   }, []);
 
-  console.log(test);
-
-  const handleSendMoney = () => {};
-
   const handleBackArrowClick = () => {
     if (screenSize >= 768) {
-      dispatch(setVisibleRightPane({ id: "currencyList", val: true }));
+      dispatch(setVisibleRightPane({ id: "tradeWallet", val: false }));
     } else {
       dispatch(setCloseRightPane());
     }
@@ -121,10 +84,13 @@ function TradeWallet() {
     <>
       <WalletHeader
         onClick={handleBackArrowClick}
-        currrencyPair={selectedCurrency?.pair}
+        currency={currentAccount?.currency}
       />
-      <div className="w-full h-full overflow-y-auto">
-        <ul className="w-full flex-column gap-4  py-6 px-4 md:px-[4%] mx-auto rounded-md border border-solid border-br-light shadow-md">
+      <div className="mx-3 mb-4 h-full overflow-y-auto">
+        <ul className="flex-column gap-4 py-4 px-4 md:px-[4%] mx-auto rounded-md border border-solid border-br-light shadow-md">
+          <p className="w-full font-semibold text-shadow text-center">
+            Currency pair ({selectedCurrency?.pair})
+          </p>
           {test.map((item, idx) => {
             const obj = {
               name: item.name,
@@ -136,7 +102,9 @@ function TradeWallet() {
                 key={idx}
                 renderLastCol={() => (
                   <div className="text-center leading-5 justify-self-end">
-                    {/* {selectedCurrency?.symbol} */}
+                    {idx === 0
+                      ? selectedCurrency?.toAmount
+                      : selectedCurrency?.fromAmount}
                   </div>
                 )}
               />
@@ -151,7 +119,9 @@ function TradeWallet() {
             </span>
             <span className="text-sm px-3 text-neutral-300 text-opacity-60 tracking-wide text-gradient-200">
               Your balance{" "}
-              <span className="text-tiny font-semibold">{baseCurrency}</span>
+              <span className="text-tiny font-semibold">
+                {currentAccount?.currency}
+              </span>
               {currentAccount?.balance}(available)
             </span>
           </p>
@@ -172,8 +142,37 @@ function TradeWallet() {
           textGradient
           title="Send Money"
           className="flex-row mt-12 mb-4 w-[90%] mx-auto shadow-100"
+          onClick={() => setTransferReceipt(true)}
         />
       </div>
+
+      <ReactModal
+        isOpen={showTransferReceipt}
+        contentLabel="Receipt Modal"
+        onRequestClose={() => setTransferReceipt(false)}
+        style={{
+          overlay: {
+            backgroundColor: "rgba(0,0,0,0.4)",
+            zIndex: 9999,
+            backdropFilter: "1em",
+          },
+          content: {
+            color: "black",
+          },
+        }}
+      >
+        <TransferReceipt />
+        <div
+          onClick={() => setTransferReceipt(false)}
+          className="group absolute icon right-1.5 top-1.5"
+          title="close-modal"
+        >
+          <MdOutlineClose
+            size={22}
+            className="text-gray-500 group-hover:text-black group-hover:scale-95 transition-colors"
+          />
+        </div>
+      </ReactModal>
     </>
   );
 }

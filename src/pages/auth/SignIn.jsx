@@ -1,19 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineMail } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import { toast } from "react-toastify";
-import logo from "@assets/images/logo.png";
 import { signInSchema } from "@schema/validate";
 import { useFormik } from "formik";
 import { FormGroup } from "./FormGroup";
-import Button from "@components/Button";
 import { motion } from "framer-motion";
-import useAuthContext from "@context/AuthContext";
 import { cookies } from "@constants/constants";
+import useAuthContext from "@context/AuthContext";
+import Button from "@components/Button";
+import logo from "@assets/images/logo.png";
 
 import sectionbg from "@assets/images/section-bg (5).jpg";
-import { useDispatch } from "react-redux";
 
 const Top = () => (
   <div className="w-full self-center">
@@ -27,7 +26,8 @@ const Top = () => (
 
 function SignIn() {
   const navigate = useNavigate();
-  const { handleSignIn, setIsAuthenticated } = useAuthContext();
+  const { handleSignIn, isAuthenticated, setIsAuthenticated } =
+    useAuthContext();
 
   const onSubmit = async (values) => {
     try {

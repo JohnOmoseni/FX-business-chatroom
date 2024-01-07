@@ -91,10 +91,7 @@
 
 @layer components {
   .grid-cols-main {
-    grid-template-columns: minmax(min-content, 25%) minmax(min-content, 1fr) minmax(
-        min-content,
-        25%
-      );
+    grid-template-columns: minmax(25%, 30%) 1fr minmax(min-content, 30%);
   }
   .grid-cols-two {
     grid-template-columns: 1fr max-content;

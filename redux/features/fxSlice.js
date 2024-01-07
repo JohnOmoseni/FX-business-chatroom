@@ -4,7 +4,7 @@ const initialState = {
   currencies: [],
   baseCurrency: "USD",
   selectedCurrency: null,
-  agreedExchangedRate: null,
+  agreedExchangedRate: "",
   amountToSend: "",
   transactions: [],
   lastTransaction: {
@@ -20,7 +20,7 @@ const initialState = {
     recipient: null,
     timestamp: "",
   },
-  userAccounts: [{ balance: "0.00", currency: "NGN" }],
+  userAccounts: [],
   currentAccount: { balance: "0.00", currency: "NGN" },
 };
 
@@ -35,7 +35,7 @@ const fxSlice = createSlice({
       state.selectedCurrency = payload;
     },
     setAgreedExchangeRate: (state, { payload }) => {
-      state.agreedExchangedRate = parseInt(payload).toFixed(2);
+      state.agreedExchangedRate = payload;
     },
     setAmountToSend: (state, { payload }) => {
       state.amountToSend = parseInt(payload).toFixed(2);
@@ -48,7 +48,14 @@ const fxSlice = createSlice({
       state.lastTransaction = payload;
     },
     setAccounts: (state, { payload }) => {
-      state.userAccounts = [...state.userAccounts, payload];
+      if (!Array.isArray(payload)) {
+        state.userAccounts = [...state.userAccounts, payload];
+        state.currentAccount = payload;
+      } else {
+        state.userAccounts = payload;
+      }
+    },
+    setCurrentAccount: (state, { payload }) => {
       state.currentAccount = payload;
     },
     setAccountCurrency: (state, { payload }) => {
@@ -77,4 +84,5 @@ export const {
   setAccountBalance,
   setAccountCurrency,
   setAccounts,
+  setCurrentAccount,
 } = fxSlice.actions;

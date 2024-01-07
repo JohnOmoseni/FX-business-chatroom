@@ -1,7 +1,10 @@
-import { useMemo, useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import ListRow from "../../ListRow";
 import { BiSearchAlt } from "react-icons/bi";
+import { setTransactions } from "@redux/features/fxSlice";
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from "../../../config/firebase-config";
 
 const SearchBar = ({ setSearchBar, input, setInput, setSearchResult, txs }) => {
   const handleInputChange = (e) => {
@@ -40,22 +43,38 @@ const SearchBar = ({ setSearchBar, input, setInput, setSearchResult, txs }) => {
 
 function Transactions() {
   const { transactions } = useSelector((state) => state.fxState);
+  const { currentUser } = useSelector((state) => state.authUser);
   const { users } = useSelector((state) => state.usersState);
   const [searchBar, setSearchBar] = useState(false);
   const [searchResult, setSearchResult] = useState([]);
   const [input, setInput] = useState("");
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (currentUser?.uid) {
+      const unsub = onSnapshot(
+        doc(db, "transactions", currentUser?.uid),
+        (doc) => {
+          doc.exists() && dispatch(setTransactions(doc.data()));
+        }
+      );
+
+      return () => {
+        unsub();
+      };
+    }
+  }, []);
 
   const txs = useMemo(() => {
     const array = searchResult?.length > 0 ? searchResult : transactions;
     return array?.map((tx) => {
       return {
         ...tx,
-        recipient: () => {
-          return users?.find((user) => user?.uid === tx?.recipient);
-        },
+        recipient: users?.find((user) => user?.uid === tx?.recipientID),
       };
     });
   }, [searchResult, transactions]);
+  console.log(txs);
 
   return (
     <div className="h-full relative rounded-ss-2xl rounded-se-lg shadow-md py-4 px-[4%] border-t-2 border-solid border-br-light overflow-y-auto">
@@ -83,7 +102,7 @@ function Transactions() {
         )}
       </div>
       {txs?.length > 0 ? (
-        <ul className="mt-4">
+        <ul className="mt-4 flex-column gap-4">
           {txs.map((tx, idx) => {
             let subtitle;
             switch (tx?.type) {
@@ -99,10 +118,10 @@ function Transactions() {
                 subtitle = "Sent";
             }
             const obj = {
-              name: tx.recipient?.businessName,
-              subtitle,
+              name: tx.recipient?.businessName ?? "Unknown",
+              subtitle: subtitle,
               avatar: tx.recipient?.avatar,
-              symbol,
+              symbol: "",
             };
             return (
               <ListRow
@@ -110,9 +129,20 @@ function Transactions() {
                 showImg
                 obj={obj}
                 renderLastCol={() => (
-                  <div className="text-center leading-5">
-                    {tx?.txType === "FX" ? tx?.exchangeRate : amount}
-                    {!tx.type !== "FX" && <span>{tx.txType}</span>}
+                  <div className="text-center leading-5 flex-column !items-center">
+                    <span
+                      className={`${
+                        tx?.txType.includes("Deposit")
+                          ? "text-green-400"
+                          : "text-red-400"
+                      }`}
+                    >
+                      <span>{tx?.txType.includes("Deposit") ? "+" : "-"}</span>
+                      {tx?.txType === "FX" ? tx?.exchangeRate : tx?.amount}
+                    </span>
+                    {!tx.type !== "FX" && (
+                      <span className="text-tiny text-shadow">{tx.txType}</span>
+                    )}
                   </div>
                 )}
               />

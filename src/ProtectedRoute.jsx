@@ -2,7 +2,7 @@ import { Navigate } from "react-router-dom";
 import useAuthContext from "@context/AuthContext";
 
 export const ProtectedRoute = ({ children }) => {
-  const authToken = localStorage.getItem("auth-token");
+  let authToken = localStorage.getItem("auth-token");
   const { isAuthenticated } = useAuthContext();
 
   console.log(isAuthenticated, authToken);

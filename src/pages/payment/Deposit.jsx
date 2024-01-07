@@ -65,7 +65,7 @@ export default function Deposit({ onCloseModal }) {
             });
             const tx = {
               transactionId: response.transaction_id,
-              currencySent: "",
+              currencySent: response?.currency,
               currencyReceived: response?.currency,
               chargedAmount: "",
               amount: response.amount,
@@ -103,27 +103,29 @@ export default function Deposit({ onCloseModal }) {
   };
 
   return (
-    <>
-      <div>
-        <span className="text-sm mb-1 font-semibold tracking-wide capitalize">
+    <div className="grid place-items-center">
+      <div className="flex-row px-4">
+        <span className="text-xl mb-1 tracking-wide uppercase">
           {currentAccount?.currency}
         </span>
-        <div className="">
+        <div className="flex-1 py-3 px-2 overlow-hidden">
           <InputField
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
+            placeholder="0.00"
             className="!text-neutral-400"
           />
         </div>
       </div>
 
-      <div>
+      <div className="my-[2rem]">
         <ButtonVariant
           title="Deposit Money"
           icon={<CiLocationOn />}
           onClick={handleDeposit}
+          className="bg-emerald-600"
         />
       </div>
-    </>
+    </div>
   );
 }

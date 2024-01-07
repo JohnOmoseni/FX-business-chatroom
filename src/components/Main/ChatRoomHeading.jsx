@@ -3,8 +3,6 @@ import { MdOutlineArrowBack } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setClosePane } from "@redux/features/appStateSlice";
-import { signOut } from "firebase/auth";
-import { auth } from "../../config/firebase-config";
 import Dropdown from "@components/Dropdown";
 import useAuthContext from "@context/AuthContext";
 
@@ -35,14 +33,14 @@ function ChatRoomHeading({ userChat }) {
   };
 
   return (
-    <div className="w-full relative z-50 py-[3%] px-[2%] grid grid-cols-row items-center gap-4 bg-gradient-200 opacity-90 shadow-md min-h-[50px] max-h-[80px]">
+    <div className="w-full relative z-50 py-[3%] px-[2%] md:py-3.5 md:px-3  grid grid-cols-row items-center gap-4 bg-gradient-200 opacity-90 shadow-md min-h-[50px] max-h-[100px]">
       <div className="grid grid-cols-2 gap-3 relative">
         <IconBg onClick={handleBack}>
           <MdOutlineArrowBack color="black" size={18} />
         </IconBg>
       </div>
 
-      <h3 className="font-kinn mt-1 text-center text-[#444] text-shadow">
+      <h3 className="font-kinn mt-1 text-center text-[#444] leading-5 text-shadow">
         FX Chat Room
       </h3>
       <div className="flex-row justify-between gap-3">

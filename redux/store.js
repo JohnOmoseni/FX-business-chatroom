@@ -1,4 +1,4 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import AuthUserReducer from "./features/authUserSlice";
 import AppStateReducer from "./features/appStateSlice";
 import ChatReducer from "./features/chatSlice";
@@ -12,7 +12,5 @@ const store = configureStore({
     fxState: FXStateReducer,
   },
 });
-
-console.log(store.getState());
 
 export default store;

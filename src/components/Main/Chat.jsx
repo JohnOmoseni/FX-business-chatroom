@@ -31,7 +31,7 @@ export function Chat({ msg, startMsg }) {
         } after:translate-x-[8px] after:border-solid after:border-b-transparent after:border-x-transparent after:-z-[1px] after:rounded-ss-md`}
       >
         <div>
-          <p className="leading-5 text-regular">{msg?.text}</p>
+          <p className="leading-5 text-regular break-words">{msg?.text}</p>
           {msg?.img && (
             <div className="my-2 rounded-sm max-h-[250px] overflow-hidden">
               <img src={msg.img} alt="" />

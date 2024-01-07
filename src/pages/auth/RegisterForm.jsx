@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFormik } from "formik";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
@@ -18,6 +18,8 @@ import logo from "@assets/images/logo.png";
 import sectionbg from "@assets/images/section-bg (4).png";
 import { toast } from "react-toastify";
 import useAuthContext from "@context/AuthContext";
+import { v4 as uuid } from "uuid";
+import { setAccounts } from "@redux/features/fxSlice";
 
 const Top = () => (
   <div>
@@ -38,7 +40,7 @@ function RegisterForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const fileRef = useRef(null);
-  const { createUser, setIsAuthenticated } = useAuthContext();
+  const { createUser, isAuthenticated, setIsAuthenticated } = useAuthContext();
   const [preview, setPreview] = useState("");
 
   const onSubmit = async (values, actions) => {
@@ -90,6 +92,16 @@ function RegisterForm() {
 
             await setDoc(doc(db, "userChats", res.user.uid), {});
 
+            await setDoc(doc(db, "userAccounts", res.user.uid), {
+              id: uuid(),
+              uid: res.user.uid,
+              userAccounts: [{ balance: "0.00", currency: "NGN" }],
+              currentAccount: { balance: "0.00", currency: "NGN" },
+            });
+
+            await setDoc(doc(db, "transactions", res.user.uid), {});
+
+            dispatch(setAccounts({ balance: "0.00", currency: "NGN" }));
             dispatch(
               setCurrentuser({
                 uid: res.user.uid,
@@ -103,8 +115,9 @@ function RegisterForm() {
               })
             );
             cookies.set("auth-token", res.user.refreshToken);
-            localStorage.setItem("auth-token", res.user.refreshToken);
             setIsAuthenticated(true);
+            localStorage.setItem("auth-token", res.user.refreshToken);
+
             toast.success("Registration successful");
             navigate("/home");
           });

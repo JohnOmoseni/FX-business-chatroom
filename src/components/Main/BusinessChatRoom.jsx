@@ -12,7 +12,6 @@ function BusinessChatRoom() {
       try {
         const unsub = onSnapshot(doc(db, "chatroom", roomID), (doc) => {
           doc.exists() && setRoomMessages(doc.data().messages);
-          console.log(doc.data());
         });
 
         return () => {
@@ -51,7 +50,7 @@ function BusinessChatRoom() {
 
   return (
     <div
-      className={`group relative w-full mt-[1px] pt-5 pb-4 px-[3%] flex-1 flex flex-col gap-4 overflow-y-auto max-sm:mb-[1rem]`}
+      className={`group relative w-full mt-[1px] pt-5 pb-4 px-[3%] flex-1 flex flex-col gap-4 overflow-hidden overflow-y-auto max-sm:mb-[1rem]`}
     >
       <div className="flex-row gap-4 mb-1">
         <hr className="w-[40%] border border-solid border-br-light opacity-40" />

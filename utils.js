@@ -1,3 +1,15 @@
+// Each bank has a bank code that flutterwave uses to identify them.
+export const banks = [
+  { name: "Access Bank Plc.", code: "044" },
+  { name: "Ecobank Nigeria Plc.", code: "050" },
+  { name: "First Bank of Nigeria Limited", code: "011" },
+  { name: "Fidelity Bank Plc.", code: "070" },
+  { name: "Guaranty Trust bank Plc.", code: "058" },
+  { name: "Sterling Bank Plc.", code: "232" },
+  { name: "United Bank for Africa Plc.", code: "033" },
+  { name: "Zenith Bank Plc.", code: "057" },
+];
+
 export const validateMessage = (msg) => {
   // Regex for email, bank account and phone number
   const emailPattern = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/;
@@ -78,8 +90,6 @@ currDate.setHours(0, 0, 0, 0);
 const yesterday = currDate.getTime() - 1 * 24 * 60 * 60 * 1000;
 
 const testDt = new Date(1702931243354).getTime();
-
-console.log(testDt, yesterday, formatDate(testDt));
 
 export const convertToTime = (seconds, nanoseconds) => {
   const timestamp = seconds * 1000 + Math.round(nanoseconds / 1e6);

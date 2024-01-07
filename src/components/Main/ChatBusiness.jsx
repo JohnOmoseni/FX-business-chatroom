@@ -139,8 +139,8 @@ export function ChatBusiness({ msg, startMsg }) {
             {msg?.senderID}
           </span>
         </p>
-        <div>
-          <p className="leading-5 text-base">{msg?.text}</p>
+        <div className="w-full">
+          <p className=" leading-5 text-base break-words ">{msg?.text}</p>
           {msg?.img && (
             <div className="my-2 rounded-sm max-h-[250px] overflow-hidden">
               <img src={msg.img} alt="" />

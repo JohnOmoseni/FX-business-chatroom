@@ -52,7 +52,7 @@ function ChatRow({ user, lastMessage, date, isConversation }) {
         [combinedId + ".date"]: serverTimestamp(),
       });
     } else if (res.exists()) {
-      console.log(res);
+      // log out the chat
     }
     dispatch(setActivePane({ id: "showChat", val: true }));
     dispatch(setChangeUser({ currentUser, user }));
