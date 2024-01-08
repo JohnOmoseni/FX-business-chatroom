@@ -15,7 +15,7 @@ const url = "https://maketrfrequestapi.netlify.app/.netlify/functions/api/";
 function Withdraw() {
   const { currentUser } = useSelector((state) => state.authUser);
   const { currentAccount } = useSelector((state) => state.fxState);
-  const [amount, setAmount] = useState("0.00");
+  const [amount, setAmount] = useState("");
   const [bankcode, setBankcode] = useState("");
   const [accountNo, setAccountNo] = useState("");
 
@@ -25,7 +25,10 @@ function Withdraw() {
   }));
 
   const initiateTransfer = async () => {
-    if (!amount && !accountNo) return;
+    if (!amount || !accountNo || !bankcode) {
+      alert("Please fill out all the fields");
+      return;
+    }
     // if (amount > currentAccount?.balance ) return;
 
     try {
@@ -100,12 +103,15 @@ function Withdraw() {
           onChange={(e) => setAccountNo(e.target.value)}
           placeholder="Enter your account number"
           className="!text-neutral-600 placeholder:text-neutral-400"
+          required={true}
         />
         <div className="flex-row">
           <InputField
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             className="!text-neutral-600"
+            placeholder="0.00"
+            required={true}
           />
           <span className="text-sm mb-1 pl-1 text-shadow tracking-wide uppercase">
             {currentAccount?.currency}

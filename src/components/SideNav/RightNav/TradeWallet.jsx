@@ -65,7 +65,6 @@ function TradeWallet() {
   const test = currencies?.reduce((arr, curr) => {
     if (curr.symbol.includes(selectedCurrency?.symbol)) {
       return [curr, ...arr];
-      return arr.unshift(curr);
     } else if (curr.symbol.includes(baseCurrency)) {
       return [...arr, curr];
     }
@@ -141,7 +140,7 @@ function TradeWallet() {
         <Button
           textGradient
           title="Send Money"
-          className="flex-row mt-12 mb-4 w-[90%] mx-auto shadow-100"
+          className="flex-row mt-12 mb-4 w-[90%] mx-auto shadow-100 bg-gradient-200"
           onClick={() => setTransferReceipt(true)}
         />
       </div>
@@ -161,7 +160,7 @@ function TradeWallet() {
           },
         }}
       >
-        <TransferReceipt />
+        <TransferReceipt setTransferReceipt={setTransferReceipt} />
         <div
           onClick={() => setTransferReceipt(false)}
           className="group absolute icon right-1.5 top-1.5"

@@ -8,6 +8,7 @@ function InputField({
   onChange,
   readOnly = false,
   className,
+  required,
 }) {
   return (
     <input
@@ -18,6 +19,7 @@ function InputField({
       onChange={onChange}
       readOnly={readOnly}
       className={`${inputClassName} ${className}`}
+      required={required}
     />
   );
 }

@@ -36,6 +36,7 @@ function UserProfile() {
   const { currentUser: userProfile, isActive } = useSelector(
     (state) => state.authUser
   );
+  const { screenSize } = useSelector((state) => state.appState);
   const { user } = useSelector((state) => state.usersState);
   const [isEditProfile, setEditProfile] = useState(false);
   const navigate = useNavigate();
@@ -49,7 +50,9 @@ function UserProfile() {
 
   const handleNavigate = (id) => {
     if (id === "currencyList") {
-      if (!user) {
+      if (user?.uid) {
+        dispatch(setVisibleRightPane({ id, val: true }));
+      } else {
         Swal.fire({
           icon: "info",
           titleText: "Start a conversation",
@@ -57,11 +60,10 @@ function UserProfile() {
           confirmButtonText: "Ok",
         }).then((result) => {
           if (result.isConfirmed) {
+            screenSize < 768 && dispatch(setCloseRightPane());
           }
         });
-        return;
       }
-      dispatch(setVisibleRightPane({ id, val: true }));
     } else {
       dispatch(setVisibleRightPane({ id, val: true }));
     }

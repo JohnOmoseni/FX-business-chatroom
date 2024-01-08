@@ -133,7 +133,7 @@ function Conversion({ setShowConversionPane }) {
   return (
     <>
       <Header onClick={() => setShowConversionPane(false)} />
-      <div className="my-3 px-3 overflow-y-auto">
+      <div className="w-full my-3 px-3 overflow-y-auto">
         <h3 className="text-center text-lg text-shadow font-kinn tracking-widest">
           {selectedCurrency?.pair}
         </h3>

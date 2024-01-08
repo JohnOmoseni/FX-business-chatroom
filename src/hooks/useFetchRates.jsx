@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setBaseCurrency } from "@redux/features/fxSlice";
 
-const apiURL = "https://api.apilayer.com/exchangerates_data";
+const apiURL = import.meta.env.VITE_API_URL;
 
 const myHeaders = new Headers();
 myHeaders.append("apikey", import.meta.env.VITE_API_KEY);
@@ -37,10 +37,10 @@ function useFetchRates() {
 
         const data = await res.json();
         console.log(data);
-        if (mounted) {
-          setRates(data?.rates);
-          dispatch(setBaseCurrency(data?.base));
-        }
+        // if (mounted) {
+        setRates(data?.rates);
+        dispatch(setBaseCurrency(data?.base));
+        // }
         setIsLoading(false);
         setError(false);
       } catch (error) {

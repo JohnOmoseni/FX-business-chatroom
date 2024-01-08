@@ -85,7 +85,7 @@ body::selection {
 }
 
 .wrapper :where(button:focus, button:focus-visible) {
-  outline: 4px auto rgb(207, 250, 207);
+  outline: 4px auto rgb(192, 250, 192);
 }
 
 .swal2-container .swal2-icon {
