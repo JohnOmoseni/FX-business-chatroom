@@ -63,9 +63,9 @@ function TradeWallet() {
   const [showTransferReceipt, setTransferReceipt] = useState(false);
 
   const test = currencies?.reduce((arr, curr) => {
-    if (curr.symbol.includes(selectedCurrency?.symbol)) {
+    if (curr?.symbol?.includes(selectedCurrency?.symbol)) {
       return [curr, ...arr];
-    } else if (curr.symbol.includes(baseCurrency)) {
+    } else if (curr?.symbol?.includes(baseCurrency)) {
       return [...arr, curr];
     }
     return arr;

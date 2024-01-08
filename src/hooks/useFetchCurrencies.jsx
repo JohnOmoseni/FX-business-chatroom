@@ -21,23 +21,25 @@ function useFetchCurrencies() {
   useEffect(() => {
     let mounted = true;
     const getCurrencies = async () => {
-      setIsLoading(true);
-      try {
-        const res = await fetch(`${apiURL}/symbols`, options);
+      if (currArray?.length === 0) {
+        setIsLoading(true);
+        try {
+          const res = await fetch(`${apiURL}/symbols`, options);
 
-        if (!res.ok) {
-          console.log(res.text());
-          setError(true);
-          throw new Error("Error fetching data");
+          if (!res.ok) {
+            console.log(res.text());
+            setError(true);
+            throw new Error("Error fetching data");
+          }
+
+          const data = await res.json();
+          console.log(data);
+          setCurrencies(data?.symbols);
+          setIsLoading(false);
+        } catch (error) {
+          setIsLoading(false);
+          console.error(error.message);
         }
-
-        const data = await res.json();
-        console.log(data);
-        setCurrencies(data?.symbols);
-        setIsLoading(false);
-      } catch (error) {
-        setIsLoading(false);
-        console.error(error.message);
       }
     };
 

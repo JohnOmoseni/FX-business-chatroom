@@ -101,7 +101,7 @@ function Currencies() {
             <Loader isLoading={isLoading} />
           ) : error ? (
             <div className="px-2 text-shadow w-full min-h-[60vh] leading-5 grid place-items-center bg-inherit text-neutral-600 text-center">
-              There is no currency pair <br /> to show
+              There are no currency pairs <br /> to show
             </div>
           ) : (
             ratesArray && (

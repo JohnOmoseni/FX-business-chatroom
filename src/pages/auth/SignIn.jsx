@@ -115,7 +115,7 @@ function SignIn() {
           </p>
         </div>
 
-        <div className="w-full mt-8 mb-2">
+        {/* <div className="w-full mt-8 mb-2">
           <div className="flex-row gap-3">
             <hr className="w-[50%] shadow-sm border border-solid border-br-light bg-br-light " />
             <span className="text-base font-kinn font-extrabold text-shadow">
@@ -127,7 +127,7 @@ function SignIn() {
             <FcGoogle className="h-5 w-5" />
             Continue with Google
           </button>
-        </div>
+        </div> */}
       </div>
     </motion.section>
   );

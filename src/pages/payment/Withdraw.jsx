@@ -1,12 +1,9 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { CiLocationOn } from "react-icons/ci";
 import { ButtonVariant } from "@components/Button";
 import { v4 as uuid } from "uuid";
-import ReactModal from "react-modal";
 import InputField from "@components/SideNav/RightNav/InputField";
-import SelectField from "../../components/SideNav/RightNav/SelectField";
 import { banks } from "../../../utils";
 import Select from "react-dropdown-select";
 

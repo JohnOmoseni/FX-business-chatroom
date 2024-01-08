@@ -118,9 +118,9 @@ function Transactions() {
                 subtitle = "Sent";
             }
             const obj = {
-              name: tx.recipient?.businessName ?? "Unknown",
+              name: tx?.recipient?.businessName ?? "Unknown",
               subtitle: subtitle,
-              avatar: tx.recipient?.avatar,
+              avatar: tx?.recipient?.avatar,
               symbol: "",
             };
             return (
@@ -132,16 +132,18 @@ function Transactions() {
                   <div className="text-center leading-5 flex-column !items-center">
                     <span
                       className={`${
-                        tx?.txType.includes("Deposit")
+                        tx?.txType?.includes("Deposit")
                           ? "text-green-400"
                           : "text-red-400"
                       }`}
                     >
-                      <span>{tx?.txType.includes("Deposit") ? "+" : "-"}</span>
+                      <span>{tx?.txType?.includes("Deposit") ? "+" : "-"}</span>
                       {tx?.txType === "FX" ? tx?.exchangeRate : tx?.amount}
                     </span>
-                    {!tx.type !== "FX" && (
-                      <span className="text-tiny text-shadow">{tx.txType}</span>
+                    {!tx?.type !== "FX" && (
+                      <span className="text-tiny text-shadow">
+                        {tx?.txType}
+                      </span>
                     )}
                   </div>
                 )}
