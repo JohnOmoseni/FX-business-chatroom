@@ -35,7 +35,7 @@ function BusinessProfile() {
       />
       <div className="w-full pt-10 pb-4 px-4 overflow-auto">
         <div className="flex-column gap-4 !items-center md:!items-start md:flex-row md:!justify-start px-4 md:gap-clamp-sm">
-          <div className="relative min-w-[140px] h-[140px] md:min-w-[80px] md:h-[80px] rounded-[50%] border border-solid border-neutral-200 shadow-md">
+          <div className="relative min-w-[120px] w-[120px] h-[120px] md:min-w-[100px] md:h-[100px] clip-circle rounded-[50%] border border-solid border-neutral-200 shadow-md">
             <img
               src={businessProfile?.avatar ?? ""}
               alt=""

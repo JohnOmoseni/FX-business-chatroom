@@ -45,7 +45,6 @@ function UserProfile() {
 
   const handleLogOut = async () => {
     await logOut();
-    navigate("/auth/sign-in");
   };
 
   const handleNavigate = (id) => {

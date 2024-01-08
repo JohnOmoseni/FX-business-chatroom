@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { CiLocationOn } from "react-icons/ci";
 import InputField from "../../components/SideNav/RightNav/InputField";
 import { ButtonVariant } from "../../components/Button";
-import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../config/firebase-config";
 
 const email = "johnnyomoseni100@gmail.com";
@@ -92,7 +92,9 @@ export default function TestDeposit({ onCloseModal }) {
               dispatch(setTransactions(tx));
               dispatch(setAccountBalance(updatedBalance));
 
-              await setDoc(doc(db, "transactions", currentUser?.uid), tx);
+              await updateDoc(doc(db, "transactions", currentUser?.uid), {
+                transactions: arrayUnion(tx),
+              });
             } else {
               console.log("Failed transaction", response);
               toast.error("Transaction failed", {

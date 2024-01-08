@@ -44,7 +44,6 @@ const SearchBar = ({ setSearchBar, input, setInput, setSearchResult, txs }) => {
 function Transactions() {
   const { transactions } = useSelector((state) => state.fxState);
   const { currentUser } = useSelector((state) => state.authUser);
-  const { users } = useSelector((state) => state.usersState);
   const [searchBar, setSearchBar] = useState(false);
   const [searchResult, setSearchResult] = useState([]);
   const [input, setInput] = useState("");
@@ -55,7 +54,8 @@ function Transactions() {
       const unsub = onSnapshot(
         doc(db, "transactions", currentUser?.uid),
         (doc) => {
-          doc.exists() && dispatch(setTransactions(doc.data()));
+          doc.exists() && dispatch(setTransactions(doc.data()?.transactions));
+          console.log(doc.data());
         }
       );
 
@@ -63,18 +63,22 @@ function Transactions() {
         unsub();
       };
     }
-  }, []);
+  }, [currentUser?.uid]);
 
-  const txs = useMemo(() => {
-    const array = searchResult?.length > 0 ? searchResult : transactions;
-    return array?.map((tx) => {
-      return {
-        ...tx,
-        recipient: users?.find((user) => user?.uid === tx?.recipientID),
-      };
-    });
-  }, [searchResult, transactions]);
-  console.log(txs);
+  // const txs = useMemo(() => {
+  //   const array = searchResult?.length > 0 ? searchResult : transactions;
+  //   if (transactions.length > 0) {
+  //     return array?.map((tx) => {
+  //       return {
+  //         ...tx,
+  //         recipient: users?.find((user) => user?.uid === tx?.recipientID),
+  //       };
+  //     });
+  //   } else {
+  //     return array;
+  //   }
+  // }, [searchResult, transactions]);
+  // console.log(txs);
 
   return (
     <div className="h-full relative rounded-ss-2xl rounded-se-lg pt-4 pb-6 px-[4%] border-t-2 border-solid border-br-light overflow-y-auto">
@@ -101,9 +105,9 @@ function Transactions() {
           </>
         )}
       </div>
-      {txs?.length > 0 ? (
+      {transactions?.length > 0 ? (
         <ul className="mt-4 flex-column gap-4">
-          {txs.map((tx, idx) => {
+          {transactions.map((tx, idx) => {
             let subtitle;
             switch (tx?.type) {
               case "Deposit":

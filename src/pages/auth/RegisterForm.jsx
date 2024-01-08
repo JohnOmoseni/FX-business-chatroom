@@ -99,7 +99,9 @@ function RegisterForm() {
               currentAccount: { balance: "0.00", currency: "NGN" },
             });
 
-            await setDoc(doc(db, "transactions", res.user.uid), {});
+            await setDoc(doc(db, "transactions", res.user.uid), {
+              transactions: [],
+            });
 
             dispatch(setAccounts({ balance: "0.00", currency: "NGN" }));
             dispatch(

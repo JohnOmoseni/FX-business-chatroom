@@ -25,6 +25,7 @@ import {
   setAccounts,
   setCurrentAccount,
   setAccountCurrency,
+  setTransactions,
 } from "@redux/features/fxSlice";
 import { toast } from "react-toastify";
 
@@ -93,25 +94,26 @@ function PersonalWallet() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (currentUser?.uid) {
-      const unsub = onSnapshot(
-        doc(db, "userAccounts", currentUser?.uid),
-        (doc) => {
-          if (doc.exists()) {
-            dispatch(setAccounts(doc.data()?.currentAccount));
-            if (baseCurrency !== doc.data()?.currentAccount?.currency) {
-              console.log("doesn't match");
+    const getUserAccounts = async () => {
+      try {
+        const unsub = onSnapshot(
+          doc(db, "userAccounts", currentUser?.uid),
+          (doc) => {
+            if (doc.exists()) {
+              dispatch(setAccounts(doc.data()?.currentAccount));
+              console.log("account event listener", doc.data());
             }
           }
-          console.log(doc.data());
-        }
-      );
-
-      return () => {
-        unsub();
-      };
-    }
-  }, []);
+        );
+        return () => {
+          unsub();
+        };
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    currentUser?.uid && getUserAccounts();
+  }, [currentUser?.uid]);
 
   useEffect(() => {
     const currency = currentAccount?.currency;
@@ -138,19 +140,6 @@ function PersonalWallet() {
   }, [currentAccount?.currency]);
 
   useEffect(() => {
-    const getAccount = async () => {
-      let account;
-      const res = await getDoc(doc(db, "userAccounts", currentUser?.uid));
-      if (res.exists()) {
-        account = res.data();
-        // dispatch(setAccounts(account?.userAccounts));
-        console.log(res.data());
-      }
-    };
-    currentUser && getAccount();
-  }, [currentAccount?.balance]);
-
-  useEffect(() => {
     const handleOnlineStatus = () => setIsOnline(true);
     const handleOfflineStatus = () => setIsOnline(false);
 
@@ -175,7 +164,7 @@ function PersonalWallet() {
     }
     return amount;
   }, [currentAccount?.balance]);
-  console.log(balance, currentAccount.balance);
+  // console.log(balance, currentAccount.balance);
 
   const handleBackArrowClick = () => {
     if (screenSize >= 768) {
@@ -193,6 +182,8 @@ function PersonalWallet() {
     setInputModal({ id: "deposit", isModal: true });
   };
 
+  // console.log(JSON.stringify(import.meta.env.VITE_API_KEY));
+
   return (
     <>
       <WalletHeader
@@ -201,7 +192,7 @@ function PersonalWallet() {
       />
       <div className="w-full h-full py-3 overflow-y-auto">
         <div className="grid grid-cols-balance gap-4">
-          <div className="bg-gradient-200 rounded-md"></div>
+          <div className="bg-gradient-100 rounded-md"></div>
           <div className="rounded-md shadow-100 bg-neutral-100 px-3 pt-5 pb-6 mx-auto w-[100%]">
             <span className="text-xs text-neutral-300 text-opacity-60 tracking-wide ml-1 mb-1 text-gradient-200">
               Account Balance

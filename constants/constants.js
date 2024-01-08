@@ -2,10 +2,10 @@ import Cookies from "universal-cookie";
 
 export const cookies = new Cookies();
 
-export const roomID = "Ne170CbD1DHZ4QDCkynM";
+export const roomID = "GsDeFXAGVBh7Z7evzs2O";
 
 export const config = {
-  public_key: "FLWPUBK_TEST-a6157e327949bccb95ad0e4f97279130-X",
+  public_key: import.meta.env.VITE_FLUTTERWAVE_API_KEY,
   tx_ref: Date.now(),
   amount: 100,
   currency: "NGN",

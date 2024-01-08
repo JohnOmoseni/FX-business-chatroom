@@ -6,12 +6,16 @@ import { v4 as uuid } from "uuid";
 import InputField from "@components/SideNav/RightNav/InputField";
 import { banks } from "../../../utils";
 import Select from "react-dropdown-select";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../../config/firebase-config";
 
 const url = "https://maketrfrequestapi.netlify.app/.netlify/functions/api/";
 
 function Withdraw() {
   const { currentUser } = useSelector((state) => state.authUser);
-  const { currentAccount } = useSelector((state) => state.fxState);
+  const { currentAccount, userAccounts } = useSelector(
+    (state) => state.fxState
+  );
   const [amount, setAmount] = useState("");
   const [bankcode, setBankcode] = useState("");
   const [accountNo, setAccountNo] = useState("");
@@ -73,6 +77,24 @@ function Withdraw() {
 
         dispatch(setTransactions(tx));
         dispatch(setAccountBalance(updatedBalance));
+
+        await updateDoc(doc(db, "transactions", currentUser?.uid), {
+          transactions: arrayUnion(tx),
+        });
+        const newUserAccounts =
+          userAccounts?.length > 0 &&
+          userAccounts?.map((account) => {
+            if (account.currency === response.currency) {
+              account.balance = updatedBalance;
+            }
+            return account;
+          });
+        if (newUserAccounts?.length > 0) {
+          await updateDoc(doc(db, "userAccounts", currentUser?.uid), {
+            userAccounts: newUserAccounts,
+            [currentAccount + ".balance"]: updatedBalance,
+          });
+        }
       } else {
         alert("Failed to initiate transfer. Please try again");
       }

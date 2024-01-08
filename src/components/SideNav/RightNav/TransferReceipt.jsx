@@ -10,6 +10,7 @@ import {
   query,
   where,
   collection,
+  arrayUnion,
 } from "firebase/firestore";
 import { db } from "../../../config/firebase-config";
 import { setAccountBalance, setTransactions } from "@redux/features/fxSlice";
@@ -84,9 +85,13 @@ function TransferReceipt({ setTransferReceipt }) {
           }
           return acc;
         });
+        tx.status = "completed";
         await updateDoc(doc(db, "userAccounts", user?.uid), {
           userAccounts: newUserAccounts,
           [currentAccount + ".balance"]: updatedBalance,
+        });
+        await updateDoc(doc(db, "transactions", user?.uid), {
+          transactions: arrayUnion(tx),
         });
       } else {
         setTransferReceipt(false);
@@ -97,13 +102,10 @@ function TransferReceipt({ setTransferReceipt }) {
           confirmButtonText: "Ok",
         }).then((result) => {});
       }
-
-      tx.status = "completed";
-      dispatch(setTransactions(tx));
-      await setDoc(doc(db, "transactions", user?.uid), tx);
     } catch (err) {
       tx.status = "Failed transaction";
     }
+    dispatch(setTransactions(tx));
   };
 
   return (
