@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ChatBusiness from "./ChatBusiness";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../config/firebase-config";
@@ -6,6 +6,7 @@ import { roomID } from "@constants/constants";
 
 function BusinessChatRoom() {
   const [roomMessages, setRoomMessages] = useState([]);
+  const elemRef = useRef(null);
 
   useEffect(() => {
     const getRoomMessages = async () => {
@@ -24,6 +25,11 @@ function BusinessChatRoom() {
 
     getRoomMessages();
   }, []);
+
+  useEffect(() => {
+    elemRef?.current &&
+      elemRef.current?.scrollIntoView({ behaviour: "smooth" });
+  }, [roomMessages]);
 
   const rows = [];
   let startOfUserMsg = "";
@@ -59,6 +65,7 @@ function BusinessChatRoom() {
       </div>
 
       {rows.length > 0 && rows?.map((row) => row)}
+      <div ref={elemRef} className="absolute bottom-0"></div>
     </div>
   );
 }

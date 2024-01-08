@@ -134,7 +134,20 @@ body::selection {
 .wallet .css-z532jj-InputComponent {
   display: none !important;
 }
+.ReactModal__Content.ReactModal__Content--after-open {
+  inset: 20% !important;
+}
 
+.withdraw > div:first-of-type,
+.withdraw > div:first-of-type .css-bes1m-DropDown.e1qjn9k92 {
+  width: 100%;
+}
+
+@media (min-width: 600px) {
+  .ReactModal__Content.ReactModal__Content--after-open {
+    inset: 25% !important;
+  }
+}
 .full-height {
   height: 100vh;
   height: 100dvh;

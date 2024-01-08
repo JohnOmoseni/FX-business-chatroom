@@ -48,7 +48,7 @@ const WalletHeader = ({ onClick }) => {
   };
 
   return (
-    <div className="wallet w-full py-4 md:py-[4%] pl-1 pr-3 flex-row gap-6 !justify-between border-b border-solid border-br-light shadow-md">
+    <div className="wallet w-full py-4 md:py-[4%] pl-1 pr-3 grid grid-cols-two gap-4 !justify-between border-b border-solid border-br-light shadow-md">
       <div className="flex-row gap-1">
         <span
           onClick={onClick}
@@ -56,18 +56,18 @@ const WalletHeader = ({ onClick }) => {
         >
           <MdOutlineArrowBack color="black" size={18} />
         </span>
-        <div className="relative w-[40px] max-w-[40px] h-[40px] rounded-[50%] border border-solid border-neutral-200 shadow-md">
+        <div className="relative min-w-[40px] max-w-[40px] h-[40px] rounded-[50%] border border-solid border-neutral-200 shadow-md">
           <img
             src={currentUser?.avatar ?? faker.image.avatar()}
             alt=""
             className="group-hover:scale-105 transition"
           />
         </div>
-        <div className="px-2">
+        <div className="w-full px-1">
           <span className="text-xs  text-opacity-60 tracking-wider !block -mb-1">
             Hello,
           </span>
-          <p className="text-xl font-semibold text-shadow tracking-tight font-kinn">
+          <p className="text-lg sm:text-xl max-sm:mt-1 font-semibold text-shadow tracking-tight font-kinn truncate">
             {currentUser?.businessName ?? "Unknown"}
           </p>
         </div>
@@ -144,6 +144,7 @@ function PersonalWallet() {
       if (res.exists()) {
         account = res.data();
         // dispatch(setAccounts(account?.userAccounts));
+        console.log(res.data());
       }
     };
     currentUser && getAccount();
@@ -198,7 +199,7 @@ function PersonalWallet() {
         currency={currentAccount?.currency}
         onClick={handleBackArrowClick}
       />
-      <div className="w-full h-full pt-3 pb-4 overflow-y-auto">
+      <div className="w-full h-full py-3 overflow-y-auto">
         <div className="grid grid-cols-balance gap-4">
           <div className="bg-gradient-200 rounded-md"></div>
           <div className="rounded-md shadow-100 bg-neutral-100 px-3 pt-5 pb-6 mx-auto w-[100%]">
@@ -216,7 +217,7 @@ function PersonalWallet() {
           <div className="bg-gradient-100 rounded-md"></div>
         </div>
 
-        <div className="flex-row gap-4 my-14 px-4 mx-auto">
+        <div className="flex-row gap-4 my-14  px-4 mx-auto">
           <ButtonVariant title="Deposit" onClick={handleDeposit} />
           <ButtonVariant
             title="Withdraw"
@@ -227,51 +228,47 @@ function PersonalWallet() {
         <Transactions />
       </div>
 
-      {isOnline && (
-        <ReactModal
-          isOpen={inputModal.isModal}
-          contentLabel="Input Modal"
-          onRequestClose={() =>
-            setInputModal((prev) => ({ ...prev, isModal: false }))
-          }
-          style={{
-            overlay: {
-              backgroundColor: "rgba(0,0,0,0.4)",
-              zIndex: 9999,
-              backdropFilter: "1em",
-            },
-            content: {
-              color: "black",
-            },
-          }}
-        >
-          {inputModal.id === "deposit" ? (
-            <TestDeposit
-              onCloseModal={() =>
-                setInputModal((prev) => ({ ...prev, isModal: false }))
-              }
-            />
-          ) : (
-            <Withdraw
-              onCloseModal={() =>
-                setInputModal((prev) => ({ ...prev, isModal: false }))
-              }
-            />
-          )}
-          <div
-            onClick={() =>
+      <ReactModal
+        isOpen={inputModal.isModal}
+        contentLabel="Input Modal"
+        onRequestClose={() =>
+          setInputModal((prev) => ({ ...prev, isModal: false }))
+        }
+        style={{
+          overlay: {
+            backgroundColor: "rgba(0,0,0,0.4)",
+            zIndex: 9999,
+            backdropFilter: "1em",
+          },
+          content: {
+            color: "black",
+          },
+        }}
+      >
+        {inputModal.id === "deposit" ? (
+          <TestDeposit
+            onCloseModal={() =>
               setInputModal((prev) => ({ ...prev, isModal: false }))
             }
-            className="group absolute icon right-1.5 top-1.5"
-            title="close-modal"
-          >
-            <MdOutlineClose
-              size={22}
-              className="text-gray-500 group-hover:text-black group-hover:scale-95 transition-colors"
-            />
-          </div>
-        </ReactModal>
-      )}
+          />
+        ) : (
+          <Withdraw
+            onCloseModal={() =>
+              setInputModal((prev) => ({ ...prev, isModal: false }))
+            }
+          />
+        )}
+        <div
+          onClick={() => setInputModal((prev) => ({ ...prev, isModal: false }))}
+          className="group absolute icon right-2 top-2"
+          title="close-modal"
+        >
+          <MdOutlineClose
+            size={22}
+            className="text-gray-500 icon group-hover:text-black group-hover:scale-95 transition-colors"
+          />
+        </div>
+      </ReactModal>
     </>
   );
 }

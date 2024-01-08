@@ -17,14 +17,18 @@ const IconBg = ({ children, onClick, className }) => {
   );
 };
 
-function ChatRoomHeading({ userChat }) {
+function ChatRoomHeading() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { logOut } = useAuthContext();
+  const { screenSize } = useSelector((state) => state.appState);
 
   const handleBack = () => {
-    dispatch(setClosePane({ id: "showChatRoom", val: false }));
-    navigate(-1);
+    if (screenSize >= 768) {
+      navigate(-1);
+    } else {
+      dispatch(setClosePane({ id: "showChatRoom", val: false }));
+    }
   };
 
   const handleLogOut = async () => {

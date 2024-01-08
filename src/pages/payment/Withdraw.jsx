@@ -7,15 +7,22 @@ import { v4 as uuid } from "uuid";
 import ReactModal from "react-modal";
 import InputField from "@components/SideNav/RightNav/InputField";
 import SelectField from "../../components/SideNav/RightNav/SelectField";
+import { banks } from "../../../utils";
+import Select from "react-dropdown-select";
 
 const url = "https://maketrfrequestapi.netlify.app/.netlify/functions/api/";
 
 function Withdraw() {
   const { currentUser } = useSelector((state) => state.authUser);
   const { currentAccount } = useSelector((state) => state.fxState);
-  const [amount, setAmount] = useState(1000);
-  const [bankcode, setBankcode] = useState("044");
-  const [accountNo, setAccountNo] = useState("0690000032");
+  const [amount, setAmount] = useState("0.00");
+  const [bankcode, setBankcode] = useState("");
+  const [accountNo, setAccountNo] = useState("");
+
+  const options = banks?.map((item) => ({
+    label: item?.name,
+    value: item?.code,
+  }));
 
   const initiateTransfer = async () => {
     if (!amount && !accountNo) return;
@@ -71,37 +78,43 @@ function Withdraw() {
       }
     } catch (err) {
       console.error(err.message);
+      alert("Failed to initiate transfer. Please try again");
     }
   };
 
   const handleSelectChange = (value) => {
-    const selectValue = value[0]?.value;
+    setBankcode(value[0]?.value);
   };
 
   return (
     <div className="grid place-items-center h-full">
-      <div className="flex-column gap-3">
-        <SelectField
-          list={[]}
-          handleSelectChange={handleSelectChange}
+      <div className="withdraw flex-column !items-center gap-4">
+        <Select
+          name="select"
+          options={options}
           placeholder="Select Bank"
+          onChange={handleSelectChange}
+        />
+        <InputField
+          value={accountNo}
+          onChange={(e) => setAccountNo(e.target.value)}
+          placeholder="Enter your account number"
+          className="!text-neutral-600 placeholder:text-neutral-400"
         />
         <div className="flex-row">
-          <span className="text-sm mb-1 pr-1 text-shadow tracking-wide uppercase">
-            {currentAccount?.currency}
-          </span>
           <InputField
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            placeholder="0.00"
-            className="!text-neutral-400"
+            className="!text-neutral-600"
           />
+          <span className="text-sm mb-1 pl-1 text-shadow tracking-wide uppercase">
+            {currentAccount?.currency}
+          </span>
         </div>
 
         <div className="my-[1rem]">
           <ButtonVariant
-            title="Deposit Money"
-            icon={<CiLocationOn />}
+            title="Withdraw"
             onClick={initiateTransfer}
             className="bg-emerald-600"
           />

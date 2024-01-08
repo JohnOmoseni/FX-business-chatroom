@@ -77,7 +77,7 @@ function Transactions() {
   console.log(txs);
 
   return (
-    <div className="h-full relative rounded-ss-2xl rounded-se-lg shadow-md py-4 px-[4%] border-t-2 border-solid border-br-light overflow-y-auto">
+    <div className="h-full relative rounded-ss-2xl rounded-se-lg pt-4 pb-6 px-[4%] border-t-2 border-solid border-br-light overflow-y-auto">
       <div className="flex-row gap-3 !justify-between">
         {searchBar ? (
           <SearchBar

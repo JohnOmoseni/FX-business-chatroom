@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Chat from "./Chat";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../config/firebase-config";
 
 function Messages({ chatId }) {
   const [messages, setMessages] = useState([]);
+  const elemRef = useRef(null);
 
   useEffect(() => {
     if (chatId) {
@@ -17,6 +18,11 @@ function Messages({ chatId }) {
         unsub();
       };
     }
+  }, [chatId]);
+
+  useEffect(() => {
+    elemRef?.current &&
+      elemRef.current?.scrollIntoView({ behaviour: "smooth" });
   }, [chatId]);
 
   const rows = [];
@@ -44,6 +50,7 @@ function Messages({ chatId }) {
       </div>
 
       {rows.length > 0 && rows?.map((row) => row)}
+      <div ref={elemRef} className="absolute bottom-0"></div>
     </div>
   );
 }
