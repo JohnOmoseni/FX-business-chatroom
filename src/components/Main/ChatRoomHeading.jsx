@@ -33,7 +33,6 @@ function ChatRoomHeading() {
 
   const handleLogOut = async () => {
     await logOut();
-    navigate("/auth/sign-in");
   };
 
   return (

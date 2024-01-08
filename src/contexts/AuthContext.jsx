@@ -7,11 +7,13 @@ import {
 import { createContext, useContext, useEffect, useState } from "react";
 import { auth } from "../config/firebase-config";
 import { cookies } from "@constants/constants";
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext(null);
 
 export const AuthContextProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -43,7 +45,8 @@ export const AuthContextProvider = ({ children }) => {
         cookies.remove("auth-token");
         setIsAuthenticated(false);
         localStorage.removeItem("auth-token");
-        return signOut(auth);
+        signOut(auth);
+        navigate("/auth/sign-in");
       } catch (err) {
         console.log(err.message, "Error logging out");
       }

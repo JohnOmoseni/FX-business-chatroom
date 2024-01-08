@@ -44,11 +44,12 @@ const fxSlice = createSlice({
       state.currencies = payload;
     },
     setTransactions: (state, { payload }) => {
-      if (!Array.isArray(payload)) {
+      if (Array.isArray(payload)) {
+        state.transactions = payload;
+      } else {
         state.transactions = [...state.transactions, payload];
         state.lastTransaction = payload;
       }
-      state.transactions = payload;
     },
     setAccounts: (state, { payload }) => {
       if (!Array.isArray(payload)) {

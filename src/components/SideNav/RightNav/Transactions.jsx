@@ -1,10 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import ListRow from "../../ListRow";
 import { BiSearchAlt } from "react-icons/bi";
-import { setTransactions } from "@redux/features/fxSlice";
-import { doc, onSnapshot } from "firebase/firestore";
-import { db } from "../../../config/firebase-config";
 
 const SearchBar = ({ setSearchBar, input, setInput, setSearchResult, txs }) => {
   const handleInputChange = (e) => {
@@ -41,29 +37,10 @@ const SearchBar = ({ setSearchBar, input, setInput, setSearchResult, txs }) => {
   );
 };
 
-function Transactions() {
-  const { transactions } = useSelector((state) => state.fxState);
-  const { currentUser } = useSelector((state) => state.authUser);
+function Transactions({ transactions }) {
   const [searchBar, setSearchBar] = useState(false);
   const [searchResult, setSearchResult] = useState([]);
   const [input, setInput] = useState("");
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (currentUser?.uid) {
-      const unsub = onSnapshot(
-        doc(db, "transactions", currentUser?.uid),
-        (doc) => {
-          doc.exists() && dispatch(setTransactions(doc.data()?.transactions));
-          console.log(doc.data());
-        }
-      );
-
-      return () => {
-        unsub();
-      };
-    }
-  }, [currentUser?.uid]);
 
   // const txs = useMemo(() => {
   //   const array = searchResult?.length > 0 ? searchResult : transactions;

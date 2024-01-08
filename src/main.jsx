@@ -17,8 +17,8 @@ ReactModal.setAppElement("#root");
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Provider store={store}>
-      <AuthContextProvider>
-        <BrowserRouter>
+      <BrowserRouter>
+        <AuthContextProvider>
           <App />
           <ToastContainer
             position="top-right"
@@ -26,8 +26,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             className="font-poppins tracking-wide"
             theme="dark"
           />
-        </BrowserRouter>
-      </AuthContextProvider>
+        </AuthContextProvider>
+      </BrowserRouter>
     </Provider>
   </React.StrictMode>
 );

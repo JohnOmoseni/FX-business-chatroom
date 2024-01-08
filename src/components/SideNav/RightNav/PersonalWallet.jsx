@@ -41,7 +41,7 @@ const WalletHeader = ({ onClick }) => {
 
   const listCurrencies = useMemo(() => {
     return currencies ? currencies?.map((curr) => curr.symbol) : [];
-  }, [currencies]);
+  }, []);
 
   const handleSelectChange = (value) => {
     const selectValue = value[0]?.value;
@@ -90,27 +90,33 @@ function PersonalWallet() {
   const { screenSize } = useSelector((state) => state.appState);
   const { currentUser } = useSelector((state) => state.authUser);
   const [inputModal, setInputModal] = useState({ isModal: false, id: "" });
+  const { transactions } = useSelector((state) => state.fxState);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     const getUserAccounts = async () => {
-      try {
-        const unsub = onSnapshot(
-          doc(db, "userAccounts", currentUser?.uid),
-          (doc) => {
-            if (doc.exists()) {
-              dispatch(setAccounts(doc.data()?.currentAccount));
-              console.log("account event listener", doc.data());
-            }
+      const unsub = onSnapshot(
+        doc(db, "userAccounts", currentUser?.uid),
+        (doc) => {
+          if (doc.exists()) {
+            dispatch(setAccounts(doc.data()?.currentAccount));
+            console.log("account event listener", doc.data());
           }
-        );
-        return () => {
-          unsub();
-        };
-      } catch (err) {
-        console.log(err);
-      }
+        }
+      );
+      const unsubTxs = onSnapshot(
+        doc(db, "transactions", currentUser?.uid),
+        (doc) => {
+          doc.exists() && dispatch(setTransactions(doc.data()?.transactions));
+          console.log(doc.data()?.transactions);
+        }
+      );
+      return () => {
+        unsub();
+        unsubTxs();
+      };
     };
     currentUser?.uid && getUserAccounts();
   }, [currentUser?.uid]);
@@ -136,7 +142,7 @@ function PersonalWallet() {
         dispatch(setCurrentAccount(account));
       }
     };
-    userAccounts.length > 0 && currentUser && updateAccount();
+    currentUser && updateAccount();
   }, [currentAccount?.currency]);
 
   useEffect(() => {
@@ -164,7 +170,7 @@ function PersonalWallet() {
     }
     return amount;
   }, [currentAccount?.balance]);
-  // console.log(balance, currentAccount.balance);
+  console.log(balance, currentAccount.balance);
 
   const handleBackArrowClick = () => {
     if (screenSize >= 768) {
@@ -216,7 +222,7 @@ function PersonalWallet() {
           />
         </div>
 
-        <Transactions />
+        <Transactions transactions={transactions} />
       </div>
 
       <ReactModal

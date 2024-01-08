@@ -73,7 +73,7 @@ function TradeWallet() {
 
   const handleBackArrowClick = () => {
     if (screenSize >= 768) {
-      dispatch(setVisibleRightPane({ id: "tradeWallet", val: false }));
+      dispatch(setVisibleRightPane({ id: "currencyList", val: true }));
     } else {
       dispatch(setCloseRightPane());
     }

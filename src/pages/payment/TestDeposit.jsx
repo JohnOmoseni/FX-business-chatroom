@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { CiLocationOn } from "react-icons/ci";
 import InputField from "../../components/SideNav/RightNav/InputField";
 import { ButtonVariant } from "../../components/Button";
-import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore";
+import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../config/firebase-config";
 
 const email = "johnnyomoseni100@gmail.com";
@@ -20,7 +20,7 @@ export default function TestDeposit({ onCloseModal }) {
     (state) => state.fxState
   );
   const { currentUser } = useSelector((state) => state.authUser);
-  const [amount, setAmount] = useState("0.00");
+  const [amount, setAmount] = useState("");
 
   const dispatch = useDispatch();
 
@@ -115,6 +115,7 @@ export default function TestDeposit({ onCloseModal }) {
         });
       } catch (error) {
         console.log(error);
+        alert("Something went wrong. Please try again.");
       }
     } else {
       toast.info("Please enter a valid amount", {
@@ -136,7 +137,7 @@ export default function TestDeposit({ onCloseModal }) {
               value={amount}
               type="text"
               onChange={(e) => setAmount(e.target.value)}
-              placeholder=""
+              placeholder="0.00"
               className="!text-neutral-700 !py-3"
             />
           </div>

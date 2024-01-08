@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ButtonVariant } from "../../Button";
 import { v4 as uuid } from "uuid";
 import {
@@ -16,6 +16,7 @@ import { db } from "../../../config/firebase-config";
 import { setAccountBalance, setTransactions } from "@redux/features/fxSlice";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import { setVisibleRightPane } from "../../../../redux/features/appStateSlice";
 
 const texts = ["You send", "They receive", "Will arrive on", "Exchange rate"];
 
@@ -30,6 +31,7 @@ function TransferReceipt({ setTransferReceipt }) {
     userAccounts,
     currentAccount,
   } = useSelector((state) => state.fxState);
+  const dispatch = useDispatch();
 
   const handleTransfer = async () => {
     const senderCurrency = currentAccount.currency;
@@ -55,7 +57,7 @@ function TransferReceipt({ setTransferReceipt }) {
           (account) => account.currency === receiverCurrency
         );
 
-    console.log(res.data(), receiverAccount);
+    console.log(res.data(), receiverAccount, senderCurrency);
     const tx = {
       transactionId: uuid(),
       currencySent: selectedCurrency.baseCurrency,
@@ -76,7 +78,17 @@ function TransferReceipt({ setTransferReceipt }) {
         const updatedBalance = parseInt(currentAccount.balance) - fullAmount;
 
         dispatch(setAccountBalance(updatedBalance));
+      } else {
+        Swal.fire({
+          icon: "info",
+          titleText: "You do not have an account of this currency",
+          showDenyButton: false,
+          confirmButtonText: "Ok",
+        }).then((result) => {});
+
+        return;
       }
+
       if (receiverAccount) {
         const updatedBalance = parseInt(receiverAccount.balance) + amountToSend;
         const newUserAccounts = recipientAccounts?.userAccounts?.map((acc) => {
@@ -93,17 +105,21 @@ function TransferReceipt({ setTransferReceipt }) {
         await updateDoc(doc(db, "transactions", user?.uid), {
           transactions: arrayUnion(tx),
         });
+        toast.success(`Transfer to ${user?.businessName} successful`);
+        dispatch(setVisibleRightPane({ id: "userWallet", val: true }));
+        console.log("successful");
       } else {
-        setTransferReceipt(false);
         Swal.fire({
           icon: "info",
-          titleText: "This user does not have an account",
+          titleText: "This user does not have an account of this currency",
           showDenyButton: false,
           confirmButtonText: "Ok",
         }).then((result) => {});
       }
     } catch (err) {
       tx.status = "Failed transaction";
+    } finally {
+      setTransferReceipt(false);
     }
     dispatch(setTransactions(tx));
   };
@@ -111,7 +127,7 @@ function TransferReceipt({ setTransferReceipt }) {
   return (
     <div className="grid place-items-center w-full h-full relative pt-3 overflow-y-auto">
       <section className="w-full absolute top-4">
-        <div className="group relative min-w-[140px] max-w-[140px] h-[140px] mx-auto md:min-w-[100px] md:h-[100px] rounded-[50%] border border-solid border-neutral-200 shadow-md grid place-items-center overflow-hidden">
+        <div className="group relative min-w-[140px] w-[140px] max-w-[140px] h-[140px] mx-auto md:min-w-[100px] md:max-w-[140px] md:h-[100px] clip-circle rounded-[50%] border border-solid border-neutral-400 shadow-md grid place-items-center overflow-hidden">
           <img
             src={user?.avatar}
             alt=""

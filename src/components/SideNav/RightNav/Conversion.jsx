@@ -12,6 +12,7 @@ import {
 } from "@redux/features/fxSlice";
 import { setVisibleRightPane } from "@redux/features/appStateSlice";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 const Header = ({ onClick }) => (
   <div className="w-full pt-6 pb-4 px-[2%] flex-row gap-4 !justify-start opacity-80 shadow-md">
@@ -60,9 +61,8 @@ const CurrencyRow = ({
 };
 
 function Conversion({ setShowConversionPane }) {
-  const { baseCurrency, currentAccount, selectedCurrency } = useSelector(
-    (state) => state.fxState
-  );
+  const { baseCurrency, currentAccount, userAccounts, selectedCurrency } =
+    useSelector((state) => state.fxState);
   const dispatch = useDispatch();
   const [fromCurrency, setFromCurrency] = useState(baseCurrency);
   const [toCurrency, setToCurrency] = useState(selectedCurrency?.symbol);
@@ -116,19 +116,31 @@ function Conversion({ setShowConversionPane }) {
 
   const handleExchangeRate = () => {
     if (amount && !isNaN(amount)) {
-      // setShowConversionPane(false);
       dispatch(setAmountToSend(amount));
-      dispatch(
-        setCurrentAccount({ ...currentAccount, currency: baseCurrency })
+      const newCurrAccount = userAccounts?.find(
+        (account) => account.currency === baseCurrency
       );
+      if (newCurrAccount) {
+        dispatch(setCurrentAccount(newCurrAccount));
+        dispatch(setVisibleRightPane({ id: "tradeWallet", val: true }));
+      } else {
+        Swal.fire({
+          icon: "info",
+          titleText:
+            "You do not have an account of this currency. Please select an account of this currency and make a deposit",
+          showDenyButton: false,
+          confirmButtonText: "Ok",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            dispatch(setVisibleRightPane({ id: "userWallet", val: true }));
+          }
+        });
+      }
       dispatch(
         setSelectedCurrency({ ...selectedCurrency, fromAmount, toAmount })
       );
-      dispatch(setVisibleRightPane({ id: "tradeWallet", val: true }));
     }
   };
-
-  console.log(selectedCurrency, fromAmount, toAmount);
 
   return (
     <>
