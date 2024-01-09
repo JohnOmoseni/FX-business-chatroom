@@ -12,13 +12,6 @@ import {
 import ReactModal from "react-modal";
 import TransferReceipt from "./TransferReceipt";
 
-const from = {
-  avatar: "",
-  businessName: "Eniola Perf",
-  amount: "1.802.00",
-  currency: "USD",
-};
-
 const WalletHeader = ({ onClick, currency }) => (
   <div className="w-full py-4 md:py-[4%] pr-3 flex-row gap-4 !justify-between border-b border-solid border-br-light shadow-md">
     <div className="flex-row gap-3 !justify-start pl-3">
@@ -85,7 +78,7 @@ function TradeWallet() {
         onClick={handleBackArrowClick}
         currency={currentAccount?.currency}
       />
-      <div className="mx-3 mb-4 h-full overflow-y-auto">
+      <div className="w-full px-3 mb-4 h-full overflow-y-auto">
         <ul className="flex-column gap-4 py-4 px-4 md:px-[4%] mx-auto rounded-md border border-solid border-br-light shadow-md">
           <p className="w-full font-semibold text-shadow text-center">
             Currency pair ({selectedCurrency?.pair})

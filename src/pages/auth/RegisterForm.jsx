@@ -110,7 +110,7 @@ function RegisterForm() {
                 displayName: values.firstName,
                 email: values.email,
                 avatar: downloadURL,
-                fullName: `${values?.firstName} ${values?.lastName}}`,
+                fullName: `${values?.firstName} ${values?.lastName}`,
                 businessName: values?.businessName,
                 phoneNo: values?.phoneNo,
                 country: values?.country,

@@ -31,21 +31,25 @@ export const FormGroup = ({
       }`}
     >
       {name === "file" ? (
-        <label
-          htmlFor={name}
-          className="flex-row gap-2 px-1 py-3 !justify-start cursor-pointer select-none "
-        >
-          <div className="w-[26px]">
-            <img src={gallery} alt="" />
+        <label htmlFor={name} className="flex-column gap-3">
+          <span
+            className={`text-sm relative inline-block tracking-wider text-shadow`}
+          >
+            {label}
+          </span>
+          <div className="flex-row gap-2 px-1 pb-3 !justify-start cursor-pointer select-none">
+            <div className="w-[26px]">
+              <img src={gallery} alt="" />
+            </div>
+            <input
+              ref={fileRef}
+              id={name}
+              type={type}
+              name={name}
+              placeholder="Add business logo"
+              className="text-tiny i-reset tracking-wide file:rounded-md file:border-none file:px-3 file:py-1 file:font-semibold file:bg-green-200 hover:file:bg-green-300 file:transition-colors file:placeholder: text-neutral-600 cursor-pointer"
+            />
           </div>
-          <input
-            ref={fileRef}
-            id={name}
-            type={type}
-            name={name}
-            placeholder="Add business logo"
-            className="text-tiny i-reset tracking-wide file:rounded-md file:border-none file:px-3 file:py-1 file:font-semibold file:bg-green-200 hover:file:bg-green-300 file:transition-colors file:placeholder: text-neutral-600 cursor-pointer"
-          />
         </label>
       ) : (
         <>

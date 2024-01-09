@@ -139,6 +139,8 @@ function Conversion({ setShowConversionPane }) {
       dispatch(
         setSelectedCurrency({ ...selectedCurrency, fromAmount, toAmount })
       );
+    } else {
+      toast.info("Enter a valid amount");
     }
   };
 
@@ -182,6 +184,7 @@ function Conversion({ setShowConversionPane }) {
             </span>
             <InputField
               refName={inputRateRef}
+              type="text"
               name="exchange rate"
               value={exchangeRate}
               onChange={(e) => setExchangeRate(e.target.value)}
@@ -206,6 +209,7 @@ function Conversion({ setShowConversionPane }) {
                 render={() => (
                   <div className="relative">
                     <InputField
+                      type="text"
                       refName={inputRef}
                       value={fromAmount}
                       onChange={handleFromAmountChange}
@@ -227,6 +231,7 @@ function Conversion({ setShowConversionPane }) {
                 readOnly={true}
                 render={() => (
                   <InputField
+                    type="text"
                     value={toAmount}
                     onChange={handleToAmountChange}
                     className="w-full"

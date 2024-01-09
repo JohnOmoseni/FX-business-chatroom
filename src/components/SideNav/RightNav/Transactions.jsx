@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import ListRow from "../../ListRow";
 import { BiSearchAlt } from "react-icons/bi";
+import { useSelector } from "react-redux";
 
 const SearchBar = ({ setSearchBar, input, setInput, setSearchResult, txs }) => {
   const handleInputChange = (e) => {
@@ -41,21 +42,21 @@ function Transactions({ transactions }) {
   const [searchBar, setSearchBar] = useState(false);
   const [searchResult, setSearchResult] = useState([]);
   const [input, setInput] = useState("");
+  const { users } = useSelector((state) => state.usersState);
 
-  // const txs = useMemo(() => {
-  //   const array = searchResult?.length > 0 ? searchResult : transactions;
-  //   if (transactions.length > 0) {
-  //     return array?.map((tx) => {
-  //       return {
-  //         ...tx,
-  //         recipient: users?.find((user) => user?.uid === tx?.recipientID),
-  //       };
-  //     });
-  //   } else {
-  //     return array;
-  //   }
-  // }, [searchResult, transactions]);
-  // console.log(txs);
+  const txs = useMemo(() => {
+    const array = searchResult?.length > 0 ? searchResult : transactions;
+    if (transactions.length > 0) {
+      return array?.map((tx) => {
+        return {
+          ...tx,
+          recipient: users?.find((user) => user?.uid === tx?.recipientID),
+        };
+      });
+    } else {
+      return array;
+    }
+  }, [searchResult, transactions]);
 
   return (
     <div className="h-full relative rounded-ss-2xl rounded-se-lg pt-4 pb-6 px-[4%] border-t-2 border-solid border-br-light overflow-y-auto">
@@ -82,11 +83,11 @@ function Transactions({ transactions }) {
           </>
         )}
       </div>
-      {transactions?.length > 0 ? (
+      {txs?.length > 0 ? (
         <ul className="mt-4 flex-column gap-4">
-          {transactions.map((tx, idx) => {
+          {txs.map((tx, idx) => {
             let subtitle;
-            switch (tx?.type) {
+            switch (tx?.txType) {
               case "Deposit":
                 subtitle = "Added to wallet";
                 break;
@@ -99,7 +100,9 @@ function Transactions({ transactions }) {
                 subtitle = "Sent";
             }
             const obj = {
-              name: tx?.recipient?.businessName ?? "Unknown",
+              name: tx?.recipient?.businessName
+                ? tx?.recipient?.businessName
+                : "Unknown",
               subtitle: subtitle,
               avatar: tx?.recipient?.avatar,
               symbol: "",

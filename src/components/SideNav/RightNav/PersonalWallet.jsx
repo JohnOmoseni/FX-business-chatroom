@@ -29,68 +29,54 @@ import {
 } from "@redux/features/fxSlice";
 import { toast } from "react-toastify";
 
-const test = [];
-test.fi;
-
-const WalletHeader = ({ onClick }) => {
-  const { currentUser } = useSelector((state) => state.authUser);
-  const { currencies, baseCurrency, currentAccount } = useSelector(
-    (state) => state.fxState
-  );
-  const dispatch = useDispatch();
-
-  const listCurrencies = useMemo(() => {
-    return currencies ? currencies?.map((curr) => curr.symbol) : [];
-  }, []);
-
-  const handleSelectChange = (value) => {
-    const selectValue = value[0]?.value;
-    dispatch(setAccountCurrency(selectValue));
-  };
-
-  return (
-    <div className="wallet w-full py-4 md:py-[4%] pl-1 pr-3 grid grid-cols-two gap-4 !justify-between border-b border-solid border-br-light shadow-md">
-      <div className="flex-row gap-1">
-        <span
-          onClick={onClick}
-          className="icon p-1 text-sm rounded-sm transition hover:ring-1 ring-inset ring-gray-200 hover:scale-95"
-        >
-          <MdOutlineArrowBack color="black" size={18} />
-        </span>
-        <div className="relative min-w-[40px] max-w-[40px] h-[40px] rounded-[50%] border border-solid border-neutral-200 shadow-md">
-          <img
-            src={currentUser?.avatar ?? faker.image.avatar()}
-            alt=""
-            className="group-hover:scale-105 transition"
-          />
-        </div>
-        <div className="w-full px-1">
-          <span className="text-xs  text-opacity-60 tracking-wider !block -mb-1">
-            Hello,
-          </span>
-          <p className="text-lg sm:text-xl max-sm:mt-1 font-semibold text-shadow tracking-tight font-kinn truncate">
-            {currentUser?.businessName ?? "Unknown"}
-          </p>
-        </div>
+const WalletHeader = ({
+  currentUser,
+  currentAccount,
+  onClick,
+  listCurrencies,
+  handleSelectChange,
+}) => (
+  <div className="wallet w-full py-4 md:py-[4%] pl-1 pr-3 grid grid-cols-two gap-4 !justify-between border-b border-solid border-br-light shadow-md">
+    <div className="flex-row gap-1">
+      <span
+        onClick={onClick}
+        className="icon p-1 text-sm rounded-sm transition hover:ring-1 ring-inset ring-gray-200 hover:scale-95"
+      >
+        <MdOutlineArrowBack color="black" size={18} />
+      </span>
+      <div className="relative min-w-[40px] max-w-[40px] h-[40px] rounded-[50%] border border-solid border-neutral-200 shadow-md">
+        <img
+          src={currentUser?.avatar ?? faker.image.avatar()}
+          alt=""
+          className="group-hover:scale-105 transition"
+        />
       </div>
-
-      <SelectField
-        list={listCurrencies}
-        handleSelectChange={handleSelectChange}
-        placeholder={currentAccount?.currency}
-      />
+      <div className="w-full px-1">
+        <span className="text-xs  text-opacity-60 tracking-wider !block -mb-1">
+          Hello,
+        </span>
+        <p className="text-lg sm:text-xl max-sm:mt-1 font-semibold text-shadow tracking-tight font-kinn truncate">
+          {currentUser?.businessName ?? "Unknown"}
+        </p>
+      </div>
     </div>
-  );
-};
+
+    <SelectField
+      list={listCurrencies}
+      handleSelectChange={handleSelectChange}
+      placeholder={currentAccount?.currency}
+    />
+  </div>
+);
 
 function PersonalWallet() {
-  const { currentAccount, userAccounts, baseCurrency } = useSelector(
-    (state) => state.fxState
-  );
+  const { currentAccount, userAccounts, transactions, currencies } =
+    useSelector((state) => state.fxState);
   const { screenSize } = useSelector((state) => state.appState);
   const { currentUser } = useSelector((state) => state.authUser);
+
   const [inputModal, setInputModal] = useState({ isModal: false, id: "" });
-  const { transactions } = useSelector((state) => state.fxState);
+  const [selectedCurrency, setSelectedCurrency] = useState("");
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   const dispatch = useDispatch();
@@ -101,7 +87,8 @@ function PersonalWallet() {
         doc(db, "userAccounts", currentUser?.uid),
         (doc) => {
           if (doc.exists()) {
-            dispatch(setAccounts(doc.data()?.currentAccount));
+            dispatch(setAccounts(doc.data()?.userAccounts));
+            dispatch(setCurrentAccount(doc.data()?.currentAccount));
             console.log("account event listener", doc.data());
           }
         }
@@ -110,7 +97,6 @@ function PersonalWallet() {
         doc(db, "transactions", currentUser?.uid),
         (doc) => {
           doc.exists() && dispatch(setTransactions(doc.data()?.transactions));
-          console.log(doc.data()?.transactions);
         }
       );
       return () => {
@@ -122,26 +108,36 @@ function PersonalWallet() {
   }, [currentUser?.uid]);
 
   useEffect(() => {
-    const currency = currentAccount?.currency;
-
     const updateAccount = async () => {
-      const account = userAccounts?.find(
-        (account) => account.currency === currency
-      );
-      if (!account) {
-        const newAccount = { balance: "0.00", currency: currency };
-        await updateDoc(doc(db, "userAccounts", currentUser?.uid), {
-          userAccounts: arrayUnion(newAccount),
-          currentAccount: newAccount,
-        });
-        dispatch(setAccounts(newAccount));
-      } else {
-        await updateDoc(doc(db, "userAccounts", currentUser?.uid), {
-          currentAccount: account,
-        });
-        dispatch(setCurrentAccount(account));
+      try {
+        const res = await getDoc(doc(db, "userAccounts", currentUser?.uid));
+        const accounts = res.data()?.userAccounts;
+
+        const account = accounts.find(
+          (acc) => acc.currency === selectedCurrency
+        );
+        if (account) {
+          dispatch(setAccounts(account));
+          await updateDoc(doc(db, "userAccounts", currentUser?.uid), {
+            currentAccount: account,
+          });
+        } else {
+          const newAccount = { balance: 0.0, currency: selectedCurrency };
+          const account = userAccounts.find(
+            (acc) => acc.currency === selectedCurrency
+          );
+          if (!account) {
+            setAccounts(newAccount);
+          } else {
+            setCurrentAccount(newAccount);
+          }
+        }
+      } catch (err) {
+        console.log(err.message);
+      } finally {
       }
     };
+
     currentUser && updateAccount();
   }, [currentAccount?.currency]);
 
@@ -158,6 +154,10 @@ function PersonalWallet() {
     };
   }, []);
 
+  const listCurrencies = useMemo(() => {
+    return currencies ? currencies?.map((curr) => curr.symbol) : [];
+  }, []);
+
   const balance = useMemo(() => {
     const amount =
       typeof currentAccount?.balance === "string"
@@ -170,7 +170,6 @@ function PersonalWallet() {
     }
     return amount;
   }, [currentAccount?.balance]);
-  console.log(balance, currentAccount.balance);
 
   const handleBackArrowClick = () => {
     if (screenSize >= 768) {
@@ -188,13 +187,20 @@ function PersonalWallet() {
     setInputModal({ id: "deposit", isModal: true });
   };
 
-  // console.log(JSON.stringify(import.meta.env.VITE_API_KEY));
+  const handleSelectChange = (value) => {
+    const selectValue = value[0]?.value;
+    setSelectedCurrency(selectValue);
+  };
 
   return (
     <>
       <WalletHeader
         currency={currentAccount?.currency}
         onClick={handleBackArrowClick}
+        currentUser={currentUser}
+        currentAccount={currentAccount}
+        listCurrencies={listCurrencies}
+        handleSelectChange={handleSelectChange}
       />
       <div className="w-full h-full py-3 overflow-y-auto">
         <div className="grid grid-cols-balance gap-4">
@@ -207,14 +213,14 @@ function PersonalWallet() {
               <span className="text-3xl">{currentAccount?.currency}</span>
               {Array.isArray(balance) ? balance?.[0] : balance}
               <span className="text-xl !text-neutral-400">
-                .{Array.isArray(balance) ? balance?.[1] : "00"}
+                {Array.isArray(balance) ? `.${balance?.[1]}` : ""}
               </span>
             </h2>
           </div>
           <div className="bg-gradient-100 rounded-md"></div>
         </div>
 
-        <div className="flex-row gap-4 my-14  px-4 mx-auto">
+        <div className="flex-row gap-4 mt-14 mb-16 px-4 mx-auto">
           <ButtonVariant title="Deposit" onClick={handleDeposit} />
           <ButtonVariant
             title="Withdraw"

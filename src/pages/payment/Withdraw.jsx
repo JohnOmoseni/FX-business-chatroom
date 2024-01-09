@@ -72,31 +72,28 @@ function Withdraw() {
           recipient: currentUser?.uid,
           timestamp: Date.now(),
         };
-        const updatedBalance =
-          parseInt(currentAccount.balance) - response?.amount;
+        const updatedAccount = {
+          balance: Number(currentAccount.balance) - Number(response?.amount),
+          currency: currentAccount?.currency,
+        };
 
-        dispatch(setTransactions(tx));
-        dispatch(setAccountBalance(updatedBalance));
-
-        await updateDoc(doc(db, "transactions", currentUser?.uid), {
-          transactions: arrayUnion(tx),
+        const newUserAccounts = userAccounts?.map((account) => {
+          if (account.currency === updatedAccount.currency) {
+            return updatedAccount;
+          }
+          return account;
         });
-        const newUserAccounts =
-          userAccounts?.length > 0 &&
-          userAccounts?.map((account) => {
-            if (account.currency === response.currency) {
-              account.balance = updatedBalance;
-            }
-            return account;
-          });
         if (newUserAccounts?.length > 0) {
           await updateDoc(doc(db, "userAccounts", currentUser?.uid), {
             userAccounts: newUserAccounts,
-            [currentAccount + ".balance"]: updatedBalance,
+            currentAccount: updatedAccount,
+          });
+          await updateDoc(doc(db, "transactions", currentUser?.uid), {
+            transactions: arrayUnion(tx),
           });
         }
       } else {
-        alert("Failed to initiate transfer. Please try again");
+        alert("Withdrawal failed. Please try again");
       }
     } catch (err) {
       console.error(err.message);

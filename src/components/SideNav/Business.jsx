@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ChatRow from "./ChatRow";
 import { setUsers } from "@redux/features/chatSlice";
@@ -25,16 +25,19 @@ function Business() {
         querySnapshot.forEach((doc) => {
           usersArray.push(doc.data());
         });
-        const otherUsers = usersArray
-          ?.filter((user) => user?.uid !== currentUser?.uid)
-          ?.sort(sortFunction);
-        dispatch(setUsers(otherUsers));
+        dispatch(setUsers(usersArray));
       } catch (err) {
         console.log(err);
       }
     };
 
     getUsers();
+  }, [currentUser?.uid]);
+
+  const otherUsers = useMemo(() => {
+    return users
+      ?.filter((user) => user?.uid !== currentUser?.uid)
+      ?.sort(sortFunction);
   }, [currentUser?.uid]);
 
   return (
@@ -45,7 +48,7 @@ function Business() {
     >
       {users.length > 0 ? (
         <ul className="flex-column gap-6">
-          {users?.map((user) => {
+          {otherUsers?.map((user) => {
             return <ChatRow key={user.uid} user={user} />;
           })}
         </ul>

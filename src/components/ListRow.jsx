@@ -25,7 +25,7 @@ const ListRow = ({
       <h4 className="font-semibold tracking-tight leading-4 text-gradient-100 truncate">
         {obj?.name}
       </h4>
-      <p className="text-sm truncate">{obj?.subtitle}</p>
+      <p className="text-base truncate">{obj?.subtitle}</p>
     </div>
 
     {renderLastCol()}

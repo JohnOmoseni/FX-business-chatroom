@@ -34,98 +34,123 @@ function TransferReceipt({ setTransferReceipt }) {
   const dispatch = useDispatch();
 
   const handleTransfer = async () => {
-    const senderCurrency = currentAccount.currency;
-    const receiverCurrency = selectedCurrency?.symbol;
-
     if (!user.uid) {
       setTransferReceipt(false);
       toast.info("Select a recipient");
       return;
     }
-    // if (currentAccount.balance < amountToSend) return;
+    const fromCurrency = selectedCurrency.baseCurrency;
+    const toCurrency = selectedCurrency?.symbol;
 
-    const senderAccount = userAccounts?.find(
-      (account) => account.currency === senderCurrency
+    const senderAccount = userAccounts.find(
+      (acc) => acc.currency === fromCurrency
     );
+
+    if (!senderAccount) {
+      Swal.fire({
+        icon: "info",
+        titleText: "You do not have an account of this currency",
+        showDenyButton: false,
+        confirmButtonText: "Ok",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setTransferReceipt(false);
+        }
+      });
+
+      return;
+    }
+    // if (senderAccount.balance < amountToSend) return;
 
     const res = await getDoc(doc(db, "userAccounts", user?.uid));
     const receiverAccount =
       res.exists() &&
       res
         .data()
-        ?.userAccounts?.find(
-          (account) => account.currency === receiverCurrency
-        );
+        ?.userAccounts?.find((account) => account.currency === toCurrency);
 
-    console.log(res.data(), receiverAccount, senderCurrency);
+    console.log(senderAccount, receiverAccount);
     const tx = {
       transactionId: uuid(),
-      currencySent: selectedCurrency.baseCurrency,
-      currencyReceived: selectedCurrency.symbol,
+      currencySent: fromCurrency,
+      currencyReceived: toCurrency,
       chargedAmount: "",
       amount: amountToSend,
       txType: "FX",
       fx: selectedCurrency.pair,
-      exchangeRate: selectedCurrency.rate,
+      exchangeRate: agreedExchangedRate,
       status: "pending",
-      recipient: user?.uid,
+      recipientID: user?.uid,
+      recipient: null,
       timestamp: Date.now(),
     };
 
-    try {
-      if (senderAccount) {
-        const fullAmount = amountToSend + 100;
-        const updatedBalance = parseInt(currentAccount.balance) - fullAmount;
-
-        dispatch(setAccountBalance(updatedBalance));
-      } else {
-        Swal.fire({
-          icon: "info",
-          titleText: "You do not have an account of this currency",
-          showDenyButton: false,
-          confirmButtonText: "Ok",
-        }).then((result) => {});
-
-        return;
+    const fullAmount = amountToSend + 100;
+    const updatedSenderAccount = {
+      balance: Number(senderAccount.balance) - Number(fullAmount),
+      currency: fromCurrency,
+    };
+    const newSenderAccounts = userAccounts?.map((acc) => {
+      if (acc.currency === fromCurrency) {
+        return updatedSenderAccount;
       }
+      return acc;
+    });
 
+    console.log(fullAmount, updatedSenderAccount, newSenderAccounts);
+
+    try {
       if (receiverAccount) {
-        const updatedBalance = parseInt(receiverAccount.balance) + amountToSend;
-        const newUserAccounts = recipientAccounts?.userAccounts?.map((acc) => {
-          if (acc.currency === selectedCurrency?.symbol) {
-            acc.balance = updatedBalance;
+        const updatedReceiverAccount = {
+          balance: Number(receiverAccount?.balance) + Number(amountToSend),
+          currency: toCurrency,
+        };
+        const newUserAccounts = res.data()?.userAccounts?.map((acc) => {
+          if (acc.currency === toCurrency) {
+            return updatedReceiverAccount;
           }
           return acc;
         });
+
         tx.status = "completed";
         await updateDoc(doc(db, "userAccounts", user?.uid), {
           userAccounts: newUserAccounts,
-          [currentAccount + ".balance"]: updatedBalance,
+          currentAccount: updatedReceiverAccount,
         });
-        await updateDoc(doc(db, "transactions", user?.uid), {
-          transactions: arrayUnion(tx),
-        });
-        toast.success(`Transfer to ${user?.businessName} successful`);
-        dispatch(setVisibleRightPane({ id: "userWallet", val: true }));
+
         console.log("successful");
       } else {
-        Swal.fire({
-          icon: "info",
-          titleText: "This user does not have an account of this currency",
-          showDenyButton: false,
-          confirmButtonText: "Ok",
-        }).then((result) => {});
+        const updatedReceiverAccount = {
+          balance: Number(amountToSend),
+          currency: toCurrency,
+        };
+        await updateDoc(doc(db, "userAccounts", user?.uid), {
+          userAccounts: arrayUnion(updatedReceiverAccount),
+          currentAccount: updatedReceiverAccount,
+        });
       }
+      toast.success(`Transfer to ${user?.businessName} successful`);
+      dispatch(setVisibleRightPane({ id: "userWallet", val: true }));
+
+      await updateDoc(doc(db, "userAccounts", currentUser?.uid), {
+        userAccounts: newSenderAccounts,
+        currentAccount: updatedSenderAccount,
+      });
+      await updateDoc(doc(db, "transactions", user?.uid), {
+        transactions: arrayUnion(tx),
+      });
+      await updateDoc(doc(db, "transactions", currentUser?.uid), {
+        transactions: arrayUnion(tx),
+      });
     } catch (err) {
       tx.status = "Failed transaction";
     } finally {
       setTransferReceipt(false);
     }
-    dispatch(setTransactions(tx));
   };
 
   return (
-    <div className="grid place-items-center w-full h-full relative pt-3 overflow-y-auto">
+    <div className="grid place-items-center w-full h-full relative pt-3 overflow-x-hidden overflow-y-auto">
       <section className="w-full absolute top-4">
         <div className="group relative min-w-[140px] w-[140px] max-w-[140px] h-[140px] mx-auto md:min-w-[100px] md:max-w-[140px] md:h-[100px] clip-circle rounded-[50%] border border-solid border-neutral-400 shadow-md grid place-items-center overflow-hidden">
           <img

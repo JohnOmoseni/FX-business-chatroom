@@ -1,13 +1,12 @@
 import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setTransactions, setAccountBalance } from "@redux/features/fxSlice";
 import { toast } from "react-toastify";
 import { CiLocationOn } from "react-icons/ci";
 import InputField from "../../components/SideNav/RightNav/InputField";
 import { ButtonVariant } from "../../components/Button";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../config/firebase-config";
+import { useSelector } from "react-redux";
 
 const email = "johnnyomoseni100@gmail.com";
 const phone_number = "09012603169";
@@ -21,8 +20,6 @@ export default function TestDeposit({ onCloseModal }) {
   );
   const { currentUser } = useSelector((state) => state.authUser);
   const [amount, setAmount] = useState("");
-
-  const dispatch = useDispatch();
 
   const config = {
     public_key: import.meta.env.VITE_FLUTTERWAVE_API_KEY,
@@ -70,31 +67,34 @@ export default function TestDeposit({ onCloseModal }) {
                 recipient: null,
                 timestamp: response.created_at,
               };
-              const updatedBalance =
-                parseInt(currentAccount.balance) + response?.amount;
 
-              let newUserAccounts;
-              if (userAccounts?.length > 0) {
-                newUserAccounts = userAccounts?.map((account) => {
-                  if (account.currency === response.currency) {
-                    account.balance = updatedBalance;
-                  }
-                  return account;
-                });
+              console.log(
+                Number(currentAccount.balance),
+                Number(response?.amount)
+              );
+              const updatedAccount = {
+                balance:
+                  Number(currentAccount.balance) + Number(response?.amount),
+                currency: currentAccount?.currency,
+              };
+
+              const newUserAccounts = userAccounts?.map((account) => {
+                if (account.currency === updatedAccount.currency) {
+                  return updatedAccount;
+                }
+                return account;
+              });
+              if (newUserAccounts?.length > 0) {
                 await updateDoc(doc(db, "userAccounts", currentUser?.uid), {
                   userAccounts: newUserAccounts,
-                  [currentAccount + ".balance"]: updatedBalance,
+                  currentAccount: updatedAccount,
+                });
+                await updateDoc(doc(db, "transactions", currentUser?.uid), {
+                  transactions: arrayUnion(tx),
                 });
               }
 
-              console.log(newUserAccounts, userAccounts, updatedBalance);
-
-              dispatch(setTransactions(tx));
-              dispatch(setAccountBalance(updatedBalance));
-
-              await updateDoc(doc(db, "transactions", currentUser?.uid), {
-                transactions: arrayUnion(tx),
-              });
+              console.log(newUserAccounts);
             } else {
               console.log("Failed transaction", response);
               toast.error("Transaction failed", {
@@ -107,7 +107,6 @@ export default function TestDeposit({ onCloseModal }) {
           },
           onClose: () => {
             onCloseModal();
-            setAmount("");
             toast.info("Transaction cancelled", {
               hideProgressBar: true,
             });
@@ -121,8 +120,8 @@ export default function TestDeposit({ onCloseModal }) {
       toast.info("Please enter a valid amount", {
         hideProgressBar: true,
       });
-      setAmount("");
     }
+    setAmount("");
   };
 
   return (

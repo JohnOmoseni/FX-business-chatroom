@@ -40,8 +40,8 @@ function SignIn() {
       }
     } catch (err) {
       console.error(err.message, "Something went wrong");
-      if (err.message.includes("(auth/email-already-in-use)")) {
-        toast.error("Email already in use");
+      if (err.message.includes("auth/invalid-login-credentials")) {
+        toast.error("Invalid login credentials");
       } else {
         toast.error("Something went wrong");
       }
@@ -114,20 +114,6 @@ function SignIn() {
             </Link>
           </p>
         </div>
-
-        {/* <div className="w-full mt-8 mb-2">
-          <div className="flex-row gap-3">
-            <hr className="w-[50%] shadow-sm border border-solid border-br-light bg-br-light " />
-            <span className="text-base font-kinn font-extrabold text-shadow">
-              Or
-            </span>
-            <hr className="w-[50%] shadow-sm border border-solid border-br-light bg-br-light" />
-          </div>
-          <button className="w-[60%] flex mx-auto my-4 py-2 px-3 flex-row gap-3 border border-solid border-br-light rounded-md shadow-sm leading-5 min-w-[20ch] text-regular">
-            <FcGoogle className="h-5 w-5" />
-            Continue with Google
-          </button>
-        </div> */}
       </div>
     </motion.section>
   );
