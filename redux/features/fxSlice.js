@@ -3,9 +3,9 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   currencies: [],
   baseCurrency: "USD",
-  selectedCurrency: null,
+  selectedCurrency: "",
   agreedExchangedRate: "",
-  amountToSend: "",
+  amountToSend: null,
   transactions: [],
   lastTransaction: {
     transactionId: "",
@@ -38,7 +38,7 @@ const fxSlice = createSlice({
       state.agreedExchangedRate = payload;
     },
     setAmountToSend: (state, { payload }) => {
-      state.amountToSend = parseInt(payload).toFixed(2);
+      state.amountToSend = Number(payload);
     },
     setCurrencies: (state, { payload }) => {
       state.currencies = payload;
@@ -46,6 +46,7 @@ const fxSlice = createSlice({
     setTransactions: (state, { payload }) => {
       if (Array.isArray(payload)) {
         state.transactions = payload;
+        state.lastTransaction = payload[payload?.length - 1];
       } else {
         state.transactions = [...state.transactions, payload];
         state.lastTransaction = payload;

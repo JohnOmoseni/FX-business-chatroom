@@ -24,7 +24,6 @@ html {
 
   --color-bg: #fff;
   --color-text: #333;
-  --toastify-color-error: black !important;
 }
 
 body {
@@ -136,6 +135,7 @@ body::selection {
 }
 .ReactModal__Content.ReactModal__Content--after-open {
   inset: 20% !important;
+  padding: 0 !important;
 }
 
 .withdraw > div:first-of-type,

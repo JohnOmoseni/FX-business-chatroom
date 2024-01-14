@@ -38,7 +38,8 @@ const SearchBar = ({ setSearchBar, input, setInput, setSearchResult, txs }) => {
   );
 };
 
-function Transactions({ transactions }) {
+function Transactions() {
+  const { transactions } = useSelector((state) => state.fxState);
   const [searchBar, setSearchBar] = useState(false);
   const [searchResult, setSearchResult] = useState([]);
   const [input, setInput] = useState("");

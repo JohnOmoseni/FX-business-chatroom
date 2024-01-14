@@ -92,7 +92,7 @@ function Currencies() {
   ) : (
     <>
       <PaneHeading title="Currencies" isVisible />
-      <div className="currencies w-full overflow-y-auto">
+      <div className="currencies w-full h-full overflow-y-auto">
         <CurrencyHeading />
 
         <Search search={search} onChange={handleInputChange} />

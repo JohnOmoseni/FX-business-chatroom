@@ -2,16 +2,14 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { ButtonVariant } from "@components/Button";
-import { v4 as uuid } from "uuid";
 import InputField from "@components/SideNav/RightNav/InputField";
-import { banks } from "../../../utils";
 import Select from "react-dropdown-select";
-import { doc, updateDoc } from "firebase/firestore";
+import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../config/firebase-config";
+import { banks } from "@constants/constants";
+import Swal from "sweetalert2";
 
-const url = "https://maketrfrequestapi.netlify.app/.netlify/functions/api/";
-
-function Withdraw() {
+function Withdraw({ onCloseModal }) {
   const { currentUser } = useSelector((state) => state.authUser);
   const { currentAccount, userAccounts } = useSelector(
     (state) => state.fxState
@@ -19,6 +17,7 @@ function Withdraw() {
   const [amount, setAmount] = useState("");
   const [bankcode, setBankcode] = useState("");
   const [accountNo, setAccountNo] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const options = banks?.map((item) => ({
     label: item?.name,
@@ -30,50 +29,73 @@ function Withdraw() {
       alert("Please fill out all the fields");
       return;
     }
-    // if (amount > currentAccount?.balance ) return;
+    if (amount >= currentAccount?.balance) {
+      Swal.fire({
+        icon: "error",
+        titleText: `Insufficient funds`,
+        showDenyButton: false,
+        confirmButtonText: "Ok",
+      }).then((result) => {
+        if (result.isConfirmed) {
+        }
+      });
+      return;
+    }
 
+    setIsLoading(true);
     try {
       const payload = {
-        account_name: "044",
-        account_number: "0690000031",
-        amount: "1000",
+        account_bank: bankcode,
+        account_number: accountNo,
+        amount,
       };
-      const res = await fetch(url, {
-        method: "POST",
-        body: JSON.stringify(payload),
-        headers: { "Content-Type": "application/json" },
-      });
+      const res = await fetch(
+        "https://maketrfrequestapi.netlify.app/.netlify/functions/api/",
+        {
+          method: "POST",
+          body: JSON.stringify(payload),
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
-      console.log(res, payload);
-      if (!res.ok) {
+      if (!res?.ok) {
         throw new Error("Failed fetch");
       }
       const data = await res.json();
       const {
-        data: { data: status },
+        success,
+        data: { data: txData },
       } = data;
+      console.log("data response", txData, data.success);
 
-      if (status === "NEW") {
+      if (success) {
         // subtract amount withdrawn from user current balance
         console.log("Transaction successful");
-        toast.success("Transaction successful", {
-          hideProgressBar: true,
-        });
+        const chargedAmount = Number(amount) + Number(txData?.fee);
+
         const tx = {
-          transactionId: uuid(),
-          currencySent: "",
+          transactionId: txData?.reference,
+          currencySent: txData?.currency,
           currencyReceived: currentAccount?.currency,
-          chargedAmount: "",
+          chargedAmount,
           amount,
-          exchangeRate: "",
+          exchangeRate: null,
           txType: "Withdraw",
           fx: "",
           status: "completed",
-          recipient: currentUser?.uid,
+          recipientID: currentUser?.uid,
+          recipient: null,
           timestamp: Date.now(),
+          withdrawal: {
+            accountNo: txData?.account_number,
+            accountName: txData?.full_name,
+            bank: txData?.bank_name,
+            bankCode: txData?.bank_code,
+            amount: txData?.amount,
+          },
         };
         const updatedAccount = {
-          balance: Number(currentAccount.balance) - Number(response?.amount),
+          balance: Number(currentAccount.balance) - chargedAmount,
           currency: currentAccount?.currency,
         };
 
@@ -92,12 +114,19 @@ function Withdraw() {
             transactions: arrayUnion(tx),
           });
         }
+
+        toast.success("Transaction successful", {
+          hideProgressBar: true,
+        });
       } else {
         alert("Withdrawal failed. Please try again");
       }
+      onCloseModal();
     } catch (err) {
       console.error(err.message);
       alert("Failed to initiate transfer. Please try again");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -106,8 +135,13 @@ function Withdraw() {
   };
 
   return (
-    <div className="grid place-items-center h-full">
-      <div className="withdraw flex-column !items-center gap-4">
+    <div className="grid place-items-center relative h-full">
+      {isLoading && (
+        <div className="absolute z-20 inset-0 bg-white bg-opacity-50 backdrop-blur-sm grid place-items-center">
+          Loading...
+        </div>
+      )}
+      <div className="withdraw  flex-column !items-center gap-4">
         <Select
           name="select"
           options={options}
@@ -121,7 +155,7 @@ function Withdraw() {
           className="!text-neutral-600 placeholder:text-neutral-400"
           required={true}
         />
-        <div className="flex-row">
+        <div className="flex-row text-">
           <InputField
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
@@ -136,7 +170,7 @@ function Withdraw() {
 
         <div className="my-[1rem]">
           <ButtonVariant
-            title="Withdraw"
+            title={isLoading ? "Loading..." : "Withdraw"}
             onClick={initiateTransfer}
             className="bg-emerald-600"
           />

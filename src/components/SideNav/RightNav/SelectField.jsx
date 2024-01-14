@@ -13,6 +13,7 @@ function SelectField({ list, handleSelectChange, placeholder }) {
       options={options}
       placeholder={placeholder}
       onChange={handleClick}
+      searchable
     />
   );
 }

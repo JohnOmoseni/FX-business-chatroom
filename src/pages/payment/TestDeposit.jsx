@@ -8,13 +8,7 @@ import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../config/firebase-config";
 import { useSelector } from "react-redux";
 
-const email = "johnnyomoseni100@gmail.com";
-const phone_number = "09012603169";
-const name = "johnny";
-const amount = "500";
-
 export default function TestDeposit({ onCloseModal }) {
-  const { user } = useSelector((state) => state.usersState);
   const { currentAccount, userAccounts } = useSelector(
     (state) => state.fxState
   );
@@ -24,13 +18,13 @@ export default function TestDeposit({ onCloseModal }) {
   const config = {
     public_key: import.meta.env.VITE_FLUTTERWAVE_API_KEY,
     tx_ref: Date.now(),
-    amount: 200,
-    currency: "NGN",
+    amount: amount,
+    currency: currentAccount?.currency,
     payment_options: "card,mobilemoney,ussd",
     customer: {
-      email,
-      phone_number,
-      name,
+      email: currentUser?.email,
+      phone_number: currentUser?.phoneNo ? currentUser.phoneNo : "",
+      name: currentUser?.businessName,
     },
     customizations: {
       title: "Osho free",
@@ -42,8 +36,6 @@ export default function TestDeposit({ onCloseModal }) {
   const handleFlutterPayment = useFlutterwave(config);
 
   const handleDeposit = () => {
-    console.log(amount);
-
     if (amount && !isNaN(amount)) {
       try {
         handleFlutterPayment({
@@ -72,9 +64,11 @@ export default function TestDeposit({ onCloseModal }) {
                 Number(currentAccount.balance),
                 Number(response?.amount)
               );
+              const balance = isNaN(currentAccount.balance)
+                ? 0
+                : currentAccount.balance;
               const updatedAccount = {
-                balance:
-                  Number(currentAccount.balance) + Number(response?.amount),
+                balance: Number(balance) + Number(response?.amount),
                 currency: currentAccount?.currency,
               };
 
@@ -109,19 +103,22 @@ export default function TestDeposit({ onCloseModal }) {
             onCloseModal();
             toast.info("Transaction cancelled", {
               hideProgressBar: true,
+              autoClose: 1000,
             });
           },
         });
       } catch (error) {
         console.log(error);
         alert("Something went wrong. Please try again.");
+      } finally {
+        setAmount("");
       }
     } else {
       toast.info("Please enter a valid amount", {
         hideProgressBar: true,
       });
+      setAmount("");
     }
-    setAmount("");
   };
 
   return (

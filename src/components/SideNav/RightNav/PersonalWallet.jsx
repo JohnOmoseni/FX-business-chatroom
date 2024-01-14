@@ -2,20 +2,13 @@ import { useMemo, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MdOutlineArrowBack, MdOutlineClose } from "react-icons/md";
 import { faker } from "@faker-js/faker";
-import Deposit from "@pages/payment/Deposit";
 import TestDeposit from "@pages/payment/TestDeposit";
 import Withdraw from "@pages/payment/Withdraw";
 import SelectField from "./SelectField";
 import Transactions from "./Transactions";
 import ReactModal from "react-modal";
 import { ButtonVariant } from "../../Button";
-import {
-  arrayUnion,
-  doc,
-  getDoc,
-  onSnapshot,
-  updateDoc,
-} from "firebase/firestore";
+import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "../../../config/firebase-config";
 import {
   setCloseRightPane,
@@ -24,7 +17,6 @@ import {
 import {
   setAccounts,
   setCurrentAccount,
-  setAccountCurrency,
   setTransactions,
 } from "@redux/features/fxSlice";
 import { toast } from "react-toastify";
@@ -111,7 +103,7 @@ function PersonalWallet() {
     const updateAccount = async () => {
       try {
         const res = await getDoc(doc(db, "userAccounts", currentUser?.uid));
-        const accounts = res.data()?.userAccounts;
+        const accounts = res.exists && res.data()?.userAccounts;
 
         const account = accounts.find(
           (acc) => acc.currency === selectedCurrency
@@ -122,24 +114,23 @@ function PersonalWallet() {
             currentAccount: account,
           });
         } else {
-          const newAccount = { balance: 0.0, currency: selectedCurrency };
+          const newAccount = { balance: 0, currency: selectedCurrency };
           const account = userAccounts.find(
             (acc) => acc.currency === selectedCurrency
           );
           if (!account) {
-            setAccounts(newAccount);
+            dispatch(setAccounts(newAccount));
           } else {
-            setCurrentAccount(newAccount);
+            dispatch(setCurrentAccount(newAccount));
           }
         }
       } catch (err) {
         console.log(err.message);
-      } finally {
       }
     };
 
-    currentUser && updateAccount();
-  }, [currentAccount?.currency]);
+    currentUser?.uid && selectedCurrency && updateAccount();
+  }, [selectedCurrency]);
 
   useEffect(() => {
     const handleOnlineStatus = () => setIsOnline(true);
@@ -159,15 +150,8 @@ function PersonalWallet() {
   }, []);
 
   const balance = useMemo(() => {
-    const amount =
-      typeof currentAccount?.balance === "string"
-        ? currentAccount?.balance.split(".")
-        : currentAccount?.balance;
-    if (Array.isArray(amount)) {
-      const sigNo = parseInt(amount?.[0]);
-      const decimal = amount?.[1];
-      return [sigNo, decimal];
-    }
+    const amount = isNaN(currentAccount?.balance) ? 0 : currentAccount?.balance;
+
     return amount;
   }, [currentAccount?.balance]);
 
@@ -211,9 +195,9 @@ function PersonalWallet() {
             </span>
             <h2 className="whitespace-nowrap  text-4xl text-shadow text-gradient-100">
               <span className="text-3xl">{currentAccount?.currency}</span>
-              {Array.isArray(balance) ? balance?.[0] : balance}
+              {balance}
               <span className="text-xl !text-neutral-400">
-                {Array.isArray(balance) ? `.${balance?.[1]}` : ""}
+                {!Number.isInteger(balance) ? "" : ".00"}
               </span>
             </h2>
           </div>

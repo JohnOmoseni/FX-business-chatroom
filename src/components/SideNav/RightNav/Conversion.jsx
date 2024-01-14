@@ -126,8 +126,7 @@ function Conversion({ setShowConversionPane }) {
       } else {
         Swal.fire({
           icon: "info",
-          titleText:
-            "You do not have an account of this currency. Please select an account of this currency and make a deposit",
+          titleText: `You do not have an account of this currency - (${baseCurrency}). Please select an account of this currency and make a deposit`,
           showDenyButton: false,
           confirmButtonText: "Ok",
         }).then((result) => {
