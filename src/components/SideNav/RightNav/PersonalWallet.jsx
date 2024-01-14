@@ -103,7 +103,7 @@ function PersonalWallet() {
     const updateAccount = async () => {
       try {
         const res = await getDoc(doc(db, "userAccounts", currentUser?.uid));
-        const accounts = res.exists && res.data()?.userAccounts;
+        const accounts = res.data()?.userAccounts;
 
         const account = accounts.find(
           (acc) => acc.currency === selectedCurrency

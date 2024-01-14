@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { CiLocationOn } from "react-icons/ci";
 import InputField from "../../components/SideNav/RightNav/InputField";
 import { ButtonVariant } from "../../components/Button";
-import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../config/firebase-config";
 import { useSelector } from "react-redux";
 
@@ -62,7 +62,8 @@ export default function TestDeposit({ onCloseModal }) {
 
               console.log(
                 Number(currentAccount.balance),
-                Number(response?.amount)
+                Number(response?.amount),
+                currentAccount?.currency
               );
               const balance = isNaN(currentAccount.balance)
                 ? 0
@@ -72,23 +73,35 @@ export default function TestDeposit({ onCloseModal }) {
                 currency: currentAccount?.currency,
               };
 
-              const newUserAccounts = userAccounts?.map((account) => {
-                if (account.currency === updatedAccount.currency) {
-                  return updatedAccount;
-                }
-                return account;
-              });
-              if (newUserAccounts?.length > 0) {
+              const res = await getDoc(
+                doc(db, "userAccounts", currentUser?.uid)
+              );
+              const accounts = res.data()?.userAccounts;
+              const acc = accounts?.find(
+                (account) => account.currency === currentAccount?.currency
+              );
+
+              if (acc) {
+                const newAccounts = accounts?.map((account) => {
+                  if (account.currency === currentAccount?.currency) {
+                    return updatedAccount;
+                  }
+                  return account;
+                });
                 await updateDoc(doc(db, "userAccounts", currentUser?.uid), {
-                  userAccounts: newUserAccounts,
+                  userAccounts: newAccounts,
                   currentAccount: updatedAccount,
                 });
-                await updateDoc(doc(db, "transactions", currentUser?.uid), {
-                  transactions: arrayUnion(tx),
+              } else {
+                await updateDoc(doc(db, "userAccounts", currentUser?.uid), {
+                  userAccounts: arrayUnion(updatedAccount),
+                  currentAccount: updatedAccount,
                 });
               }
 
-              console.log(newUserAccounts);
+              await updateDoc(doc(db, "transactions", currentUser?.uid), {
+                transactions: arrayUnion(tx),
+              });
             } else {
               console.log("Failed transaction", response);
               toast.error("Transaction failed", {
@@ -110,14 +123,11 @@ export default function TestDeposit({ onCloseModal }) {
       } catch (error) {
         console.log(error);
         alert("Something went wrong. Please try again.");
-      } finally {
-        setAmount("");
       }
     } else {
       toast.info("Please enter a valid amount", {
         hideProgressBar: true,
       });
-      setAmount("");
     }
   };
 

@@ -65,7 +65,7 @@ function BusinessChatRoom() {
       </div>
 
       {rows.length > 0 && rows?.map((row) => row)}
-      <div ref={elemRef} className="absolute bottom-0"></div>
+      <div ref={elemRef} className="absolute h-0 bottom-0"></div>
     </div>
   );
 }
