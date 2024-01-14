@@ -22,6 +22,7 @@ function RightNav() {
 
   return (
     <>
+      {/* {import.meta.env.VITE_API_KEY} */}
       {rightPane.userProfile && <UserProfile />}
       {rightPane.businessProfile && <BusinessProfile />}
       {rightPane.tradeWallet && <TradeWallet />}
