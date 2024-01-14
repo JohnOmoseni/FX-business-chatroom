@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { ButtonVariant } from "@components/Button";
 import InputField from "@components/SideNav/RightNav/InputField";
 import Select from "react-dropdown-select";
-import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../config/firebase-config";
 import { banks } from "@constants/constants";
 import Swal from "sweetalert2";
@@ -98,22 +98,33 @@ function Withdraw({ onCloseModal }) {
           balance: Number(currentAccount.balance) - chargedAmount,
           currency: currentAccount?.currency,
         };
+        const res = await getDoc(doc(db, "userAccounts", currentUser?.uid));
+        const accounts = res.data()?.userAccounts;
+        const acc = accounts?.find(
+          (account) => account.currency === currentAccount?.currency
+        );
 
-        const newUserAccounts = userAccounts?.map((account) => {
-          if (account.currency === updatedAccount.currency) {
-            return updatedAccount;
-          }
-          return account;
-        });
-        if (newUserAccounts?.length > 0) {
+        if (acc) {
+          const newAccounts = accounts?.map((account) => {
+            if (account.currency === currentAccount?.currency) {
+              return updatedAccount;
+            }
+            return account;
+          });
           await updateDoc(doc(db, "userAccounts", currentUser?.uid), {
-            userAccounts: newUserAccounts,
+            userAccounts: newAccounts,
             currentAccount: updatedAccount,
           });
-          await updateDoc(doc(db, "transactions", currentUser?.uid), {
-            transactions: arrayUnion(tx),
+        } else {
+          await updateDoc(doc(db, "userAccounts", currentUser?.uid), {
+            userAccounts: arrayUnion(updatedAccount),
+            currentAccount: updatedAccount,
           });
         }
+
+        await updateDoc(doc(db, "transactions", currentUser?.uid), {
+          transactions: arrayUnion(tx),
+        });
 
         toast.success("Transaction successful", {
           hideProgressBar: true,
