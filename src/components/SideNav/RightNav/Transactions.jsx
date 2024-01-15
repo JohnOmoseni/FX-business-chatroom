@@ -118,8 +118,8 @@ function Transactions() {
                     <span
                       className={`${
                         tx?.txType?.includes("Deposit")
-                          ? "text-green-400"
-                          : "text-red-400"
+                          ? "!text-green-400"
+                          : "!text-red-400"
                       }`}
                     >
                       <span>{tx?.txType?.includes("Deposit") ? "+" : "-"}</span>

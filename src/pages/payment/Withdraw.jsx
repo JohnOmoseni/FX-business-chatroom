@@ -30,6 +30,8 @@ function Withdraw({ onCloseModal }) {
       return;
     }
     if (amount >= currentAccount?.balance) {
+      onCloseModal();
+
       Swal.fire({
         icon: "error",
         titleText: `Insufficient funds`,

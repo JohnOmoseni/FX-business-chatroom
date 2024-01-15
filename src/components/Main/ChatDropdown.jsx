@@ -90,7 +90,7 @@ export default function ChatDropdown() {
                   )}
                   onClick={() => handleClick("currencyList")}
                 >
-                  Currency List
+                  Exchange Currency
                 </div>
               )}
             </Menu.Item>

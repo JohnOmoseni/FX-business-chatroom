@@ -135,7 +135,7 @@ body::selection {
 }
 .ReactModal__Content.ReactModal__Content--after-open {
   inset: 20% !important;
-  padding: 0 !important;
+  padding: 1em !important;
 }
 
 .withdraw > div:first-of-type,
@@ -143,11 +143,24 @@ body::selection {
   width: 100%;
 }
 
-@media (min-width: 600px) {
+@media (max-width: 600px) {
   .ReactModal__Content.ReactModal__Content--after-open {
-    inset: 25% !important;
+    inset: 10% !important;
+  }
+  .swal2-container {
+    padding: 1em;
+  }
+  .swal2-popup {
+    width: 100%;
   }
 }
+
+@media (min-width: 600px) {
+  .ReactModal__Content.ReactModal__Content--after-open {
+    inset: 20% !important;
+  }
+}
+
 .full-height {
   height: 100vh;
   height: 100dvh;

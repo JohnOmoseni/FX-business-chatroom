@@ -1,8 +1,8 @@
-function formatDateStatus(timestampObject) {
+export function formatDateStatus(timestampObject) {
   // Convert the timestamp to milliseconds
   const milliseconds =
-    timestampObject.seconds * 1000 +
-    Math.floor(timestampObject.nanoseconds / 1e6);
+    timestampObject?.seconds * 1000 +
+    Math.floor(timestampObject?.nanoseconds / 1e6);
 
   // Create a new Date object based on the timestamp
   const inputDate = new Date(milliseconds);

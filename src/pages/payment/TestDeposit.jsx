@@ -1,7 +1,7 @@
 import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { CiLocationOn } from "react-icons/ci";
+import { FaArrowDown } from "react-icons/fa";
 import InputField from "../../components/SideNav/RightNav/InputField";
 import { ButtonVariant } from "../../components/Button";
 import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
@@ -77,8 +77,8 @@ export default function TestDeposit({ onCloseModal }) {
                 doc(db, "userAccounts", currentUser?.uid)
               );
               const accounts = res.data()?.userAccounts;
-              const acc = accounts?.find(
-                (account) => account.currency === currentAccount?.currency
+              const acc = accounts.find((account) =>
+                account.currency.includes(currentAccount?.currency)
               );
 
               if (acc) {
@@ -132,7 +132,7 @@ export default function TestDeposit({ onCloseModal }) {
   };
 
   return (
-    <div className="h-full grid place-items-center">
+    <div className="h-full grid place-items-center px-3">
       <div className="flex-column !items-center">
         <div className="flex-row px-4">
           <span className="text-xl mb-1 tracking-wide uppercase font-kinn text-shadow">
@@ -151,7 +151,7 @@ export default function TestDeposit({ onCloseModal }) {
         <div className="my-[2rem]">
           <ButtonVariant
             title="Deposit Money"
-            icon={<CiLocationOn />}
+            icon={<FaArrowDown />}
             onClick={handleDeposit}
             className="bg-emerald-600"
           />
