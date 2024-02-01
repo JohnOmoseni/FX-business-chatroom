@@ -1,22 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
 import { ButtonVariant } from "../../Button";
 import { v4 as uuid } from "uuid";
-import {
-  doc,
-  getDoc,
-  getDocs,
-  setDoc,
-  updateDoc,
-  query,
-  where,
-  collection,
-  arrayUnion,
-} from "firebase/firestore";
+import { doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import { db } from "../../../config/firebase-config";
-import { setAccountBalance, setTransactions } from "@redux/features/fxSlice";
 import { toast } from "react-toastify";
+import { setVisibleRightPane } from "@redux/features/appStateSlice";
 import Swal from "sweetalert2";
-import { setVisibleRightPane } from "../../../../redux/features/appStateSlice";
 
 const texts = ["You send", "They receive", "Will arrive on", "Exchange rate"];
 
@@ -29,7 +18,6 @@ function TransferReceipt({ setTransferReceipt }) {
     amountToSend,
     selectedCurrency,
     userAccounts,
-    currentAccount,
   } = useSelector((state) => state.fxState);
   const dispatch = useDispatch();
 
@@ -49,7 +37,7 @@ function TransferReceipt({ setTransferReceipt }) {
     if (!senderAccount) {
       Swal.fire({
         icon: "info",
-        titleText: "You do not have an account of this currency",
+        titleText: `You do not have an account of this currency - (${fromCurrency})`,
         showDenyButton: false,
         confirmButtonText: "Ok",
       }).then((result) => {
@@ -60,7 +48,19 @@ function TransferReceipt({ setTransferReceipt }) {
 
       return;
     }
-    // if (senderAccount.balance < amountToSend) return;
+    const chargedAmount = Number(amountToSend) + 20;
+    if (senderAccount.balance < chargedAmount) {
+      Swal.fire({
+        icon: "error",
+        titleText: `Insufficient funds`,
+        showDenyButton: false,
+        confirmButtonText: "Ok",
+      }).then((result) => {
+        if (result.isConfirmed) {
+        }
+      });
+      return;
+    }
 
     const res = await getDoc(doc(db, "userAccounts", user?.uid));
     const receiverAccount =
@@ -74,7 +74,7 @@ function TransferReceipt({ setTransferReceipt }) {
       transactionId: uuid(),
       currencySent: fromCurrency,
       currencyReceived: toCurrency,
-      chargedAmount: "",
+      chargedAmount: chargedAmount,
       amount: amountToSend,
       txType: "FX",
       fx: selectedCurrency.pair,
@@ -85,9 +85,9 @@ function TransferReceipt({ setTransferReceipt }) {
       timestamp: Date.now(),
     };
 
-    const fullAmount = amountToSend + 100;
+    const balance = Number(senderAccount.balance) - chargedAmount;
     const updatedSenderAccount = {
-      balance: Number(senderAccount.balance) - Number(fullAmount),
+      balance,
       currency: fromCurrency,
     };
     const newSenderAccounts = userAccounts?.map((acc) => {
@@ -97,7 +97,7 @@ function TransferReceipt({ setTransferReceipt }) {
       return acc;
     });
 
-    console.log(fullAmount, updatedSenderAccount, newSenderAccounts);
+    console.log(chargedAmount, updatedSenderAccount, newSenderAccounts);
 
     try {
       if (receiverAccount) {
@@ -118,7 +118,7 @@ function TransferReceipt({ setTransferReceipt }) {
           currentAccount: updatedReceiverAccount,
         });
 
-        console.log("successful");
+        console.log("successful", newUserAccounts);
       } else {
         const updatedReceiverAccount = {
           balance: Number(amountToSend),

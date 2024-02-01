@@ -2,6 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import Chat from "./Chat";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../config/firebase-config";
+import { formatDateStatus } from "@utils";
+
+const DateStatus = ({ status }) => (
+  <div className="flex-row gap-4 mb-1">
+    <hr className="w-[45%] border border-solid border-br-light opacity-40" />
+    <span className="text-tiny text-neutral-400 capitalize">{status}</span>
+    <hr className="w-[45%] border border-solid border-br-light  opacity-50" />
+  </div>
+);
 
 function Messages({ chatId }) {
   const [messages, setMessages] = useState([]);
@@ -25,17 +34,30 @@ function Messages({ chatId }) {
       elemRef.current?.scrollIntoView({ behaviour: "smooth" });
   }, [chatId]);
 
-  const rows = [];
   let startOfUserMsg = "";
+  let lastDateStatus = "";
+  const array = [];
 
   messages.length > 0 &&
     messages?.forEach((msg, idx) => {
-      if (startOfUserMsg !== messages[idx]?.senderID) {
-        rows.push(<Chat msg={msg} key={msg.id} messages={messages} startMsg />);
+      let dateStatus = formatDateStatus(msg?.date);
+
+      if (lastDateStatus !== dateStatus) {
+        array.push(<DateStatus status={dateStatus} key={dateStatus} />);
+        array.push(
+          <Chat msg={msg} key={msg.id} messages={messages} startMsg />
+        );
       } else {
-        rows.push(<Chat msg={msg} key={msg.id} messages={messages} />);
+        if (startOfUserMsg !== messages[idx]?.senderID) {
+          array.push(
+            <Chat msg={msg} key={msg.id} messages={messages} startMsg />
+          );
+        } else {
+          array.push(<Chat msg={msg} key={msg.id} messages={messages} />);
+        }
       }
 
+      lastDateStatus = dateStatus;
       startOfUserMsg = messages[idx]?.senderID;
     });
 
@@ -43,13 +65,7 @@ function Messages({ chatId }) {
     <div
       className={`group relative w-full pt-5 pb-4 px-[4%] flex-1 flex flex-col gap-4 overflow-hidden overflow-y-auto max-sm:mb-[1rem]`}
     >
-      <div className="flex-row gap-4 mb-1">
-        <hr className="w-[45%] border border-solid border-br-light opacity-40" />
-        <span className="text-tiny text-neutral-400">Today</span>
-        <hr className="w-[45%] border border-solid border-br-light  opacity-50" />
-      </div>
-
-      {rows.length > 0 && rows?.map((row) => row)}
+      {array.length > 0 && array?.map((row) => row)}
       <div ref={elemRef} className="absolute bottom-0"></div>
     </div>
   );

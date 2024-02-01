@@ -7,8 +7,8 @@ import { AuthContextProvider } from "@context/AuthContext";
 import store from "../redux/store";
 
 import ReactModal from "react-modal";
-import "./globals.css";
 import "./index.css";
+import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 

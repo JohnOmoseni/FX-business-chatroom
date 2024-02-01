@@ -1,33 +1,3 @@
-// var myHeaders = new Headers();
-// myHeaders.append("apikey", "oDjGfs4qIs01KV6TUZH3Q3EAY2ZGcIoG");
-
-// var requestOptions = {
-//   method: 'GET',
-//   redirect: 'follow',
-//   headers: myHeaders
-// };
-
-// source=USD
-
-// fetch("https://api.apilayer.com/currency_data/live?source=source&currencies=currencies", requestOptions)
-//   .then(response => response.text())
-//   .then(result => console.log(result))
-//   .catch(error => console.log('error', error));
-
-// var myHeaders = new Headers();
-// myHeaders.append("apikey", "oDjGfs4qIs01KV6TUZH3Q3EAY2ZGcIoG");
-
-// var requestOptions = {
-//   method: 'GET',
-//   redirect: 'follow',
-//   headers: myHeaders
-// };
-
-// fetch("https://api.apilayer.com/currency_data/list", requestOptions)
-//   .then(response => response.text())
-//   .then(result => console.log(result))
-//   .catch(error => console.log('error', error));
-
 const currenciesList = {
   currencies: {
     AED: "United Arab Emirates Dirham",

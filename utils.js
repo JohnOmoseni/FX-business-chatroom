@@ -1,14 +1,61 @@
-// Each bank has a bank code that flutterwave uses to identify them.
-export const banks = [
-  { name: "Access Bank Plc.", code: "044" },
-  { name: "Ecobank Nigeria Plc.", code: "050" },
-  { name: "First Bank of Nigeria Limited", code: "011" },
-  { name: "Fidelity Bank Plc.", code: "070" },
-  { name: "Guaranty Trust bank Plc.", code: "058" },
-  { name: "Sterling Bank Plc.", code: "232" },
-  { name: "United Bank for Africa Plc.", code: "033" },
-  { name: "Zenith Bank Plc.", code: "057" },
-];
+export function formatDateStatus(timestampObject) {
+  // Convert the timestamp to milliseconds
+  const milliseconds =
+    timestampObject?.seconds * 1000 +
+    Math.floor(timestampObject?.nanoseconds / 1e6);
+
+  // Create a new Date object based on the timestamp
+  const inputDate = new Date(milliseconds);
+
+  // Create a new Date object for the current date
+  const currentDate = new Date();
+
+  // Calculate the time difference in milliseconds
+  const timeDifference = currentDate - inputDate;
+
+  // Calculate the number of days
+  const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+  // Function to get the ordinal suffix for a number (e.g., 1st, 2nd, 3rd)
+  function getOrdinalSuffix(day) {
+    if (day >= 11 && day <= 13) {
+      return day + "th";
+    }
+    switch (day % 10) {
+      case 1:
+        return day + "st";
+      case 2:
+        return day + "nd";
+      case 3:
+        return day + "rd";
+      default:
+        return day + "th";
+    }
+  }
+
+  // Check the conditions and return the appropriate string
+  if (daysDifference === 0) {
+    return "today";
+  } else if (daysDifference === 1) {
+    return "yesterday";
+  } else if (daysDifference >= 2 && daysDifference <= 6) {
+    return inputDate.toLocaleDateString("en-US", { weekday: "long" });
+  } else if (daysDifference >= 7) {
+    const day = getOrdinalSuffix(inputDate.getDate());
+    const month = inputDate.toLocaleDateString("en-US", { month: "short" });
+    const year = inputDate.getFullYear();
+    return `${day} ${month} ${year}`;
+  }
+}
+
+// Example usage:
+const timestampObject = {
+  seconds: 1705173451,
+  nanoseconds: 16000000,
+};
+
+const result = formatDateStatus(timestampObject);
+// console.log(result);
 
 // remove duplicate objects in an array of objects
 export const removeDuplicate = (array) => {
@@ -122,6 +169,8 @@ export const convertToTime = (seconds, nanoseconds) => {
 
   return { time: formattedTime, date: formattedDate, timestamp };
 };
+
+// framer-motion variants
 
 export const container = {
   hidden: { opacity: 0 },

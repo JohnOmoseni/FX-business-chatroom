@@ -84,7 +84,7 @@ function RegisterForm() {
               lastName: values.lastName,
               email: values.email,
               avatar: downloadURL,
-              fullName: `${values?.firstName} ${values?.lastName}}`,
+              fullName: `${values?.firstName} ${values?.lastName}`,
               businessName: values?.businessName,
               phoneNo: values?.phoneNo,
               country: values?.country,
@@ -95,15 +95,15 @@ function RegisterForm() {
             await setDoc(doc(db, "userAccounts", res.user.uid), {
               id: uuid(),
               uid: res.user.uid,
-              userAccounts: [{ balance: "0.00", currency: "NGN" }],
-              currentAccount: { balance: "0.00", currency: "NGN" },
+              userAccounts: [{ balance: 0, currency: "NGN" }],
+              currentAccount: { balance: 0, currency: "NGN" },
             });
 
             await setDoc(doc(db, "transactions", res.user.uid), {
               transactions: [],
             });
 
-            dispatch(setAccounts({ balance: "0.00", currency: "NGN" }));
+            dispatch(setAccounts({ balance: 0, currency: "NGN" }));
             dispatch(
               setCurrentuser({
                 uid: res.user.uid,

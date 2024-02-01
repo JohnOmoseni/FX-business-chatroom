@@ -91,7 +91,10 @@
 
 @layer components {
   .grid-cols-main {
-    grid-template-columns: minmax(25%, 30%) 1fr minmax(min-content, 30%);
+    grid-template-columns: minmax(25%, 30%) minmax(min-content, 1fr) minmax(
+        min-content,
+        30%
+      );
   }
   .grid-cols-two {
     grid-template-columns: 1fr max-content;
@@ -114,10 +117,5 @@
   }
   .grid-rows-trade {
     grid-template-rows: minmax(150px, 300px) max-content;
-  }
-  .gain {
-    background: white;
-    padding: 0.8em;
-    border-radius: 8% 92% 36% 64% / 12% 39% 61% 88%;
   }
 }

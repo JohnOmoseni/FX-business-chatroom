@@ -143,11 +143,24 @@ body::selection {
 	width: 100%;
 }
 
+@media (max-width: 600px) {
+	.ReactModal__Content.ReactModal__Content--after-open {
+		inset: 10% !important;
+	}
+	.swal2-container {
+		padding: 1em;
+	}
+	.swal2-popup {
+		width: 100%;
+	}
+}
+
 @media (min-width: 600px) {
 	.ReactModal__Content.ReactModal__Content--after-open {
 		inset: 25% !important;
 	}
 }
+
 .full-height {
 	height: 100vh;
 	height: 100svh;
@@ -159,7 +172,6 @@ body::selection {
 
 /* Track */
 .wrapper ::-webkit-scrollbar-track {
-	/* background: red; */
 }
 
 /* Handle */

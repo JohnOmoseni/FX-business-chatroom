@@ -1,20 +1,14 @@
 import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { CiLocationOn } from "react-icons/ci";
+import { FaArrowDown } from "react-icons/fa";
 import InputField from "../../components/SideNav/RightNav/InputField";
 import { ButtonVariant } from "../../components/Button";
-import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../config/firebase-config";
 import { useSelector } from "react-redux";
 
-const email = "johnnyomoseni100@gmail.com";
-const phone_number = "09012603169";
-const name = "johnny";
-const amount = "500";
-
 export default function TestDeposit({ onCloseModal }) {
-  const { user } = useSelector((state) => state.usersState);
   const { currentAccount, userAccounts } = useSelector(
     (state) => state.fxState
   );
@@ -24,13 +18,13 @@ export default function TestDeposit({ onCloseModal }) {
   const config = {
     public_key: import.meta.env.VITE_FLUTTERWAVE_API_KEY,
     tx_ref: Date.now(),
-    amount: 200,
-    currency: "NGN",
+    amount: amount,
+    currency: currentAccount?.currency,
     payment_options: "card,mobilemoney,ussd",
     customer: {
-      email,
-      phone_number,
-      name,
+      email: currentUser?.email,
+      phone_number: currentUser?.phoneNo ? currentUser.phoneNo : "",
+      name: currentUser?.businessName,
     },
     customizations: {
       title: "Osho free",
@@ -42,8 +36,6 @@ export default function TestDeposit({ onCloseModal }) {
   const handleFlutterPayment = useFlutterwave(config);
 
   const handleDeposit = () => {
-    console.log(amount);
-
     if (amount && !isNaN(amount)) {
       try {
         handleFlutterPayment({
@@ -70,31 +62,46 @@ export default function TestDeposit({ onCloseModal }) {
 
               console.log(
                 Number(currentAccount.balance),
-                Number(response?.amount)
+                Number(response?.amount),
+                currentAccount?.currency
               );
+              const balance = isNaN(currentAccount.balance)
+                ? 0
+                : currentAccount.balance;
               const updatedAccount = {
-                balance:
-                  Number(currentAccount.balance) + Number(response?.amount),
+                balance: Number(balance) + Number(response?.amount),
                 currency: currentAccount?.currency,
               };
 
-              const newUserAccounts = userAccounts?.map((account) => {
-                if (account.currency === updatedAccount.currency) {
-                  return updatedAccount;
-                }
-                return account;
-              });
-              if (newUserAccounts?.length > 0) {
+              const res = await getDoc(
+                doc(db, "userAccounts", currentUser?.uid)
+              );
+              const accounts = res.data()?.userAccounts;
+              const acc = accounts.find((account) =>
+                account.currency.includes(currentAccount?.currency)
+              );
+
+              if (acc) {
+                const newAccounts = accounts?.map((account) => {
+                  if (account.currency === currentAccount?.currency) {
+                    return updatedAccount;
+                  }
+                  return account;
+                });
                 await updateDoc(doc(db, "userAccounts", currentUser?.uid), {
-                  userAccounts: newUserAccounts,
+                  userAccounts: newAccounts,
                   currentAccount: updatedAccount,
                 });
-                await updateDoc(doc(db, "transactions", currentUser?.uid), {
-                  transactions: arrayUnion(tx),
+              } else {
+                await updateDoc(doc(db, "userAccounts", currentUser?.uid), {
+                  userAccounts: arrayUnion(updatedAccount),
+                  currentAccount: updatedAccount,
                 });
               }
 
-              console.log(newUserAccounts);
+              await updateDoc(doc(db, "transactions", currentUser?.uid), {
+                transactions: arrayUnion(tx),
+              });
             } else {
               console.log("Failed transaction", response);
               toast.error("Transaction failed", {
@@ -109,6 +116,7 @@ export default function TestDeposit({ onCloseModal }) {
             onCloseModal();
             toast.info("Transaction cancelled", {
               hideProgressBar: true,
+              autoClose: 1000,
             });
           },
         });
@@ -121,11 +129,10 @@ export default function TestDeposit({ onCloseModal }) {
         hideProgressBar: true,
       });
     }
-    setAmount("");
   };
 
   return (
-    <div className="h-full grid place-items-center">
+    <div className="h-full grid place-items-center px-3">
       <div className="flex-column !items-center">
         <div className="flex-row px-4">
           <span className="text-xl mb-1 tracking-wide uppercase font-kinn text-shadow">
@@ -144,7 +151,7 @@ export default function TestDeposit({ onCloseModal }) {
         <div className="my-[2rem]">
           <ButtonVariant
             title="Deposit Money"
-            icon={<CiLocationOn />}
+            icon={<FaArrowDown />}
             onClick={handleDeposit}
             className="bg-emerald-600"
           />

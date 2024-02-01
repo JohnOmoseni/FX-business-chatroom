@@ -77,7 +77,7 @@ export default function Deposit({ onCloseModal }) {
               timestamp: response.created_at,
             };
             const updatedBalance =
-              parseInt(currentAccount.balance) + response?.amount;
+              Number(currentAccount.balance) + response?.amount;
 
             dispatch(setTransactions(tx));
             dispatch(setAccountBalance(updatedBalance));

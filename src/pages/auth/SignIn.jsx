@@ -100,6 +100,7 @@ function SignIn() {
             <Button
               type="submit"
               title="Submit"
+              disabled={isSubmitting}
               textGradient
               className="bg-gradient-100 font-kinn w-[80%] flex-row mx-auto mt-8 md:mt-12 hover:bg-grad-100 hover:scale-[1.02]"
             />
