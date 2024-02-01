@@ -10,6 +10,19 @@ export const banks = [
   { name: "Zenith Bank Plc.", code: "057" },
 ];
 
+// remove duplicate objects in an array of objects
+export const removeDuplicate = (array) => {
+  const newArray = array.reduce((finalArray, current) => {
+    let obj = finalArray.find((obj) => obj?.currency === current?.currency);
+    if (obj) {
+      return finalArray;
+    }
+    return finalArray.concat([current]);
+  }, []);
+
+  return newArray;
+};
+
 export const validateMessage = (msg) => {
   // Regex for email, bank account and phone number
   const emailPattern = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/;

@@ -1,169 +1,169 @@
 *,
 *::before,
 *::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  scroll-behavior: smooth;
-  font-family: "Poppins", Arial, sans-serif;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	scroll-behavior: smooth;
+	font-family: "Poppins", Arial, sans-serif;
 }
 
 html {
-  overflow-x: hidden;
-  height: 100%;
+	overflow-x: hidden;
+	height: 100%;
 }
 
 :root {
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  text-size-adjust: none;
-  text-decoration-skip-ink: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+	text-size-adjust: none;
+	text-decoration-skip-ink: auto;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-text-size-adjust: 100%;
 
-  --color-bg: #fff;
-  --color-text: #333;
-  --toastify-color-error: black !important;
+	--color-bg: #fff;
+	--color-text: #333;
+	--toastify-color-error: black !important;
 }
 
 body {
-  width: 100%;
-  min-height: 100vh;
-  background-color: var(--color-bg);
-  color: var(--color-text);
-  overflow: hidden auto;
+	width: 100%;
+	min-height: 100vh;
+	background-color: var(--color-bg);
+	color: var(--color-text);
+	overflow: hidden auto;
 }
 
 body::selection {
-  background-color: #026a52;
+	background-color: #026a52;
 }
 
 .wrapper {
-  width: 100%;
-  height: 100%;
-  margin: 0 auto;
-  position: relative;
-  overflow: hidden;
+	width: 100%;
+	height: 100%;
+	margin: 0 auto;
+	position: relative;
+	overflow: hidden;
 }
 
 .wrapper :is(a, .icon, button) {
-  cursor: pointer;
+	cursor: pointer;
 }
 
 .wrapper .icon {
-  display: grid;
-  place-items: center;
-  will-change: filter;
-  transition: filter 300ms;
+	display: grid;
+	place-items: center;
+	will-change: filter;
+	transition: filter 300ms;
 }
 .wrapper .icon:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+	filter: drop-shadow(0 0 2em #646cffaa);
 }
 
 .wrapper :where(a, span) {
-  color: inherit;
-  display: inline-block;
-  text-decoration: none;
+	color: inherit;
+	display: inline-block;
+	text-decoration: none;
 }
 
 .wrapper :where(img) {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  border-radius: inherit;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	border-radius: inherit;
 }
 
 .wrapper :where(ul li) {
-  list-style-type: none;
+	list-style-type: none;
 }
 
 .wrapper :where(button) {
-  transition: border-color 0.25s;
-  outline: none;
+	transition: border-color 0.25s;
+	outline: none;
 }
 
 .wrapper :where(button:focus, button:focus-visible) {
-  outline: 4px auto rgb(192, 250, 192);
+	outline: 4px auto rgb(192, 250, 192);
 }
 
 .swal2-container .swal2-icon {
-  margin: 1em auto 0.6em;
+	margin: 1em auto 0.6em;
 }
 .swal2-title {
-  font-size: 1.5rem;
+	font-size: 1.5rem;
 }
 
 .swal2-container .swal2-html-container {
-  margin: 0.8rem;
+	margin: 0.8rem;
 }
 
 .swal2-container .swal2-actions .swal2-confirm {
-  outline: none;
+	outline: none;
 }
 
 .css-wmy1p7-ReactDropdownSelect {
-  border-radius: 4px !important;
+	border-radius: 4px !important;
 }
 .css-1c8t16q-InputComponent::placeholder {
-  font-size: 0.75rem;
+	font-size: 0.75rem;
 }
 .css-jznujr-ContentComponent span,
 .currency-header .css-nf4xsl-InputComponent::placeholder {
-  color: #222;
-  font-family: "Kinn", "Arial";
-  font-size: 0.8rem;
-  padding-right: 2em;
-  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3);
+	color: #222;
+	font-family: "Kinn", "Arial";
+	font-size: 0.8rem;
+	padding-right: 2em;
+	text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3);
 }
 .css-1c8t16q-InputComponent {
-  width: calc(5ch + 5px) !important;
+	width: calc(5ch + 5px) !important;
 }
 
 .wrapper .currencies .css-nf4xsl-InputComponent,
 .css-w5u23q-DropDown {
-  width: 100% !important;
+	width: 100% !important;
 }
 .wrapper .currencies .css-z532jj-InputComponent {
-  display: none;
+	display: none;
 }
 .wrapper .currencies .css-1c8t16q-InputComponent {
-  width: 100% !important;
+	width: 100% !important;
 }
 .wallet .css-z532jj-InputComponent {
-  display: none !important;
+	display: none !important;
 }
 .ReactModal__Content.ReactModal__Content--after-open {
-  inset: 20% !important;
+	inset: 20% !important;
 }
 
 .withdraw > div:first-of-type,
 .withdraw > div:first-of-type .css-bes1m-DropDown.e1qjn9k92 {
-  width: 100%;
+	width: 100%;
 }
 
 @media (min-width: 600px) {
-  .ReactModal__Content.ReactModal__Content--after-open {
-    inset: 25% !important;
-  }
+	.ReactModal__Content.ReactModal__Content--after-open {
+		inset: 25% !important;
+	}
 }
 .full-height {
-  height: 100vh;
-  height: 100dvh;
+	height: 100vh;
+	height: 100svh;
 }
 .wrapper ::-webkit-scrollbar {
-  width: 3px;
-  height: 100%;
+	width: 3px;
+	height: 100%;
 }
 
 /* Track */
 .wrapper ::-webkit-scrollbar-track {
-  /* background: red; */
+	/* background: red; */
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #888888;
-  border-radius: 999px;
+	background: #888888;
+	border-radius: 999px;
 }
