@@ -20,6 +20,7 @@ import { toast } from "react-toastify";
 import useAuthContext from "@context/AuthContext";
 import { v4 as uuid } from "uuid";
 import { setAccounts } from "@redux/features/fxSlice";
+import PhoneNoInput from "./PhoneNoInput";
 
 const Top = () => (
   <div>
@@ -40,8 +41,9 @@ function RegisterForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const fileRef = useRef(null);
-  const { createUser, isAuthenticated, setIsAuthenticated } = useAuthContext();
+  const { createUser, setIsAuthenticated } = useAuthContext();
   const [preview, setPreview] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   const onSubmit = async (values, actions) => {
     const file = fileRef.current.files[0];
@@ -55,8 +57,8 @@ function RegisterForm() {
 
     try {
       const res = await createUser(values.email, values.password);
-
       console.log(res);
+
       // upload an image
       const storageRef = ref(storage, values?.businessName);
       const uploadTask = uploadBytesResumable(storageRef, file);
@@ -86,7 +88,7 @@ function RegisterForm() {
               avatar: downloadURL,
               fullName: `${values?.firstName} ${values?.lastName}`,
               businessName: values?.businessName,
-              phoneNo: values?.phoneNo,
+              phoneNo: phoneNumber ? `+${phoneNumber}` : "",
               country: values?.country,
             });
 
@@ -112,7 +114,7 @@ function RegisterForm() {
                 avatar: downloadURL,
                 fullName: `${values?.firstName} ${values?.lastName}`,
                 businessName: values?.businessName,
-                phoneNo: values?.phoneNo,
+                phoneNo: phoneNumber ? `+${phoneNumber}` : "",
                 country: values?.country,
               })
             );
@@ -150,7 +152,6 @@ function RegisterForm() {
       businessName: "",
       firstName: "",
       lastName: "",
-      phoneNo: "",
       country: "",
       email: "",
       password: "",
@@ -216,17 +217,10 @@ function RegisterForm() {
             />
           </div>
           <div className="w-full flex-row gap-4">
-            <FormGroup
-              name="phoneNo"
-              label="Phone Number"
+            <PhoneNoInput
               required
-              value={values.phoneNo}
-              placeholder="Your phone number"
-              Icon={FaUser}
-              errors={errors}
-              touched={touched}
-              onChange={handleChange}
-              onBlur={handleBlur}
+              phoneNumber={phoneNumber}
+              setPhoneNumber={setPhoneNumber}
             />
             <FormGroup
               name="country"

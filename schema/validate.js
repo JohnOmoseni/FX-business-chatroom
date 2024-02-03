@@ -22,7 +22,6 @@ export const registerSchema = yup.object().shape({
   firstName: yup.string().required("Field is required"),
   businessName: yup.string().required("Field is required"),
   lastName: yup.string(),
-  phoneNo: yup.number("Must be of number type").required("Field is required"),
 });
 
 export const signInSchema = yup.object().shape({

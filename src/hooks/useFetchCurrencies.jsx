@@ -7,46 +7,46 @@ const myHeaders = new Headers();
 myHeaders.append("apikey", import.meta.env.VITE_API_KEY);
 
 const options = {
-  method: "GET",
-  redirect: "follow",
-  headers: myHeaders,
+	method: "GET",
+	redirect: "follow",
+	headers: myHeaders,
 };
 
 function useFetchCurrencies() {
-  const { currencies: currArray } = useSelector((state) => state.fxState);
-  const [currencies, setCurrencies] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
+	const { currencies: currArray } = useSelector((state) => state.fxState);
+	const [currencies, setCurrencies] = useState(null);
+	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState(false);
 
-  useEffect(() => {
-    let mounted = true;
-    const getCurrencies = async () => {
-      if (currArray?.length === 0) {
-        setIsLoading(true);
-        try {
-          const res = await fetch(`${apiURL}/symbols`, options);
+	useEffect(() => {
+		let mounted = true;
+		const getCurrencies = async () => {
+			if (currArray?.length === 0) {
+				setIsLoading(true);
+				try {
+					const res = await fetch(`${apiURL}/symbols`, options);
 
-          if (!res.ok) {
-            console.log(res.text());
-            setError(true);
-            throw new Error("Error fetching data");
-          }
+					if (!res.ok) {
+						console.log(res.text());
+						setError(true);
+						throw new Error("Error fetching data");
+					}
 
-          const data = await res.json();
-          console.log(data);
-          setCurrencies(data?.symbols);
-          setIsLoading(false);
-        } catch (error) {
-          setIsLoading(false);
-          console.error(error.message);
-        }
-      }
-    };
+					const data = await res.json();
+					console.log(data);
+					setCurrencies(data?.symbols);
+					setIsLoading(false);
+				} catch (err) {
+					setIsLoading(false);
+					console.error(err.message);
+				}
+			}
+		};
 
-    currArray.length === 0 && getCurrencies();
-    return () => (mounted = false);
-  }, []);
+		currArray.length === 0 && getCurrencies();
+		return () => (mounted = false);
+	}, []);
 
-  return [currencies, isLoading, error];
+	return [currencies, isLoading, error];
 }
 export default useFetchCurrencies;

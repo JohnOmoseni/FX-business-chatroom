@@ -9,28 +9,21 @@ const Home = React.lazy(() => import("./pages/Home"));
 import { ProtectedRoute } from "./ProtectedRoute";
 
 function App() {
-  return (
-    <>
-      <div className="wrapper relative">
-        <Suspense fallback={<LoaderBody />}>
-          <Routes>
-            <Route path="/" element={<Navigate to="/home" />} />
-            <Route
-              path="/home"
-              element={
-                <ProtectedRoute>
-                  <Home />
-                </ProtectedRoute>
-              }
-            />
+	return (
+		<>
+			<div className="wrapper relative">
+				<Suspense fallback={<LoaderBody />}>
+					<Routes>
+						<Route path="/" element={<Navigate to="/home" />} />
+						<Route path="/home" element={<ProtectedRoute />} />
 
-            <Route path="/auth/sign-up" element={<RegisterForm />} />
-            <Route path="/auth/sign-in" element={<SignIn />} />
-          </Routes>
-        </Suspense>
-      </div>
-    </>
-  );
+						<Route path="/auth/sign-up" element={<RegisterForm />} />
+						<Route path="/auth/sign-in" element={<ProtectedRoute />} />
+					</Routes>
+				</Suspense>
+			</div>
+		</>
+	);
 }
 
 export default App;
