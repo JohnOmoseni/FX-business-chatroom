@@ -7,10 +7,10 @@ export function Chat({ msg, startMsg }) {
   const owner = msg?.senderID === currentUser?.uid;
   const newMsgRef = useRef();
 
-  useEffect(() => {
-    newMsgRef?.current &&
-      newMsgRef.current?.scrollIntoView({ behaviour: "smooth" });
-  }, [msg]);
+  // useEffect(() => {
+  //   newMsgRef?.current &&
+  //     newMsgRef.current?.scrollIntoView({ behaviour: "smooth" });
+  // }, [msg]);
 
   return (
     <div

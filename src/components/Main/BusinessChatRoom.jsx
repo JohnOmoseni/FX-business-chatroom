@@ -85,7 +85,7 @@ function BusinessChatRoom() {
       {array.length > 0 && array?.map((row) => row)}
       <div
         ref={elemRef}
-        className="h-10 w-10 select-none pointer-events-none"
+        className="min-h-8 w-10 select-none pointer-events-none"
       ></div>
     </div>
   );
