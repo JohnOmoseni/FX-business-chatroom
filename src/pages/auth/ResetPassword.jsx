@@ -54,7 +54,7 @@ function ResetPassword() {
 
   return (
     <section
-      className="w-full h-screen relative md:grid grid-cols-2 overflow-hidden"
+      className="w-full full-height relative md:grid grid-cols-2 overflow-hidden"
       id="reset-password"
     >
       <div className="w-full hidden md:block h-screen self-stretch bg-green-300">

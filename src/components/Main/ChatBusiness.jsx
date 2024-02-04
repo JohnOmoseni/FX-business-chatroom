@@ -25,10 +25,10 @@ export function ChatBusiness({ msg, startMsg }) {
     });
   const newMsgRef = useRef();
 
-  // useEffect(() => {
-  // 	newMsgRef?.current &&
-  // 		newMsgRef.current?.scrollIntoView({ behaviour: "smooth" });
-  // }, [msg]);
+  useEffect(() => {
+    newMsgRef?.current &&
+      newMsgRef.current?.scrollIntoView({ behaviour: "smooth" });
+  }, [msg]);
 
   const handleChatRoomClick = (id) => {
     if (owner) return;
