@@ -81,7 +81,7 @@ function SignIn() {
           {error && <Error error={error} />}
           <form
             onSubmit={handleSubmit}
-            className="mt-10 mb-4 mx-auto w-[95%] flex-column gap-6"
+            className="mt-10 mb-4 mx-auto w-[95%] flex-column gap-6 overflow-x-hidden"
           >
             <FormGroup
               name="email"

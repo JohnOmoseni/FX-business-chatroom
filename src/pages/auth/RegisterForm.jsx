@@ -174,7 +174,7 @@ function RegisterForm() {
 
         <form
           onSubmit={handleSubmit}
-          className="mt-12 mb-8 mx-auto w-[94%] flex-column gap-6"
+          className="mt-12 mb-8 mx-auto w-[94%] flex-column gap-6 overflow-x-hidden"
         >
           <FormGroup
             name="businessName"
@@ -213,7 +213,7 @@ function RegisterForm() {
               onBlur={handleBlur}
             />
           </div>
-          <div className="w-full flex-row gap-4">
+          <div className="w-full grid grid-cols-2 gap-4">
             <PhoneNoInput
               required
               phoneNumber={phoneNumber}
@@ -229,6 +229,7 @@ function RegisterForm() {
               touched={touched}
               onChange={handleChange}
               onBlur={handleBlur}
+              className=""
             />
           </div>
           <FormGroup

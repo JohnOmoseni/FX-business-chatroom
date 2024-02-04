@@ -142,6 +142,13 @@ body::selection {
   width: 100%;
 }
 
+.react-tel-input .form-control {
+  width: 100% !important;
+  padding-right: 4px !important;
+  padding-block: 0.4rem !important;
+  height: auto !important;
+}
+
 @media (max-width: 600px) {
   .ReactModal__Content.ReactModal__Content--after-open {
     inset: 10% !important;
@@ -162,7 +169,7 @@ body::selection {
 
 .full-height {
   height: 100vh;
-  height: 100svh;
+  height: 100dvh;
 }
 .wrapper ::-webkit-scrollbar {
   width: 3px;

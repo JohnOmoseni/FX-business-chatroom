@@ -15,6 +15,7 @@ export const FormGroup = ({
   touched,
   onBlur,
   onChange,
+  className,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
   const inputRef = useRef(null);
@@ -26,7 +27,7 @@ export const FormGroup = ({
 
   return (
     <div
-      className={`w-full group ${
+      className={`w-full group ${className} ${
         errors[name] && touched[name] ? "is-error" : ""
       }`}
     >

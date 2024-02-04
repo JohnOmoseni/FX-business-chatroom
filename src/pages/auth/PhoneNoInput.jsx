@@ -18,12 +18,12 @@ const PhoneNoInput = ({ required, phoneNumber, setPhoneNumber }) => {
   };
 
   return (
-    <div className={`w-full group`}>
+    <div className="group w-full">
       <label
         htmlFor="phoneNo"
         className={`text-sm relative mb-1 inline-block tracking-wider text-shadow after:absolute ${
           required && "after:content-['*']"
-        } after:-top-[2px] after:-right-2 after:text-red-800 after:text-sm`}
+        } after:-top-[2px] after:-right-2 after:text-red-800 after:text-sm whitespace-nowrap`}
       >
         Phone Number
       </label>
@@ -32,7 +32,7 @@ const PhoneNoInput = ({ required, phoneNumber, setPhoneNumber }) => {
           !valid
             ? "border-pink-400 bg-pink-100"
             : "border-grey-400 bg-green-100"
-        } relative rounded-md shadow-sm border border-solid form-group w-full flex-row gap-2 !justify-start align-middle`}
+        } relative rounded-md shadow-sm border border-solid form-group w-full flex-row gap-2 !justify-start align-middle overflow-hidden`}
       >
         <PhoneInput
           country={"ng"}
