@@ -129,7 +129,6 @@ function Conversion({ setShowConversionPane }) {
           titleText: `You do not have an account of this currency - (${baseCurrency}). /nPlease select an account of this currency and make a deposit`,
           showDenyButton: false,
           confirmButtonText: "Ok",
-          className,
         }).then((result) => {
           if (result.isConfirmed) {
             dispatch(setVisibleRightPane({ id: "userWallet", val: true }));

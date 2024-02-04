@@ -28,6 +28,7 @@ const Button = ({
   textGradient,
   icon,
   disabled,
+  loadingText,
   onClick,
 }) => {
   return (
@@ -52,9 +53,9 @@ const Button = ({
       <span
         className={`${
           textGradient && "text-gradient-100"
-        } font-semibold tracking-wide`}
+        } font-semibold tracking-wide capitalize`}
       >
-        {title}
+        {disabled && loadingText ? loadingText : title}
       </span>
     </motion.button>
   );

@@ -162,12 +162,9 @@ function RegisterForm() {
   });
 
   return (
-    <motion.section
+    <section
       className="w-full md:h-screen relative flex-column md:grid md:justify-center grid-cols-auth overflow-hidden max-sm:gap-8"
       id="register"
-      initial="hidden"
-      animate="animate"
-      viewport={{ once: true, amount: 0.2 }}
     >
       <div className="w-full hidden md:block h-screen bg-green-300">
         <img src={sectionbg} alt="" className="h-full w-full" />
@@ -290,6 +287,7 @@ function RegisterForm() {
             title="Submit"
             textGradient
             disabled={isSubmitting}
+            loadingText="Loading..."
             className="bg-green-400 font-kinn w-[80%] mx-auto mt-6 md:mt-8 transition-all  hover:bg-grad-100 hover:opacity-80 hover:scale-[1.02] translate-y-0 active:translate-y-1 active:origin-bottom active:scale-y-90"
           />
         </form>
@@ -308,7 +306,7 @@ function RegisterForm() {
           </Link>
         </p>
       </div>
-    </motion.section>
+    </section>
   );
 }
 
