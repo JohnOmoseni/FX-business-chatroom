@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import { AiOutlineMail } from "react-icons/ai";
 import sectionbg from "@assets/images/section-bg (5).jpg";
 import { MdOutlineArrowBack } from "react-icons/md";
+import { toast } from "react-toastify";
 
 function ResetPassword() {
   const [email, setEmail] = useState("");
@@ -15,24 +16,13 @@ function ResetPassword() {
   const onSubmit = async (e) => {
     e.preventDefault();
     if (!email) return;
-    const actionCodeSettings = {
-      url: "https://www.example.com/?email=user@example.com",
-      iOS: {
-        bundleId: "com.example.ios",
-      },
-      android: {
-        packageName: "com.example.android",
-        installApp: true,
-        minimumVersion: "12",
-      },
-      handleCodeInApp: true,
-    };
 
     try {
       await sendPasswordResetEmail(auth, email);
       Swal.fire({
         icon: "info",
-        titleText: `Check your gmail for password reset link`,
+        titleText: "Password reset email link sent",
+        text: `Check your gmail for password reset link`,
         showDenyButton: false,
         confirmButtonText: "Ok",
       }).then((result) => {

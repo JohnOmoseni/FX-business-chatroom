@@ -123,7 +123,7 @@ function ChatRoomInput({ userChat }) {
 	};
 
 	return (
-		<div className="w-full min-h-[4rem] bg-slate-100 flex-row px-4 py-1 pr-3 border-y border-solid border-br-light">
+		<div className="w-full mt-auto min-h-[4rem] bg-slate-100 flex-row px-4 py-1 pr-3 border-y border-solid border-br-light">
 			<form onSubmit={handleSend} className="w-full flex-row py-2 gap-3">
 				<div className="flex-1 flex-row gap-3">
 					<div title="emoji" className="relative  hover:text-slate-800">
